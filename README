@@ -1,5 +1,7 @@
-This is a simple project. It currently focuses on a raytracing renderer.
+This is a simple project. It currently focuses on a raytracing renderer. I still need to finish the rewrite of the render method.
 
 The code is documented in a Doxygen format. Use doxygen to generate the documentation. It will help to explain the project.
 
 Todo's are included in the code. Search for 'TODO' if you want to find some in the code.
+
+// vim: set spell:

@@ -1,0 +1,85 @@
+#include "simpleObject.h"
+
+SimpleObject::SimpleObject()
+{
+	//TODO initialize these to some values
+	shape = new Sphere();
+	texture = new SolidColor();
+}
+
+SimpleObject::SimpleObject(const Shape& s, const Material& mat)
+{
+	shape = s.clone();
+	texture = mat.clone();
+}
+
+SimpleObject::SimpleObject(const SimpleObject & other)
+{
+	copy(other);
+}
+
+void SimpleObject::copy(const SimpleObject& other)
+{
+	assert(shape != NULL && texture != NULL);
+	delete shape;
+	shape = other.shape->clone();
+
+	delete texture;
+	texture = other.texture->clone();
+}
+
+SimpleObject& SimpleObject::operator=(SimpleObject const & rhs)
+{
+	// If this object and rhs are the same object, do nothing.
+	if(this == &rhs)
+		return *this;
+
+	// otherwise just copy rhs
+	copy(rhs);
+	return *this;
+}
+
+SimpleObject::~SimpleObject()
+{
+	assert(shape != NULL && texture != NULL);
+	delete shape;
+	delete texture;
+}
+
+bool SimpleObject::intersects(const ray<3> viewRay) const
+{
+	assert(shape != NULL);
+	return shape->intersects(viewRay);
+}
+
+double SimpleObject::intersection(const ray<3> viewRay) const
+{
+	assert(shape != NULL);
+	return shape->intersection(viewRay);
+}
+
+vectre<3> SimpleObject::normal_vectre(const point<3> surface, const point<3> ray_start) const
+{
+	assert(shape != NULL);
+	return shape->normal_vectre(surface, ray_start);
+}
+
+Properties SimpleObject::getProperties(const point<3> location) const
+{
+	assert(texture != NULL);
+	return texture->getProperties(location);
+}
+
+void SimpleObject::setShape(const Shape& s)
+{
+	assert(shape != NULL);
+	delete shape;
+	shape = s.clone();
+}
+
+void SimpleObject::setMaterial(const Material& mat)
+{
+	assert(texture != NULL);
+	delete texture;
+	texture = mat.clone();
+}

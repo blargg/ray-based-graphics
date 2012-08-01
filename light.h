@@ -7,22 +7,16 @@
  * Stores the location of the light and the intensities
  * of the red green and blue components of the light.
  */
-struct light
+struct Light
 {
 	/// The location of the light.
 	point<3> location;
 
-	/// The intensity of the red light.
-	double red;
-
-	/// The intensity of the green light.
-	double green;
-
-	/// The intensity of the blue light.
-	double blue;
+	/// The color of the light
+	Color color;
 
 	/// Default consturctor. Puts it at the origin with a white light.
-	light():location(point<3>(0.0,0.0,0.0)),red(1.0),green(1.0),blue(1.0) { /* do nothing */ }
+	Light():location(point<3>(0.0,0.0,0.0)),color(1.0,1.0,1.0) { /* do nothing */ }
 };
 
 #endif

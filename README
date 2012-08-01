@@ -4,4 +4,4 @@ The code is documented in a Doxygen format. Use doxygen to generate the document
 
 Todo's are included in the code. Search for 'TODO' if you want to find some in the code.
 
-// vim: set spell:
+// vim: set spell wrap:

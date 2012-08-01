@@ -33,18 +33,57 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
 
 	// no object was intersected and the ray has left the scene. return this color.
 	if(closestObj < 0)
-		return DEBUG_COLOR; //TODO eventually change this to something more meaningful
+		return Color(0,0,0); /// \todo eventually change this to something more meaningful
 
 	// Initialize the return value to black (no light).
 	Color retColor(0.0, 0.0, 0.0);
 	Properties objProp = objList[closestObj]->getProperties( viewRay(bestTime) );
 	// named unit_normal to signify that it is a unit vector (otherwise i keep forgetting)
-	vectre<3> unit_normal = objList[closetObj]->normal_vectre( viewRay(bestTime), point<3>() ).unit_vectre();
+	vectre<3> unit_normal = objList[closestObj]->normal_vectre( viewRay(bestTime), point<3>() ).unit_vectre();
 
 	// For each light in the scene
 	for(unsigned int i = 0; i < lightList.size(); ++i)
 	{
+		vectre<3> lightDir(viewRay(bestTime), lightList[i].location);
+
+		// skip if the normal points completely away from the object
+		if(unit_normal.dot_prod(lightDir) <= 0.0)
+			continue;
+		/// @todo store length_sq() to speed getting the unit vectre later
+		if(lightDir.length_sq() <= 0.0) /// \todo make this Episilon?
+			continue;
+
+		lightDir = lightDir.unit_vectre();
+		/// \todo store viewRay(bestTime) to prevent recalculation.
+		// Test if any objects are between the intersection and the light.
+		ray<3> lightRay(viewRay(bestTime), lightDir);
+		bool inShadow = false;
+		for(unsigned int j = 0; j < objList.size(); ++j)
+		{
+			if(objList[j]->intersects(lightRay))
+			{
+				inShadow = true;
+				break;
+			}
+		}
+		
+		// If not in the shadow of another object, to the lighting
+		if(!inShadow)
+		{
+			/*
+			 * labert shading
+			 * multiply the light RGB by the color's RGB and the nby the cosine of the 
+			 * angle between the surface normal vector and the vector that points to 
+			 * the light.
+			 *
+			 */
+			/// \todo Multiply Labmbert by the inverse square of the distance to the light.
+			double lambert = (lightRay.dir.dot_prod(unit_normal));
+			retColor += lambert * lightList[i].color * objProp.color;
+		}
 	}
+
+	return retColor;
 
 
 	return Color(0.0,0.0,0.0);

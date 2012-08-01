@@ -19,7 +19,7 @@ using std::vector;
 void makeObjList(vector<Drawable*>& objList)
 {
 	//OBJECT 1
-	Sphere s(point<3>(10.5, 100.1, 300), 100);
+	Sphere s(point<3>(100.5, 100.1, 300), 100);
 	Properties p;
 	p.color = Color(0.0, 0.0, 0.6);
 	SolidColor c(p);
@@ -28,14 +28,18 @@ void makeObjList(vector<Drawable*>& objList)
 }
 
 /// List of lights for the renderer.
-void makeLights(vector<light>& lightList)
+void makeLights(vector<Light>& lightList)
 {
+	Light temp;
+	temp.location = point<3>(0.0, 0.0, 0.0);
+	lightList.push_back(temp);
 }
 
 int main()
 {
 	Raytracer renderer;
 	makeObjList(renderer.objList);
+	makeLights(renderer.lightList);
 
 	//TODO This is a basic test.
 	PNG pic(400,400);

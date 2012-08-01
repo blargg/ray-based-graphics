@@ -26,7 +26,7 @@ class Raytracer
 	 */
 	vector<Drawable*> objList;
 	/// This is a list of all the lights in the scene.
-	vector<light> lightList;
+	vector<Light> lightList;
 
 	/// Clears the lights and the objects.
 	void clear_scene();

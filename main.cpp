@@ -19,12 +19,17 @@ using std::vector;
 void makeObjList(vector<Drawable*>& objList)
 {
 	//OBJECT 1
-	Sphere s(point<3>(100.5, 100.1, 300), 100);
+	Sphere s(point<3>(100.5, 100.1, 200), 30);
 	Properties p;
 	p.color = Color(0.0, 0.0, 0.6);
 	SolidColor c(p);
 	SimpleObject* ptr = new SimpleObject(s,c);
 	objList.push_back(ptr);
+
+	//OBJECT 2
+	Sphere s2(point<3>(200, 100, 300), 100);
+	p.color = Color(0.7, 0.0, 0.0);
+	objList.push_back(new SimpleObject(s2, SolidColor(p)));
 }
 
 /// List of lights for the renderer.
@@ -55,5 +60,7 @@ int main()
 								   c.blue * 255);
 		}
 	pic.writeToFile("output.png");
+	// Clean up memory.
+	renderer.clear_objects();
 	return 0;
 }

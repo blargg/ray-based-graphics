@@ -8,11 +8,9 @@ void Raytracer::clear_scene()
 
 void Raytracer::clear_objects()
 {
-	while(!objList.empty())
-	{
-		delete objList[0];
-		objList.pop_back();
-	}
+	for(unsigned int i = 0; i < objList.size(); ++i)
+		delete objList[i];
+	objList.clear();
 }
 
 void Raytracer::clear_lights()
@@ -50,6 +48,7 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
 		if(unit_normal.dot_prod(lightDir) <= 0.0)
 			continue;
 		/// @todo store length_sq() to speed getting the unit vectre later
+		// skip if the light is on the point of intersection
 		if(lightDir.length_sq() <= 0.0) /// \todo make this Episilon?
 			continue;
 

@@ -11,8 +11,8 @@ Compiling:
 ----------
 Requires that you have gcc (for c++) and libpng on your system.
 In the project directory run:
-	make
-	./render
+    make
+    ./render
 
 
 The code is documented in a Doxygen format. Use doxygen to generate the

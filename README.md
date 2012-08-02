@@ -11,6 +11,7 @@ Compiling:
 ----------
 Requires that you have gcc (for c++) and libpng on your system.
 In the project directory run:
+
     make
     ./render
 

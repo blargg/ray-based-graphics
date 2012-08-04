@@ -14,6 +14,7 @@
 #include "ray.h"
 
 using std::vector;
+using std::min;
 
 /// Hard coded test list of objects for the renderer.
 void makeObjList(vector<Drawable*>& objList)
@@ -22,6 +23,7 @@ void makeObjList(vector<Drawable*>& objList)
 	Sphere s(point<3>(100.5, 100.1, 200), 30);
 	Properties p;
 	p.color = Color(0.0, 0.0, 0.6);
+	p.reflect = 0.5;
 	SolidColor c(p);
 	SimpleObject* ptr = new SimpleObject(s,c);
 	objList.push_back(ptr);
@@ -55,9 +57,9 @@ int main()
 			viewRay.orig = point<3>(i, j, 0);
 			viewRay.dir = vectre<3>(0,0,1);
 			Color c = renderer.getColor(viewRay, 0);
-			*pic(i,j) = RGBAPixel( c.red * 255,
-					               c.green * 255,
-								   c.blue * 255);
+			*pic(i,j) = RGBAPixel( min( (int) (c.red * 255), 255),
+					               min( (int) (c.green * 255), 255),
+								   min( (int) (c.blue * 255), 255) );
 		}
 	pic.writeToFile("output.png");
 	// Clean up memory.

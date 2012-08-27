@@ -18,7 +18,7 @@ RTEXE=render
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o shape.o solidColor.o easypng.o
+$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o plane.o shape.o solidColor.o easypng.o
 	$(LK) $(LIBS) -o $@ $^
 
 #TODO really, i think main.o only really depends on the .h files rather than the .o files.
@@ -40,6 +40,9 @@ shape.o : shape.cpp shape.h $(MATH_DEPS)
 	$(COMPILE) $<
 
 sphere.o : sphere.cpp sphere.h shape.o $(MATH_DEPS)
+	$(COMPILE) $<
+
+plane.o : plane.cpp plane.h shape.h $(MATH_DEPS)
 	$(COMPILE) $<
 
 ############### Drawing Objects #################

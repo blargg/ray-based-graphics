@@ -5,10 +5,14 @@
 
 #include "raytracer.h"
 #include "drawable.h"
+
 #include "simpleObject.h"
 #include "sphere.h"
+#include "plane.h"
+
 #include "material.h"
 #include "solidColor.h"
+
 #include "light.h"
 #include "structs.h"
 #include "ray.h"
@@ -32,6 +36,11 @@ void makeObjList(vector<Drawable*>& objList)
 	Sphere s2(point<3>(200, 100, 300), 100);
 	p.color = Color(0.7, 0.0, 0.0);
 	objList.push_back(new SimpleObject(s2, SolidColor(p)));
+
+	//OBJECT 3
+	Plane pl1(point<3>(100,100,300), vectre<3>(0,0,-1));
+	p.color = Color(0, 0.7, 0);
+	objList.push_back(new SimpleObject(pl1, SolidColor(p)));
 }
 
 /// List of lights for the renderer.

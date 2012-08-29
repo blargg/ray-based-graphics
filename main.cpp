@@ -38,7 +38,7 @@ void makeObjList(vector<Drawable*>& objList)
 	objList.push_back(new SimpleObject(s2, SolidColor(p)));
 
 	//OBJECT 3
-	Plane pl1(point<3>(100,100,300), vectre<3>(0,0,-1));
+	Plane pl1(point<3>(100,100,300), vectre<3>(1,1,1));
 	p.color = Color(0, 0.7, 0);
 	objList.push_back(new SimpleObject(pl1, SolidColor(p)));
 }

@@ -82,7 +82,7 @@ class Shape
 	/// Gives the closest intersection in front of the ray.
 	virtual double intersection(const ray<3>& viewRay) const = 0;
 	/// Gives the normal vectre for the given point.
-	virtual vectre<3> normal_vectre(const point<3>& surface, const point<3>& ray_start) const = 0;
+	virtual vectre<3> normal_vectre(const point<3>& surface) const = 0;
 
 };
 #endif

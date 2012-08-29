@@ -59,13 +59,13 @@ bool Sphere::intersects(const ray<3>& viewRay) const
 	{
 		// true if the viewRay points into the object,
 		// false if viewRay points away
-		return normal_vectre(viewRay(far_intersection),point<3>()).dot_prod(viewRay.dir) < 0.0;
+		return normal_vectre(viewRay(far_intersection)).dot_prod(viewRay.dir) < 0.0;
 	}
 
 	double close_intersection = (-B - sqrt(B*B - 4*C) ) / 2.0; 
 	// ray is close to the close intersection
 	if(close_intersection < EPSILON && close_intersection > -1.0 * EPSILON)
-		return normal_vectre(viewRay(close_intersection),point<3>()).dot_prod(viewRay.dir) < 0.0;
+		return normal_vectre(viewRay(close_intersection)).dot_prod(viewRay.dir) < 0.0;
 
 
 	// the ray isn't on the surface and there is at least a far intersection
@@ -95,7 +95,7 @@ double Sphere::intersection(const ray<3>& viewRay) const
 	return (-B + sqrt(B*B - 4*C) ) / 2.0;
 }
 
-vectre<3> Sphere::normal_vectre(const point<3>& surface, const point<3>& ray_start) const
+vectre<3> Sphere::normal_vectre(const point<3>& surface) const
 {
 	/*
 	double vals [3];

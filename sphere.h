@@ -25,6 +25,6 @@ class Sphere: public Shape
 
 	virtual bool intersects(const ray<3>& viewRay) const;
 	virtual double intersection(const ray<3>& viewRay) const;
-	virtual vectre<3> normal_vectre(const point<3>& surface, const point<3>& ray_start) const;
+	virtual vectre<3> normal_vectre(const point<3>& surface) const;
 };
 #endif

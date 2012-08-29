@@ -23,4 +23,9 @@ Documentation
 The code is documented in a Doxygen format. Use doxygen to generate the
 documentation. It can be used as a reference for the code.
 
+To make the documentation, first check that doxygen is installed then run the following.
+(This may also require latex)
+
+	doxygen Doxyfile
+
 Todo's are included in the code. Search for 'TODO'

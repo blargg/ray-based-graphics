@@ -1,7 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-//#include "color.h"
 #include "properties.h"
 #include "point.h"
 

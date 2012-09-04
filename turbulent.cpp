@@ -9,7 +9,7 @@ Material* Turbulent::clone() const
 
 Properties Turbulent::getProperties(point<3> loc) 
 {
-	double noiseLevel = PerlinNoise3D(loc[0], loc[1], loc[2], 1.1, 0.5, 9);
+	double noiseLevel = PerlinNoise3D(loc[0], loc[1], loc[2], 1.05, 5.5, 9);
 	//double noiseLevel = Noise::noise(loc[0],loc[1],loc[2]);
 	//double noiseLevel = noise.Get(loc);
 	// \todo

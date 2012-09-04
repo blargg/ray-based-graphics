@@ -3,7 +3,6 @@
 
 #include "perlin.h"
 #include "material.h"
-//#include "noise.h"
 
 class Turbulent: public Material
 {
@@ -14,8 +13,8 @@ class Turbulent: public Material
 	//Perlin noise;
 
 	public:
-	Turbulent(Properties firstProp = Properties(Color(0.7, 0.0, 0.0)),
-			  Properties secondProp = Properties(Color(0.0,0.0, 0.7))):
+	Turbulent(Properties firstProp = Properties(Color(0.0, 0.0, 0.0)),
+			  Properties secondProp = Properties(Color(1.0,0.0, 0.0))):
 			  prop1(firstProp),prop2(secondProp)
 			  { /* do nothing */ }
 	/// Returns a Material pointer to a new Turbulent

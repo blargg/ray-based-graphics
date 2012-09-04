@@ -218,9 +218,9 @@ double PerlinNoise3D(double x,double y,double z,double alpha,double beta,int n)
    double val,sum = 0;
    double p[3],scale = 1;
 
-   p[0] = x;
-   p[1] = y;
-   p[2] = z;
+   p[0] = x/900000.0; // scales the points to make use of the given algorithm
+   p[1] = y/900000.0;
+   p[2] = z/900000.0;
    for (i=0;i<n;i++) {
       val = noise3(p);
       sum += val / scale;

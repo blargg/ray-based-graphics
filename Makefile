@@ -18,7 +18,7 @@ RTEXE=render
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o plane.o shape.o solidColor.o easypng.o properties.o turbulent.o perlin.o noise.o
+$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o plane.o shape.o solidColor.o easypng.o properties.o turbulent.o perlin.o
 	$(LK) $(LIBS) -o $@ $^
 
 #TODO really, i think main.o only really depends on the .h files rather than the .o files.
@@ -49,13 +49,10 @@ drawable.h : properties.h
 solidColor.o : solidColor.cpp solidColor.h material.h $(MATH_DEPS)
 	$(COMPILE) $<
 
-turbulent.o : turbulent.cpp turbulent.h perlin.h noise.h material.h $(MATH_DEPS)
+turbulent.o : turbulent.cpp turbulent.h perlin.h material.h $(MATH_DEPS)
 	$(COMPILE) $<
 
 perlin.o : perlin.cpp perlin.h $(MATH_DEPS)
-	$(COMPILE) $<
-
-noise.o : noise.cpp noise.h
 	$(COMPILE) $<
 
 checkerBoardTexture.o : checkerBoardTexture.cpp checkerBoardTexture.h material.h

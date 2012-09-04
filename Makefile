@@ -18,22 +18,15 @@ RTEXE=render
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o plane.o shape.o solidColor.o easypng.o
+$(RTEXE) : main.o raytracer.o simpleObject.o sphere.o plane.o shape.o solidColor.o easypng.o properties.o turbulent.o perlin.o noise.o
 	$(LK) $(LIBS) -o $@ $^
 
 #TODO really, i think main.o only really depends on the .h files rather than the .o files.
-main.o : main.cpp raytracer.o drawable.h simpleObject.o sphere.o solidColor.o easypng.h light.h $(MATH_DEPS)
+main.o : main.cpp raytracer.o drawable.h simpleObject.o sphere.o solidColor.o properties.h easypng.h light.h turbulent.h $(MATH_DEPS)
 	$(COMPILE) $<
 
-raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h structs.h $(MATH_DEPS)
+raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h $(MATH_DEPS)
 	$(COMPILE) $<
-
-#TODO old stuff
-#$(RTEXE) : raytrace.o simpleObject.o shape.o sphere.o solidColor.o easypng.o checkerBoardTexture.o
-#	$(LK) $(LIBS) -o $@ $^
-#
-#raytrace.o : raytrace.cpp easypng.o sphere.o drawable.h structs.h $(MATH_DEPS)
-#	$(COMPILE) raytrace.cpp
 
 ############### Geometry ####################
 shape.o : shape.cpp shape.h $(MATH_DEPS)
@@ -49,20 +42,37 @@ plane.o : plane.cpp plane.h shape.h $(MATH_DEPS)
 simpleObject.o : simpleObject.cpp simpleObject.h drawable.h material.h $(MATH_DEPS)
 	$(COMPILE) $<
 
+drawable.h : properties.h
+	touch $@
+
+	### Matherials and textures
 solidColor.o : solidColor.cpp solidColor.h material.h $(MATH_DEPS)
+	$(COMPILE) $<
+
+turbulent.o : turbulent.cpp turbulent.h perlin.h noise.h material.h $(MATH_DEPS)
+	$(COMPILE) $<
+
+perlin.o : perlin.cpp perlin.h $(MATH_DEPS)
+	$(COMPILE) $<
+
+noise.o : noise.cpp noise.h
 	$(COMPILE) $<
 
 checkerBoardTexture.o : checkerBoardTexture.cpp checkerBoardTexture.h material.h
 	$(COMPILE) $<
 
+material.h : properties.h $(MATH_DEPS)
+	touch $@
+
 easypng.o : easypng.h easypng.cpp
 	$(COMPILE) easypng.cpp
 
-material.h : structs.h $(MATH_DEPS)
-	touch $@
+########################## Color and Properties ############################################
+properties.o : properties.cpp properties.h color.h
+	$(COMPILE) $<
 
-drawable.h : structs.h
-	touch $@
+#properties.h : color.h
+	#touch $@
 
 ############# Makefile utilities ################
 .PHONY : clean

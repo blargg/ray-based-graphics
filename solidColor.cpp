@@ -16,7 +16,7 @@ Material * SolidColor::clone() const
 	return new SolidColor(*this);
 }
 
-Properties SolidColor::getProperties(point<3> loc) const
+Properties SolidColor::getProperties(point<3> loc)
 {
 	return myProperties;
 }

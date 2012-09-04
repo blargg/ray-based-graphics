@@ -4,7 +4,7 @@
 #include "ray.h"
 #include "vectre.h"
 #include "point.h"
-#include "structs.h"
+#include "properties.h"
 
 
 /**
@@ -48,7 +48,7 @@ class Drawable
 	/**
 	 * @brief Gets the normal vectre for the given point on the Drawable's surface.
 	 */
-	virtual vectre<3> normal_vectre(const point<3> surface, const point<3> ray_start) const = 0;
+	virtual vectre<3> normal_vectre(const point<3> surface) const = 0;
 
 	/**
 	 * @brief Gets the Properties of the Drawable at the given point.

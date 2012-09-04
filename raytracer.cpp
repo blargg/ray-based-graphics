@@ -37,7 +37,7 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
 	Color retColor(0.0, 0.0, 0.0);
 	Properties objProp = objList[closestObj]->getProperties( viewRay(bestTime) );
 	// named unit_normal to signify that it is a unit vector (otherwise i keep forgetting)
-	vectre<3> unit_normal = objList[closestObj]->normal_vectre( viewRay(bestTime), point<3>() ).unit_vectre();
+	vectre<3> unit_normal = objList[closestObj]->normal_vectre( viewRay(bestTime)).unit_vectre();
 	/// \todo transparency
 	if( unit_normal.dot_prod(viewRay.dir) > 0.0 )
 		unit_normal = unit_normal * -1.0;

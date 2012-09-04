@@ -2,7 +2,7 @@
 #define MATERIAL_H
 
 //#include "color.h"
-#include "structs.h"
+#include "properties.h"
 #include "point.h"
 
 /**
@@ -41,7 +41,7 @@ class Material
 	 * @brief Returns the properties of the material at the given point.
 	 * @param loc The location for the given properties.
 	 */
-	virtual Properties getProperties(point<3> loc) const = 0;
+	virtual Properties getProperties(point<3> loc) = 0;
 
 	/*
 	 * @brief returns the color of the material at a given point in 3-space

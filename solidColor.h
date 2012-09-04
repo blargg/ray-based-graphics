@@ -2,7 +2,7 @@
 #define SOLIDCOLOR_H
 
 #include "material.h"
-#include "structs.h"
+#include "properties.h"
 //#include "color.h"
 
 /**
@@ -81,7 +81,7 @@ class SolidColor: public Material
 	virtual double getIndexOfRefraction(point<3> loc) const;
 	*/
 
-	virtual Properties getProperties(point<3> loc) const;
+	virtual Properties getProperties(point<3> loc);
 };
 
 #endif

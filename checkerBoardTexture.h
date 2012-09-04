@@ -6,7 +6,7 @@
 /**
  * @brief A material of to different properties. Alternates between the two properties in a grid-like pattern
  *
- * Essentually, this texture covers all space in a cubes. The properties of each cube alternates when moving to an adjacent one.
+ * Essentially, this texture covers all space in a cubes. The properties of each cube alternates when moving to an adjacent one.
  */
 class CheckerBoardTexture: public Material
 {
@@ -25,7 +25,7 @@ class CheckerBoardTexture: public Material
 	 * @brief Constructs the material from the given properties and size
 	 *
 	 * @param firstProp One of the properties of the pattern. Defaults to red.
-	 * @param secondProp The other set of propterties of the pattern. Defaults to blue.
+	 * @param secondProp The other set of properties of the pattern. Defaults to blue.
 	 * @param scale The size of the cube pattern. Defaults to 10.0
 	 */
 	CheckerBoardTexture(Properties firstProp = Properties(Color(1.0,0.0,0.0)),
@@ -33,7 +33,7 @@ class CheckerBoardTexture: public Material
 						prop1(firstProp),prop2(secondProp),size(scale)
 	{ /* Do nothing */ }
 
-	/// Allows the material to be constructed virually.
+	/// Allows the material to be constructed virtually.
 	virtual Material * create() const;
 	/// Allows the material to be copied virtually.
 	virtual Material * clone() const;

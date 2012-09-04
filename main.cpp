@@ -12,13 +12,16 @@
 
 #include "material.h"
 #include "solidColor.h"
+#include "turbulent.h"
 
 #include "light.h"
-#include "structs.h"
+#include "properties.h"
 #include "ray.h"
 
 using std::vector;
 using std::min;
+using std::max;
+using namespace std;
 
 /// Hard coded test list of objects for the renderer.
 void makeObjList(vector<Drawable*>& objList)
@@ -33,12 +36,13 @@ void makeObjList(vector<Drawable*>& objList)
 	objList.push_back(ptr);
 
 	//OBJECT 2
-	Sphere s2(point<3>(200, 100, 300), 100);
+	Sphere s2(point<3>(300, 200, 300), 100);
 	p.color = Color(0.7, 0.0, 0.0);
-	objList.push_back(new SimpleObject(s2, SolidColor(p)));
+	Turbulent turbTex;
+	objList.push_back(new SimpleObject(s2, turbTex));
 
 	//OBJECT 3
-	Plane pl1(point<3>(100,100,300), vectre<3>(1,1,1));
+	Plane pl1(point<3>(100,100,300), vectre<3>(0,0,1));
 	p.color = Color(0, 0.7, 0);
 	objList.push_back(new SimpleObject(pl1, SolidColor(p)));
 }
@@ -47,12 +51,20 @@ void makeObjList(vector<Drawable*>& objList)
 void makeLights(vector<Light>& lightList)
 {
 	Light temp;
+	temp.color = Color(0.8, 0.8, 0.8);
 	temp.location = point<3>(0.0, 0.0, 0.0);
 	lightList.push_back(temp);
 }
 
 int main()
 {
+	Turbulent turbTex;
+	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>(100, 100, 100)).color.red << endl;
+	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>()).color.blue << endl;
+	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>(200, 0, 104)).color.blue << endl;
+	//return 0;
+
+
 	Raytracer renderer;
 	makeObjList(renderer.objList);
 	makeLights(renderer.lightList);
@@ -66,9 +78,9 @@ int main()
 			viewRay.orig = point<3>(i, j, 0);
 			viewRay.dir = vectre<3>(0,0,1);
 			Color c = renderer.getColor(viewRay, 0);
-			*pic(i,j) = RGBAPixel( min( (int) (c.red * 255), 255),
-					               min( (int) (c.green * 255), 255),
-								   min( (int) (c.blue * 255), 255) );
+			*pic(i,j) = RGBAPixel( max(min( (int) (c.red * 255), 255), 0),
+					               max(min( (int) (c.green * 255), 255), 0),
+								   max(min( (int) (c.blue * 255), 255), 0) );
 		}
 	pic.writeToFile("output.png");
 	// Clean up memory.

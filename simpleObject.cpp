@@ -58,10 +58,10 @@ double SimpleObject::intersection(const ray<3> viewRay) const
 	return shape->intersection(viewRay);
 }
 
-vectre<3> SimpleObject::normal_vectre(const point<3> surface, const point<3> ray_start) const
+vectre<3> SimpleObject::normal_vectre(const point<3> surface) const
 {
 	assert(shape != NULL);
-	return shape->normal_vectre(surface, ray_start);
+	return shape->normal_vectre(surface);
 }
 
 Properties SimpleObject::getProperties(const point<3> location) const

@@ -1,4 +1,5 @@
 #TODO Use the system provided makefile variables for the compiler
+#TODO Figure out how to clean this up.
 
 CC=g++
 FLAGS=-g

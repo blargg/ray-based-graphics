@@ -76,8 +76,8 @@ struct Properties
 		reflect *= x;
 		tranparency *= x;
 		i_refraction *= x;
-		//specular *= x;
-		//spec_power *= x;
+		specular *= x;
+		spec_power *= x;
 		return *this;
 	}
 

@@ -27,44 +27,45 @@ using namespace std;
 void makeObjList(vector<Drawable*>& objList)
 {
 	//OBJECT 1
-	Sphere s(point<3>(100.5, 100.1, 200), 30);
+	Sphere s(point<3>(100.5, 100.1, 300), 30);
 	Properties p;
-	p.color = Color(0.0, 0.0, 0.6);
-	p.reflect = 0.5;
+	p.color = Color(0.85, 0.85, 0.85);
+	p.reflect = 0.0;
+	p.specular = Color(0.0,0.0,0.0);
+	p.spec_power = 0.0;
 	SolidColor c(p);
 	SimpleObject* ptr = new SimpleObject(s,c);
 	objList.push_back(ptr);
 
 	//OBJECT 2
 	Sphere s2(point<3>(300, 200, 300), 100);
-	p.color = Color(0.7, 0.0, 0.0);
-	Turbulent turbTex;
+	Properties blend1;
+		blend1.color = Color(0.0, 0.0, 0.9);
+		blend1.reflect = 0.3;
+	
+	Properties blend2;
+		blend2.color = Color(0.0, 0.7, 0.0);
+		blend2.specular = Color(0.0, 0.0, 0.0);
+	Turbulent turbTex(blend1, blend2);
 	objList.push_back(new SimpleObject(s2, turbTex));
 
-	//OBJECT 3
-	Plane pl1(point<3>(100,100,300), vectre<3>(0,0,1));
+	//OBJECT 3 (REMOVED FROM SCENE)
+	Plane pl1(point<3>(100,100,500), vectre<3>(0,0,1));
 	p.color = Color(0, 0.7, 0);
-	objList.push_back(new SimpleObject(pl1, SolidColor(p)));
+	//objList.push_back(new SimpleObject(pl1, SolidColor(p)));
 }
 
 /// List of lights for the renderer.
 void makeLights(vector<Light>& lightList)
 {
 	Light temp;
-	temp.color = Color(0.8, 0.8, 0.8);
-	temp.location = point<3>(0.0, 0.0, 0.0);
+	temp.color = Color(0.9, 0.9, 0.9);
+	temp.location = point<3>(75, 75, 75);
 	lightList.push_back(temp);
 }
 
 int main()
 {
-	Turbulent turbTex;
-	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>(100, 100, 100)).color.red << endl;
-	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>()).color.blue << endl;
-	cout << "at point (0,0,0) color is " << turbTex.getProperties(point<3>(200, 0, 104)).color.blue << endl;
-	//return 0;
-
-
 	Raytracer renderer;
 	makeObjList(renderer.objList);
 	makeLights(renderer.lightList);

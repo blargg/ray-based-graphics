@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "easypng.h"
+#include "animation.cpp"
 
 #include "raytracer.h"
 #include "drawable.h"

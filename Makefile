@@ -6,7 +6,6 @@ FLAGS=-g
 WARNINGS= -Wall -Werror
 LIBS= -lpng
 COMPILE=$(CC) $(FLAGS) $(WARNINGS) -c
-#COMPILE=$(CC) $(FLAGS) $(WARNINGS) $(LIBS) -c #TODO don't know why LIBS was included. Removing
 
 LK=g++
 
@@ -64,6 +63,9 @@ material.h : properties.h $(MATH_DEPS)
 
 easypng.o : easypng.h easypng.cpp
 	$(COMPILE) easypng.cpp
+
+animation.o : animation.cpp animation.h
+	$(COMPILE) $<
 
 ########################## Color and Properties ############################################
 properties.o : properties.cpp properties.h color.h

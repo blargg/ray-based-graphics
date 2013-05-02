@@ -33,7 +33,6 @@ class Shape
 	/// Default constructor. Does nothing.
 	Shape();
 
-	/// Makes a shape at a certain point.
 	Shape(const point<3> loc);
 
 	/// Makes a shape at a certain point and rotation.

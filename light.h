@@ -1,6 +1,9 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include "color.h"
+#include "point.h"
+
 /**
  * @brief Simple point light for the ray tracer.
  *

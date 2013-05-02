@@ -4,10 +4,10 @@
 #include <assert.h>
 #include <limits>
 
-#include "shape.h"
-#include "ray.h"
-#include "vectre.h"
-#include "point.h"
+#include "../shape.h"
+#include "../ray.h"
+#include "../vectre.h"
+#include "../point.h"
 
 class Sphere: public Shape
 {

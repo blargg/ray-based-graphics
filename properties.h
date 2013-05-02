@@ -52,6 +52,11 @@ struct Properties
 	 */
 	double spec_power;
 
+    /**
+     * The color of the light emitted from the object
+     */
+    Color emittance;
+
 
 	/**
 	 * @brief Default constructor
@@ -62,10 +67,10 @@ struct Properties
 	 * - specular is set to white
 	 * - spec_power is set to 1.0
 	 */
-	Properties():color(Color()),reflect(0.0),i_refraction(1.33),specular(0.7,0.7,0.7),spec_power(25.55){ /* Do nothing */ }
+	Properties():color(Color()),reflect(0.0),i_refraction(1.33),specular(0.7,0.7,0.7),spec_power(25.55),emittance(Color()){ /* Do nothing */ }
 
-	Properties(Color cColor, double reflection = 0.0, double index_of_refraction = 1.33, Color specularVal = Color(0.7,0.7,0.7), double power = 25.55):
-		color(cColor),reflect(reflection),i_refraction(index_of_refraction),specular(specularVal),spec_power(power)
+	Properties(Color cColor, double reflection = 0.0, double index_of_refraction = 1.33, Color specularVal = Color(0.7,0.7,0.7), double power = 25.55, Color emit = Color(1.0, 1.0, 1.0)):
+		color(cColor),reflect(reflection),i_refraction(index_of_refraction),specular(specularVal),spec_power(power),emittance(emit)
 	{ /* Do nothing */ }
 
 	/// Scales the properties by x.
@@ -78,6 +83,7 @@ struct Properties
 		i_refraction *= x;
 		specular *= x;
 		spec_power *= x;
+        emittance *= x;
 		return *this;
 	}
 
@@ -88,8 +94,9 @@ struct Properties
 		reflect += other.reflect;
 		tranparency += other.tranparency;
 		i_refraction += other.i_refraction;
-		//specular += other.specular;
-		//spec_power += other.spec_power;
+        specular += other.specular;
+        spec_power += other.spec_power;
+        emittance += other.emittance;
 		return *this;
 	}
 };

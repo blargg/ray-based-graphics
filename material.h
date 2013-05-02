@@ -40,21 +40,7 @@ class Material
 	 * @brief Returns the properties of the material at the given point.
 	 * @param loc The location for the given properties.
 	 */
-	virtual Properties getProperties(point<3> loc) = 0;
-
-	/*
-	 * @brief returns the color of the material at a given point in 3-space
-	 * Takes a point in 3-space and returns the color of this material at that
-	 * point.
-	 *
-	 * @param loc The point in space to get the color of.
-	 * @returns The color of the material at that point in space
-	 */
-	/*
-	virtual color getColor(point<3> loc) const = 0;
-	virtual double getReflection(point<3> loc) const = 0;
-	virtual double getIndexOfRefraction(point<3> loc) const = 0;
-	*/
+	virtual Properties getProperties(point<3> loc) const = 0;
 
 };
 

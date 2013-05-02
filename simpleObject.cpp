@@ -2,7 +2,6 @@
 
 SimpleObject::SimpleObject()
 {
-	//TODO initialize these to some values
 	shape = new Sphere();
 	texture = new SolidColor();
 }

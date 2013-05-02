@@ -6,6 +6,12 @@
 #include "point.h"
 #include "properties.h"
 
+struct intersection {
+    double time;
+    vectre<3> normal;
+    Properties p;
+};
+
 
 /**
  * @brief An interface for anything that can be drawn in the Ray tracing algorithm

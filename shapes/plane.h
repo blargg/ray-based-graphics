@@ -1,7 +1,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include "shape.h"
+#include "../shape.h"
 #include "assert.h"
 
 #define EPSILON 0.00000000001

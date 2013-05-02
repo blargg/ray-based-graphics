@@ -1,9 +1,8 @@
 #ifndef SOLIDCOLOR_H
 #define SOLIDCOLOR_H
 
-#include "material.h"
-#include "properties.h"
-//#include "color.h"
+#include "../material.h"
+#include "../properties.h"
 
 /**
  * @brief A type of Material with the same properties (color, reflectiveness, etc.) at all points.
@@ -14,24 +13,6 @@ class SolidColor: public Material
 {
 	private:
 	Properties myProperties;
-	/*
-	 * @brief The color of the object
-	 * The rgba color of the object, includes the opacity of the object
-	 */
-	//color myColor;
-
-	/*
-	 * @brief How reflective the material is.
-	 * How reflective the material is. 0.0 is not reflective, 1.0 is a perfect mirror
-	 */
-	//double reflect;			 // how reflective the material is
-	/*
-	 * @brief The index of refraction of the object.
-	 * Controls how light bends when in passes through the material.
-	 * A value of 1.0 is air.
-	 * A value of 1.33 is like water.
-	 */
-	//double i_refraction;	 // the index of refraction for the material
 
 	public:
 	/**
@@ -81,7 +62,7 @@ class SolidColor: public Material
 	virtual double getIndexOfRefraction(point<3> loc) const;
 	*/
 
-	virtual Properties getProperties(point<3> loc);
+	virtual Properties getProperties(point<3> loc) const;
 };
 
 #endif

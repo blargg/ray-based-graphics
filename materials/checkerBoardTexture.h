@@ -1,7 +1,8 @@
 #ifndef CHECKE_BOARD_TEXTURE_H
 #define CHECKE_BOARD_TEXTURE_H
 
-#include "material.h"
+#include "../material.h"
+#include "../properties.h"
 
 /**
  * @brief A material of to different properties. Alternates between the two properties in a grid-like pattern
@@ -32,6 +33,8 @@ class CheckerBoardTexture: public Material
 			   			Properties secondProp = Properties(Color(0.0,0.0,1.0)), double scale = 10.0):
 						prop1(firstProp),prop2(secondProp),size(scale)
 	{ /* Do nothing */ }
+
+    virtual ~CheckerBoardTexture(){ /* Do noting */ }
 
 	/// Allows the material to be constructed virtually.
 	virtual Material * create() const;

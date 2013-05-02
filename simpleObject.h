@@ -11,10 +11,10 @@
 #include "shape.h"
 #include "material.h"
 
-// not really required, but allows the default constructor to 
+// not really required, but allows the default constructor to
 // not brake the system.
-#include "sphere.h"
-#include "solidColor.h"
+#include "shapes/sphere.h"
+#include "materials/solidColor.h"
 
 #include "assert.h"
 
@@ -45,8 +45,6 @@ class SimpleObject: public Drawable
 
 	void setShape(const Shape& s);
 	void setMaterial(const Material& mat);
-
-
 };
 
 #endif

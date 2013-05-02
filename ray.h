@@ -14,7 +14,6 @@ template <int DIM>
 class ray
 {
 	public:
-	// these variables are left public so that they are directly accessed when needed
 	/**
 	 * @brief Where the origin of the ray is.
 	 */

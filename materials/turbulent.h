@@ -1,8 +1,8 @@
 #ifndef TURBULENT_H
 #define TURBULENT_H
 
-#include "perlin.h"
-#include "material.h"
+#include "../perlin.h"
+#include "../material.h"
 
 class Turbulent: public Material
 {
@@ -24,7 +24,7 @@ class Turbulent: public Material
 	virtual Material * clone() const;
 
 	/// Returns the material properties for a given point in space
-	virtual Properties getProperties(point<3> loc);
+	virtual Properties getProperties(point<3> loc) const;
 };
 
 #endif //TURBULENT_H

@@ -20,8 +20,6 @@ Shape* Sphere::clone() const
 
 bool Sphere::intersects(const ray<3>& viewRay) const
 {
-	// TODO optimise this, cause it gets called a lot
-	
 	//only takes rays with unit vectors
 	assert(viewRay.dir.length_sq() <= 1.0 + EPSILON);
 	assert(viewRay.dir.length_sq() >= 1.0 - EPSILON);
@@ -97,16 +95,9 @@ double Sphere::intersection(const ray<3>& viewRay) const
 
 vectre<3> Sphere::normal_vectre(const point<3>& surface) const
 {
-	/*
-	double vals [3];
-	vals[0] = surface[0] - location[0];
-	vals[1] = surface[1] - location[1];
-	vals[2] = surface[2] - location[2];
-	return vectre<3>(vals);
-	*/
 	return vectre<3>( surface[0] - location[0],
 			   surface[1] - location[1],
 			   surface[2] - location[2]);
 }
 
-#undef EPSILON // <----- does this help or hurt?
+#undef EPSILON

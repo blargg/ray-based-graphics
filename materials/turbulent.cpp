@@ -7,7 +7,7 @@ Material* Turbulent::create() const
 Material* Turbulent::clone() const
 { return new Turbulent(*this); }
 
-Properties Turbulent::getProperties(point<3> loc) 
+Properties Turbulent::getProperties(point<3> loc) const
 {
 	double noiseLevel = 0.0;
 	for(int i = 1; i < 10; ++i)

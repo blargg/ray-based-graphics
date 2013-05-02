@@ -1,0 +1,23 @@
+#ifndef RT_FILM_H
+#define RT_FILM_H
+
+#include <string>
+#include "easypng.h"
+#include "color.h"
+
+class Film {
+    public:
+        Film(int width, int height);
+        /// Adds color contribution to pixel (x,y)
+        void addColor(Color c, int x, int y);
+        PNG writeImage();
+    private:
+        Color **color_grid;
+        int **count_grid;
+        int height;
+        int width;
+
+        RGBAPixel makePixel(Color c);
+};
+
+#endif // RT_FILM_H

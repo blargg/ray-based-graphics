@@ -21,7 +21,6 @@ class BumpySphere : public Drawable {
     BumpySphere(Sphere s, Color c, string const filename):sphere(s),mat(c),bumpMap(filename)
     { /* Do nothing */ }
 
-    virtual bool intersects(const ray<3> viewRay) const;
     virtual double intersection(const ray<3> viewRay) const;
     virtual vectre<3> normal_vectre(const point<3> surface) const;
     virtual Properties getProperties(const point<3> location) const;

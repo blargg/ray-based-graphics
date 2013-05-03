@@ -1,9 +1,5 @@
 #include "bumpy_sphere.h"
 
-bool BumpySphere::intersects(const ray<3> viewRay) const {
-    return sphere.intersects(viewRay);
-}
-
 double BumpySphere::intersection(const ray<3> viewRay) const {
     return sphere.intersection(viewRay);
 }

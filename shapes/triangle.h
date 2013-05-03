@@ -22,7 +22,6 @@ class Triangle: public Shape
 
     virtual ~Triangle(){/* do nothing */}
 
-    virtual bool intersects(const ray<3>& viewRay) const;
     virtual double intersection(const ray<3>& viewRay) const;
     virtual vectre<3> normal_vectre(const point<3>& surface) const;
 };

@@ -18,6 +18,8 @@
 #include "bounding_shape.h"
 #include "ray.h"
 
+#define MIN_INTERSECTION_DIST (1.0e-10)
+
 using std::vector;
 
 class Raytracer

@@ -1,8 +1,6 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-/// \todo This file structure should really be cleaned up. Make this into color.h color.cpp and structs.h
-
 /**
  * @brief Simple RGBA color struct.
  *

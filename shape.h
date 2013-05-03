@@ -76,8 +76,6 @@ class Shape
 	/// Simply returns the location of the object
 	point<3> getLocation() const;
 
-	/// Returns true if the ray intersects the shape.
-	virtual bool intersects(const ray<3>& viewRay) const = 0;
 	/// Gives the closest intersection in front of the ray.
 	virtual double intersection(const ray<3>& viewRay) const = 0;
 	/// Gives the normal vectre for the given point.

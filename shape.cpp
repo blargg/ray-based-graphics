@@ -1,6 +1,5 @@
 #include "shape.h"
 
-//TODO: I don't really think this is necissary... keeping it though
 Shape::Shape()
 { /* Do Nothing */ }
 

@@ -32,7 +32,6 @@ camera.o : camera.cpp camera.h
 film.o : film.cpp film.h easypng.h color.h
 	$(COMPILE) $<
 
-#TODO really, i think main.o only really depends on the .h files rather than the .o files.
 main.o : main.cpp
 	$(COMPILE) $<
 

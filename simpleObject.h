@@ -20,31 +20,29 @@
 
 class SimpleObject: public Drawable
 {
-	private:
-	/// The shape of the SimpleObject
-	Shape* shape;
-	/// The texture of the Object
-	Material* texture;
+    private:
+    /// The shape of the SimpleObject
+    Shape* shape;
+    /// The texture of the Object
+    Material* texture;
 
-	void copy(const SimpleObject& other);
-	//void clear(); //TODO this goes against the model for this object. Should never clear, only delete pointers when putting in a new object.
+    void copy(const SimpleObject& other);
 
-	public:
-	SimpleObject();
-	SimpleObject(const Shape& s, const Material& mat);
-	SimpleObject(const SimpleObject& other);
+    public:
+    SimpleObject();
+    SimpleObject(const Shape& s, const Material& mat);
+    SimpleObject(const SimpleObject& other);
 
-	SimpleObject& operator=(SimpleObject const & rhs);
+    SimpleObject& operator=(SimpleObject const & rhs);
 
-	virtual ~SimpleObject();
+    virtual ~SimpleObject();
 
-	virtual bool intersects(const ray<3> viewRay) const;
-	virtual double intersection(const ray<3> viewRay) const;
-	virtual vectre<3> normal_vectre(const point<3> surface) const;
-	virtual Properties getProperties(const point<3> location) const;
+    virtual double intersection(const ray<3> viewRay) const;
+    virtual vectre<3> normal_vectre(const point<3> surface) const;
+    virtual Properties getProperties(const point<3> location) const;
 
-	void setShape(const Shape& s);
-	void setMaterial(const Material& mat);
+    void setShape(const Shape& s);
+    void setMaterial(const Material& mat);
 };
 
 #endif

@@ -1,35 +1,8 @@
 #include "triangle.h"
 #include <assert.h>
+#include <limits>
 
 #define EPSILON 0.0000001
-
-bool Triangle::intersects(const ray<3> &viewRay)const{
-    vectre<3> edge1(p1, p2);
-    vectre<3> edge2(p1, p3);
-
-    vectre<3> h = viewRay.dir.cross_prod(edge2);
-    double a = edge1.dot_prod(h);
-
-    if(a > -EPSILON && a < EPSILON)
-        return false;
-
-    double f = 1/a;
-    vectre<3>s(p1, viewRay.orig);
-    double u = f * s.dot_prod(h);
-
-    if(u < 0.0 || u > 1.0)
-        return false;
-
-    vectre<3> q = s.cross_prod(edge1);
-    double v = f * q.dot_prod(viewRay.dir);
-
-    if(v < 0.0 || u + v > 1.0)
-        return false;
-
-    double t = f * edge2.dot_prod(q);
-
-    return t > EPSILON;
-}
 
 double Triangle::intersection(const ray<3> &viewRay)const{
     vectre<3> edge1(p1, p2);
@@ -38,15 +11,22 @@ double Triangle::intersection(const ray<3> &viewRay)const{
     vectre<3> h = edge2.cross_prod(viewRay.dir);
     double a = edge1.dot_prod(h);
 
+    if(a > -EPSILON && a < EPSILON)
+        return std::numeric_limits<double>::min();
+
 
     double f = 1/a;
     vectre<3>s(p1, viewRay.orig);
     double u = f * s.dot_prod(h);
 
+    if(u < 0.0 || u > 1.0)
+        return std::numeric_limits<double>::min();
 
     vectre<3> q = s.cross_prod(edge1);
     double v = f * q.dot_prod(viewRay.dir);
 
+    if(v < 0.0 || u + v > 1.0)
+        return std::numeric_limits<double>::min();
 
     double t = f * edge2.dot_prod(q);
 

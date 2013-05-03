@@ -124,17 +124,16 @@ void Raytracer::getClosestObject(const ray<3>& viewRay, Drawable **closestObj, d
 {
     vector<Drawable *> allObj = generateObjectList(viewRay);
 
+    double current_intersection = 0.0;
     for(unsigned int i = 0; i < allObj.size(); ++i)
     {
-        if( allObj[i]->intersects(viewRay) )
+        current_intersection = allObj[i]->intersection(viewRay);
+        if(current_intersection > MIN_INTERSECTION_DIST &&
+          (bestTime < 0.0 || current_intersection < bestTime))
         {
-            double currentTime = allObj[i]->intersection(viewRay);
-            if(bestTime < 0.0 || currentTime < bestTime)
-            {
-                // Store the time of intersection and the object intersected.
-                bestTime = currentTime;
-                *closestObj = allObj[i];
-            }
+            // Store the time of intersection and the object intersected.
+            bestTime = current_intersection;
+            *closestObj = allObj[i];
         }
     }
 }
@@ -165,7 +164,7 @@ vector<Light> Raytracer::generateLights() {
 
 bool Raytracer::intersectsObject( const ray<3> &viewRay ){
     for(unsigned int j = 0; j < objList.size(); j++){
-        if(objList[j]->intersects(viewRay))
+        if(objList[j]->intersection(viewRay) > MIN_INTERSECTION_DIST)
         {
             return true;
         }
@@ -174,7 +173,6 @@ bool Raytracer::intersectsObject( const ray<3> &viewRay ){
 }
 
 double Raytracer::attenuation(const double dist) {
-    //return 1.0;
     return 1.0 / (0.01 + 0.03 * dist);
 }
 

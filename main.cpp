@@ -41,7 +41,7 @@ int main()
     p.color = Color(0,0,0);
     p.emittance = Color(100,100,100);
     Sphere lightShape(point<3>(-20,20,0), 5);
-    renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
+    //renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
 
     Sphere s(point<3>(0,0,0), 10);
     p.color = Color(1,0.5,0.5);
@@ -50,18 +50,15 @@ int main()
     //renderer.objList.push_back(new SimpleObject(s, SphereTexture("texture2.png")));
 
     ray<3> orientation;
-    orientation.dir = vectre<3>(0,0,-1);
-    orientation.orig = point<3>(0,0,500);
-
     orientation.dir = vectre<3>(1,0,0).unit_vectre();
     orientation.orig = point<3>(-25,0,0);
-    vectre<3> up(0,0,1);
-    //PNG *pic = renderImage(renderer, 500, 1.0, orientation, up);
-    //pic->writeToFile("output.png");
-    //delete pic;
+    vectre<3> up(0,1,0);
+    PNG *pic = renderImage(renderer, 500, 1.0, orientation, up);
+    pic->writeToFile("output.png");
+    delete pic;
 
-    PNG pic = pathtraceImage(renderer, 500, 1.0, orientation, up, 200);
-    pic.writeToFile("output.png");
-    renderer.clear_objects();
+    //PNG pic = pathtraceImage(renderer, 500, 1.0, orientation, up, 200);
+    //pic.writeToFile("output.png");
+    //renderer.clear_objects();
     return 0;
 }

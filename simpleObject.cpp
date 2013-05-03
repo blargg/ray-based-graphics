@@ -45,12 +45,6 @@ SimpleObject::~SimpleObject()
 	delete texture;
 }
 
-bool SimpleObject::intersects(const ray<3> viewRay) const
-{
-	assert(shape != NULL);
-	return shape->intersects(viewRay);
-}
-
 double SimpleObject::intersection(const ray<3> viewRay) const
 {
 	assert(shape != NULL);

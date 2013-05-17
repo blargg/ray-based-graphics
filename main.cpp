@@ -4,6 +4,7 @@
 #include "easypng.h"
 
 #include "raytracer.h"
+#include "film.h"
 #include "loader.h"
 #include "camera.h"
 #include "drawable.h"
@@ -53,12 +54,14 @@ int main()
     orientation.dir = vectre<3>(1,0,0).unit_vectre();
     orientation.orig = point<3>(-25,0,0);
     vectre<3> up(0,1,0);
-    PNG *pic = renderImage(renderer, 500, 1.0, orientation, up);
-    pic->writeToFile("output.png");
-    delete pic;
+    //PNG *pic = renderImage(renderer, 500, 1.0, orientation, up);
+    //pic->writeToFile("output.png");
+    //delete pic;
 
-    //PNG pic = pathtraceImage(renderer, 500, 1.0, orientation, up, 200);
-    //pic.writeToFile("output.png");
-    //renderer.clear_objects();
+    Film myFilm(500,500);
+    pathtraceImage(&myFilm, renderer, 500, 1.0, orientation, up, 50);
+    PNG pic = myFilm.writeImage();
+    pic.writeToFile("output.png");
+    renderer.clear_objects();
     return 0;
 }

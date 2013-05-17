@@ -1,7 +1,6 @@
 #include "camera.h"
 #include <math.h>
 #include <omp.h>
-#include "film.h"
 
 #define BLOCK_SIZE 32
 
@@ -60,7 +59,7 @@ PNG* renderImage(Raytracer render, int imgSize, double worldSize,
     return image;
 }
 
-PNG pathtraceImage(Raytracer render, int imgSize, double worldSize,
+void pathtraceImage(Film *imageFilm, Raytracer render, int imgSize, double worldSize,
                  ray<3> position, vectre<3> up, int numSamples) {
 
     up = up.unit_vectre();
@@ -80,7 +79,6 @@ PNG pathtraceImage(Raytracer render, int imgSize, double worldSize,
     double dx = (worldSize / imgSize);
     double dy = (worldSize / imgSize);
 
-    Film imgageFilm(imgSize, imgSize);
     for(int count = 0; count < numSamples; count++) {
         for(int x = 0; x <= imgSize / BLOCK_SIZE; x++) {
             for(int y = 0; y <= imgSize / BLOCK_SIZE; y++) {
@@ -96,14 +94,11 @@ PNG pathtraceImage(Raytracer render, int imgSize, double worldSize,
                         viewRay.dir = currentDir;
                         viewRay.orig = screen_point;
                         Color c = render.pathtraceColor(viewRay, 3);
-                        imgageFilm.addColor(c, BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff);
+                        imageFilm->addColor(c, BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff);
                     }
                 }
             }
         }
     }
-
-    return imgageFilm.writeImage();
-
 
 }

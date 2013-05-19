@@ -26,27 +26,27 @@ TEST_F(TriangleTest, intersects){
     ray<3> testRay;
     testRay.orig = point<3>(0.5, 0.25, 1.0);
     testRay.dir = vectre<3>(0, 0, -1);
-    EXPECT_TRUE(t1.intersects(testRay)) << "Intersects simple ray";
+    EXPECT_GT(t1.intersection(testRay), 0.0) << "Intersects simple ray";
 
     testRay.orig = point<3>(0.9, 0.5, 10.0);
     testRay.dir = vectre<3>(0, 0, -1);
-    EXPECT_TRUE(t1.intersects(testRay)) << "Should definatly intersect tringle";
+    EXPECT_GT(t1.intersection(testRay), 0.0) << "Should definatly intersect tringle";
 
     testRay.orig = point<3>(0.9, 0.5, 10.0);
     testRay.dir = vectre<3>(0, 0, 1);
-    EXPECT_FALSE(t1.intersects(testRay)) << "Ray faces opposite direction";
+    EXPECT_LT(t1.intersection(testRay), 0.0) << "Ray faces opposite direction";
 
     testRay.orig = point<3>(0.0, 1.5, 10.0);
     testRay.dir = vectre<3>(0, 0, -1);
-    EXPECT_FALSE(t1.intersects(testRay)) << "Intersects the plane, but not triangle";
+    EXPECT_LT(t1.intersection(testRay), 0.0) << "Intersects the plane, but not triangle";
 
     testRay.orig = point<3>(0.0, 1.5, 10.0);
     testRay.dir = vectre<3>(1, 0, 0);
-    EXPECT_FALSE(t1.intersects(testRay)) << "Parallel to the triangle";
+    EXPECT_LT(t1.intersection(testRay), 0.0) << "Parallel to the triangle";
 
     testRay.orig = point<3>(0,0,1);
     testRay.dir = vectre<3>(0.11, 0.1, -1).unit_vectre();
-    EXPECT_TRUE(t1.intersects(testRay)) << "Angled intersection";
+    EXPECT_GT(t1.intersection(testRay), 0.0) << "Angled intersection";
 }
 
 TEST_F(TriangleTest, intersection_point){

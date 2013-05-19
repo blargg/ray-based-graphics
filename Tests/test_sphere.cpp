@@ -24,27 +24,27 @@ TEST_F(SphereTest, intersects){
     ray<3> testRay;
     testRay.orig = point<3>(-10, 0.0, 0.0);
     testRay.dir = vectre<3>(1, 0, 0);
-    EXPECT_TRUE(unit_sphere.intersects(testRay)) << "Intersects simple ray";
+    EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects simple ray";
 
     testRay.orig = point<3>(-10, 0.5, 0.0);
     testRay.dir = vectre<3>(1, 0, 0);
-    EXPECT_TRUE(unit_sphere.intersects(testRay)) << "Intersects at a skew angle";
+    EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects at a skew angle";
 
     testRay.orig = point<3>(-10, 0.99, 0.0);
     testRay.dir = vectre<3>(1, 0, 0);
-    EXPECT_TRUE(unit_sphere.intersects(testRay)) << "Intersects at edge";
+    EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects at edge";
 
     testRay.orig = point<3>(-10, 0.0, 0.0);
     testRay.dir = vectre<3>(0, 1, 0);
-    EXPECT_FALSE(unit_sphere.intersects(testRay)) << "Line doesn't intersect the ray";
+    EXPECT_LT(unit_sphere.intersection(testRay), 0.0) << "Line doesn't intersect the ray";
 
     testRay.orig = point<3>(-10, 0.0, 0.0);
     testRay.dir = vectre<3>(-1, 0, 0);
-    EXPECT_FALSE(unit_sphere.intersects(testRay)) << "Sphere lies behind the ray origin";
+    EXPECT_LT(unit_sphere.intersection(testRay), 0.0) << "Sphere lies behind the ray origin";
 
     testRay.orig = point<3>(0.0, 0.0, 0.0);
     testRay.dir = vectre<3>(-1, 0, 0);
-    EXPECT_TRUE(unit_sphere.intersects(testRay)) << "Ray originates inside the sphere";
+    EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Ray originates inside the sphere";
 }
 
 TEST_F(SphereTest, intersection_point){

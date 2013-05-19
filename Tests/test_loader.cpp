@@ -16,7 +16,7 @@ TEST(loader, loadsShapes){
     ray<3> viewRay;
     viewRay.dir = vectre<3>(1,0,0);
     viewRay.orig = point<3>(-2,0,0);
-    EXPECT_TRUE(fst->intersects(viewRay));
+    EXPECT_GT(fst->intersection(viewRay), 0.0);
 }
 
 int main(int argc, char **argv){

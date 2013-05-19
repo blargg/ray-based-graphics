@@ -22,15 +22,15 @@ TEST_F(PlaneTest, intersects){
     ray<3> testRay;
     testRay.orig = point<3>(0, 10, 0);
     testRay.dir = vectre<3>(0, -1,0);
-    EXPECT_TRUE(plane1.intersects(testRay)) << "Direct intersection";
+    EXPECT_GT(plane1.intersection(testRay), 0.0) << "Direct intersection";
 
     testRay.orig = point<3>(10, 10, -340.5);
     testRay.dir = vectre<3>(0, 1, 0);
-    EXPECT_FALSE(plane1.intersects(testRay)) << "Ray faces oposite direction";
+    EXPECT_LT(plane1.intersection(testRay), 0.0) << "Ray faces oposite direction";
 
     testRay.orig = point<3>(10, 10, -340.5);
     testRay.dir = vectre<3>(1, 0, 0);
-    EXPECT_FALSE(plane1.intersects(testRay)) << "Ray is parallel";
+    EXPECT_LT(plane1.intersection(testRay), 0.0) << "Ray is parallel";
 }
 
 TEST_F(PlaneTest, intersection_point){

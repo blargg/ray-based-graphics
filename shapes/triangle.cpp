@@ -8,11 +8,11 @@ double Triangle::intersection(const ray<3> &viewRay)const{
     vectre<3> edge1(p1, p2);
     vectre<3> edge2(p1, p3);
 
-    vectre<3> h = edge2.cross_prod(viewRay.dir);
+    vectre<3> h = viewRay.dir.cross_prod(edge2);
     double a = edge1.dot_prod(h);
 
     if(a > -EPSILON && a < EPSILON)
-        return std::numeric_limits<double>::min();
+        return -1 * std::numeric_limits<double>::max();
 
 
     double f = 1/a;
@@ -20,17 +20,17 @@ double Triangle::intersection(const ray<3> &viewRay)const{
     double u = f * s.dot_prod(h);
 
     if(u < 0.0 || u > 1.0)
-        return std::numeric_limits<double>::min();
+        return -1 * std::numeric_limits<double>::max();
 
     vectre<3> q = s.cross_prod(edge1);
     double v = f * q.dot_prod(viewRay.dir);
 
     if(v < 0.0 || u + v > 1.0)
-        return std::numeric_limits<double>::min();
+        return -1 * std::numeric_limits<double>::max();
 
     double t = f * edge2.dot_prod(q);
 
-    return -1.0 * t;
+    return t;
 }
 
 vectre<3> Triangle::normal_vectre(const point<3> &surface)const{

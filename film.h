@@ -2,8 +2,9 @@
 #define RT_FILM_H
 
 #include <string>
-#include "easypng.h"
+#include "common.h"
 #include "color.h"
+#include "easypng.h"
 
 class Film {
     public:

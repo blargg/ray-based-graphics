@@ -3,27 +3,27 @@
 
 #include "../shape.h"
 #include "../ray.h"
-#include "../vectre.h"
-#include "../point.h"
+#include <Eigen/Dense>
+#include "../common.h"
 
 class Triangle: public Shape
 {
     protected:
-    point<3> p1;
-    point<3> p2;
-    point<3> p3;
+    Vector4d p1;
+    Vector4d p2;
+    Vector4d p3;
 
     public:
     Triangle();
-    Triangle(point<3> first, point<3> second, point<3> third);
+    Triangle(Vector4d first, Vector4d second, Vector4d third);
 
     virtual Shape* create() const;
     virtual Shape* clone() const;
 
     virtual ~Triangle(){/* do nothing */}
 
-    virtual double intersection(const ray<3>& viewRay) const;
-    virtual vectre<3> normal_vectre(const point<3>& surface) const;
+    virtual double intersection(const ray& viewRay) const;
+    virtual Vector4d normal_vectre(const Vector4d& surface) const;
 };
 
 #endif//TRIANGLE_H

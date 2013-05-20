@@ -31,7 +31,7 @@ Material * SphereTexture::clone() const {
     return new SphereTexture(*this);
 }
 
-Properties SphereTexture::getProperties(point<3> loc) const {
+Properties SphereTexture::getProperties(Vector4d loc) const {
     double r = sqrt( loc[0] * loc[0] + loc[1] * loc[1] + loc[2] * loc[2] );
     double s = acos(loc[2] / r);
     double t = atan(loc[1] / loc[0]);

@@ -45,19 +45,19 @@ SimpleObject::~SimpleObject()
 	delete texture;
 }
 
-double SimpleObject::intersection(const ray<3> viewRay) const
+double SimpleObject::intersection(const ray viewRay) const
 {
 	assert(shape != NULL);
 	return shape->intersection(viewRay);
 }
 
-vectre<3> SimpleObject::normal_vectre(const point<3> surface) const
+Vector4d SimpleObject::normal_vectre(const Vector4d surface) const
 {
 	assert(shape != NULL);
 	return shape->normal_vectre(surface);
 }
 
-Properties SimpleObject::getProperties(const point<3> location) const
+Properties SimpleObject::getProperties(const Vector4d location) const
 {
 	assert(texture != NULL);
 	return texture->getProperties(location);

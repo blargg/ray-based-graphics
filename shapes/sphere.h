@@ -4,26 +4,26 @@
 #include <assert.h>
 #include <limits>
 
+#include "../common.h"
 #include "../shape.h"
 #include "../ray.h"
-#include "../vectre.h"
-#include "../point.h"
 
 class Sphere: public Shape
 {
     protected:
+    Vector4d location;
     double radius;
 
     public:
     Sphere();
-    Sphere(const point<3>& loc, double rad = 1.0);
+    Sphere(const Vector4d& loc, double rad = 1.0);
 
     virtual Shape* create() const;
     virtual Shape* clone() const;
 
     virtual ~Sphere(){ /* do nothing */ }
 
-    virtual double intersection(const ray<3>& viewRay) const;
-    virtual vectre<3> normal_vectre(const point<3>& surface) const;
+    virtual double intersection(const ray& viewRay) const;
+    virtual Vector4d normal_vectre(const Vector4d& surface) const;
 };
 #endif

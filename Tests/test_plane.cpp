@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../shapes/plane.h"
+#include <Eigen/Dense>
 
 namespace{
 class PlaneTest : public ::testing::Test{
@@ -9,8 +10,8 @@ class PlaneTest : public ::testing::Test{
 
         virtual void SetUp(){
             plane1 = Plane(
-                    point<3>(0, 0, 0),
-                    vectre<3>(0, 1.0, 0));
+                    Vector4d(0, 0, 0, 1),
+                    Vector4d(0, 1.0, 0, 0));
         }
 
         virtual void TearDown(){
@@ -19,29 +20,29 @@ class PlaneTest : public ::testing::Test{
 };//PlaneTest
 
 TEST_F(PlaneTest, intersects){
-    ray<3> testRay;
-    testRay.orig = point<3>(0, 10, 0);
-    testRay.dir = vectre<3>(0, -1,0);
+    ray testRay;
+    testRay.orig = Vector4d(0, 10, 0, 1);
+    testRay.dir = Vector4d(0, -1,0, 0);
     EXPECT_GT(plane1.intersection(testRay), 0.0) << "Direct intersection";
 
-    testRay.orig = point<3>(10, 10, -340.5);
-    testRay.dir = vectre<3>(0, 1, 0);
+    testRay.orig = Vector4d(10, 10, -340.5, 1);
+    testRay.dir = Vector4d(0, 1, 0, 0);
     EXPECT_LT(plane1.intersection(testRay), 0.0) << "Ray faces oposite direction";
 
-    testRay.orig = point<3>(10, 10, -340.5);
-    testRay.dir = vectre<3>(1, 0, 0);
+    testRay.orig = Vector4d(10, 10, -340.5, 1);
+    testRay.dir = Vector4d(1, 0, 0, 0);
     EXPECT_LT(plane1.intersection(testRay), 0.0) << "Ray is parallel";
 }
 
 TEST_F(PlaneTest, intersection_point){
-    ray<3> testRay;
-    testRay.orig = point<3>(0, 10, 0);
-    testRay.dir = vectre<3>(0, -1,0);
+    ray testRay;
+    testRay.orig = Vector4d(0, 10, 0, 1);
+    testRay.dir = Vector4d(0, -1,0, 0);
     EXPECT_DOUBLE_EQ(plane1.intersection(testRay), 10.0) << "Direct intersection";
 }
 
 TEST_F(PlaneTest, normals){
-    vectre<3> normal = plane1.normal_vectre(point<3>(0.0, 0.0, 0.0));
+    Vector4d normal = plane1.normal_vectre(Vector4d(0.0, 0.0, 0.0, 1));
     EXPECT_DOUBLE_EQ(normal[0], 0);
     EXPECT_DOUBLE_EQ(normal[1], 1.0);
     EXPECT_DOUBLE_EQ(normal[2], 0);

@@ -1,5 +1,6 @@
 #include "loader.h"
 
+#include <Eigen/Dense>
 #include "simpleObject.h"
 #include "shapes/sphere.h"
 #include "shapes/plane.h"
@@ -11,6 +12,8 @@
 #include "properties.h"
 #include "light.h"
 #include "ray.h"
+
+using namespace Eigen;
 
 
 Raytracer loadScene(const char *filename) {
@@ -39,7 +42,7 @@ Raytracer loadScene(const char *filename) {
                    a[0] >> a[1] >> a[2] >>
                    b[0] >> b[1] >> b[2] >>
                    c[0] >> c[1] >> c[2];
-            Triangle tri(point<3>(a[0], a[1], a[2]), point<3>(b[0], b[1], b[2]), point<3>(c[0], c[1], c[2]));
+            Triangle tri(Vector4d(a[0], a[1], a[2], 1), Vector4d(b[0], b[1], b[2], 1), Vector4d(c[0], c[1], c[2], 1));
             SolidColor color(currentProperties);
             render.objList.push_back(new SimpleObject(tri, color));
 
@@ -49,7 +52,7 @@ Raytracer loadScene(const char *filename) {
             double p[3];
             iss >> start >>
                    p[0] >> p[1] >> p[2] >> r;
-            Sphere s(point<3>(p), r);
+            Sphere s(Vector4d(p[0], p[1], p[2], 1), r);
             render.objList.push_back(new SimpleObject(s, SolidColor(currentProperties)));
         } else if (line[0] == 'l') {
             char start;
@@ -57,7 +60,7 @@ Raytracer loadScene(const char *filename) {
             double i;
             iss >> start >> p[0] >> p[1] >> p[2] >> i;
             Light l;
-            l.location = point<3>(p);
+            l.location = Vector4d(p[0], p[1], p[2], 1);
             l.color = Color(i,i,i);
             render.lightList.push_back(l);
         }

@@ -1,4 +1,5 @@
 #include "raytracer.h"
+#include "common.h"
 
 void Raytracer::clear_scene()
 {
@@ -19,13 +20,13 @@ void Raytracer::clear_lights()
 }
 
 // ********************* Main Rendering function ****************************
-Color Raytracer::getColor(const ray<3>& viewRay, int depth)
+Color Raytracer::getColor(const ray& viewRay, int depth)
 {
     //int closestObj = -1;
     double bestTime = -1.0;
     Drawable *obj = NULL;
     getClosestObject(viewRay, &obj, bestTime);
-    point<3> intersection = viewRay(bestTime);
+    Vector4d intersection = viewRay(bestTime);
 
     // no object was intersected and the ray has left the scene. return this color.
     if(obj == NULL)
@@ -33,28 +34,30 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
-    vectre<3> unit_normal = obj->normal_vectre( intersection).unit_vectre();
-    if( unit_normal.dot_prod(viewRay.dir) > 0.0 )
+    Vector4d unit_normal = obj->normal_vectre( intersection);
+    unit_normal.normalize();
+
+    if( unit_normal.dot(viewRay.dir) > 0.0 )
         unit_normal = unit_normal * -1.0;
 
     vector<Light> lights = generateLights();
     for(unsigned int i = 0; i < lights.size(); ++i)
     {
-        vectre<3> lightPath(intersection, lights[i].location);
+        Vector4d lightPath = lights[i].location - intersection;
 
-        if(unit_normal.dot_prod(lightPath) <= 0.0)
+        if(unit_normal.dot(lightPath) <= 0.0)
             continue;
-        if(lightPath.length_sq() <= 0.0)
+        if(lightPath.norm() <= 0.0)
             continue;
 
-        vectre<3> lightDir = lightPath.unit_vectre();
-        ray<3> lightRay(intersection, lightDir);
+        Vector4d lightDir = lightPath.normalized();
+        ray lightRay(intersection, lightDir);
 
         // If not in the shadow of another object, to the lighting
         if(!intersectsObject(lightRay))
         {
-            double att = attenuation(lightPath.length());
-            double lambert = (lightRay.dir.dot_prod(unit_normal));
+            double att = attenuation(lightPath.norm());
+            double lambert = (lightRay.dir.dot(unit_normal));
             retColor += att * lambert * lights[i].color * objProp.color;
 
             retColor += att * blinnPhong(viewRay, unit_normal, lightRay, lights[i].color, objProp);
@@ -64,7 +67,7 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
     // cast more rays for reflections for a certain depth
     if(objProp.reflect > 0.0 && depth < 10)
     {
-        ray<3> reflect_ray(intersection, viewRay.dir - (2.0 * (viewRay.dir.dot_prod(unit_normal))) * unit_normal);
+        ray reflect_ray(intersection, viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal);
         Color reflect_color = getColor(reflect_ray, depth + 1);
         retColor += objProp.reflect * reflect_color;
     }
@@ -72,14 +75,14 @@ Color Raytracer::getColor(const ray<3>& viewRay, int depth)
     return retColor;
 }
 
-Color Raytracer::pathtraceColor(const ray<3>& viewRay, int depth)
+Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 {
     if(depth >= 10)
         return Color(0,0,0);
     double bestTime = -1.0;
     Drawable *obj = NULL;
     getClosestObject(viewRay, &obj, bestTime);
-    point<3> intersection = viewRay(bestTime);
+    Vector4d intersection = viewRay(bestTime);
 
     // no object was intersected and the ray has left the scene. return this color.
     if(obj == NULL)
@@ -87,13 +90,14 @@ Color Raytracer::pathtraceColor(const ray<3>& viewRay, int depth)
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
-    vectre<3> unit_normal = obj->normal_vectre( intersection).unit_vectre();
-    if( unit_normal.dot_prod(viewRay.dir) > 0.0 )
+    Vector4d unit_normal = obj->normal_vectre( intersection).normalized();
+    if( unit_normal.dot(viewRay.dir) > 0.0 )
         unit_normal = unit_normal * -1.0;
 
-    vectre<3> up(0,1,0);
-    vectre<3> right = up.cross_prod(unit_normal).unit_vectre();
-    up = right.cross_prod(unit_normal);
+    Vector4d up(0,1,0, 0);
+    Vector4d right = cross(up, unit_normal);
+    right.normalize();
+    up = cross(right, unit_normal);
 
     double theta = ((double)rand() / (double)RAND_MAX) * (M_PI / 2.0);
     double thi = ((double)rand() / (double)RAND_MAX) * (2.0 * M_PI);
@@ -101,12 +105,12 @@ Color Raytracer::pathtraceColor(const ray<3>& viewRay, int depth)
     double y = sin(theta) * sin(thi);
     double z = cos(theta);
 
-    ray<3> random_ray;
+    ray random_ray;
     random_ray.dir = x * right + y * up + z * unit_normal;
     random_ray.orig = intersection;
 
     Color lighting = pathtraceColor(random_ray, depth + 1);
-    retColor += objProp.color * lighting * unit_normal.dot_prod(random_ray.dir);
+    retColor += objProp.color * lighting * unit_normal.dot(random_ray.dir);
     retColor += objProp.emittance;
 
     return retColor;
@@ -120,33 +124,20 @@ Color Raytracer::pathtraceColor(const ray<3>& viewRay, int depth)
  * closestObject the index of the current closest object (gets modified)
  * bestTime the current best time of the closest object
  */
-void Raytracer::getClosestObject(const ray<3>& viewRay, Drawable **closestObj, double& bestTime)
+void Raytracer::getClosestObject(const ray& viewRay, Drawable **closestObj, double& bestTime)
 {
-    vector<Drawable *> allObj = generateObjectList(viewRay);
-
     double current_intersection = 0.0;
-    for(unsigned int i = 0; i < allObj.size(); ++i)
+    for(unsigned int i = 0; i < objList.size(); ++i)
     {
-        current_intersection = allObj[i]->intersection(viewRay);
+        current_intersection = objList[i]->intersection(viewRay);
         if(current_intersection > MIN_INTERSECTION_DIST &&
           (bestTime < 0.0 || current_intersection < bestTime))
         {
             // Store the time of intersection and the object intersected.
             bestTime = current_intersection;
-            *closestObj = allObj[i];
+            *closestObj = objList[i];
         }
     }
-}
-
-vector<Drawable *> Raytracer::generateObjectList(const ray<3> viewRay) {
-    vector<Drawable *> allObj = objList;
-
-    for(unsigned int i = 0; i < boundries.size(); i++) {
-        Drawable *tmp = boundries[i].intersectionObj(viewRay);
-        if(tmp != NULL)
-            allObj.push_back(tmp);
-    }
-    return allObj;
 }
 
 vector<Light> Raytracer::generateLights() {
@@ -162,7 +153,7 @@ vector<Light> Raytracer::generateLights() {
     return genLights;
 }
 
-bool Raytracer::intersectsObject( const ray<3> &viewRay ){
+bool Raytracer::intersectsObject( const ray &viewRay ){
     for(unsigned int j = 0; j < objList.size(); j++){
         if(objList[j]->intersection(viewRay) > MIN_INTERSECTION_DIST)
         {
@@ -176,13 +167,13 @@ double Raytracer::attenuation(const double dist) {
     return 1.0 / (0.01 + 0.03 * dist);
 }
 
-Color Raytracer::blinnPhong(const ray<3> &viewRay, const vectre<3> &unit_normal,
-        const ray<3> lightRay, const Color lightColor, const Properties &objProp){
+Color Raytracer::blinnPhong(const ray &viewRay, const Vector4d &unit_normal,
+        const ray lightRay, const Color lightColor, const Properties &objProp){
 
-    double viewProj = viewRay.dir.dot_prod(unit_normal);
-    double lightProj = lightRay.dir.dot_prod(unit_normal);
-    vectre<3> blinnDir = lightRay.dir - viewRay.dir;
-    double temp = blinnDir.dot_prod(blinnDir);
+    double viewProj = viewRay.dir.dot(unit_normal);
+    double lightProj = lightRay.dir.dot(unit_normal);
+    Vector4d blinnDir = lightRay.dir - viewRay.dir;
+    double temp = blinnDir.dot(blinnDir);
     if(temp != 0.0)
     {
         double blinn = (1.0 / sqrt(temp)) * std::max(lightProj - viewProj, 0.0);

@@ -3,6 +3,10 @@
 
 #include "../material.h"
 #include "../properties.h"
+#include "../common.h"
+#include <Eigen/Dense>
+
+using namespace Eigen;
 
 /**
  * @brief A type of Material with the same properties (color, reflectiveness, etc.) at all points.
@@ -62,7 +66,7 @@ class SolidColor: public Material
 	virtual double getIndexOfRefraction(point<3> loc) const;
 	*/
 
-	virtual Properties getProperties(point<3> loc) const;
+	virtual Properties getProperties(Vector4d loc) const;
 };
 
 #endif

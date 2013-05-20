@@ -6,7 +6,7 @@ Material * CheckerBoardTexture::create() const
 Material * CheckerBoardTexture::clone() const
 { return new CheckerBoardTexture(*this); }
 
-Properties CheckerBoardTexture::getProperties(point<3> loc) const
+Properties CheckerBoardTexture::getProperties(Vector4d loc) const
 {
 	bool useFirst = true;
 

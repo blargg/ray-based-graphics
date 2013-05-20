@@ -5,6 +5,7 @@
 #include "../easypng.h"
 #include "../material.h"
 #include "../properties.h"
+#include "../common.h"
 
 /**
  * @brief A material for a file loaded texture. Forms a sphere around the orign
@@ -20,7 +21,7 @@ class SphereTexture : public Material {
 
     virtual Material * clone() const;
 
-    virtual Properties getProperties(point<3> loc) const;
+    virtual Properties getProperties(Vector4d loc) const;
 
     private:
     PNG texture;

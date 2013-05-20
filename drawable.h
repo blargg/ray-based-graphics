@@ -2,16 +2,7 @@
 #define DRAWBLE_H
 
 #include "ray.h"
-#include "vectre.h"
-#include "point.h"
 #include "properties.h"
-
-struct intersection {
-    double time;
-    vectre<3> normal;
-    Properties p;
-};
-
 
 /**
  * @brief An interface for anything that can be drawn in the Ray tracing algorithm
@@ -34,17 +25,17 @@ class Drawable
      * @param viewRay The ray to test.
      * @returns The time for the ray to reach the intersection point.
      */
-    virtual double intersection(const ray<3> viewRay) const = 0;
+    virtual double intersection(const ray viewRay) const = 0;
 
     /**
      * @brief Gets the normal vectre for the given point on the Drawable's surface.
      */
-    virtual vectre<3> normal_vectre(const point<3> surface) const = 0;
+    virtual Vector4d normal_vectre(const Vector4d surface) const = 0;
 
     /**
      * @brief Gets the Properties of the Drawable at the given point.
      */
-    virtual Properties getProperties(const point<3> location) const = 0;
+    virtual Properties getProperties(const Vector4d location) const = 0;
 };
 
 #endif

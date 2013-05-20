@@ -13,9 +13,9 @@ TEST(loader, loadsShapes){
     EXPECT_DOUBLE_EQ(l.location[2], 10) << "Location should match (z)";
 
     Drawable *fst = render.objList[0];
-    ray<3> viewRay;
-    viewRay.dir = vectre<3>(1,0,0);
-    viewRay.orig = point<3>(-2,0,0);
+    ray viewRay;
+    viewRay.dir = Vector4d(1,0,0,0);
+    viewRay.orig = Vector4d(-2,0,0,1);
     EXPECT_GT(fst->intersection(viewRay), 0.0);
 }
 

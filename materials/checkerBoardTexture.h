@@ -3,6 +3,7 @@
 
 #include "../material.h"
 #include "../properties.h"
+#include "../common.h"
 
 /**
  * @brief A material of to different properties. Alternates between the two properties in a grid-like pattern
@@ -41,7 +42,7 @@ class CheckerBoardTexture: public Material
 	/// Allows the material to be copied virtually.
 	virtual Material * clone() const;
 	/// Returns the properties of the material at the given point.
-	virtual Properties getProperties(point<3> loc) const;
+	virtual Properties getProperties(Vector4d loc) const;
 };
 
 #endif

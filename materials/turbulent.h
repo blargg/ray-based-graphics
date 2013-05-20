@@ -3,6 +3,7 @@
 
 #include "../perlin.h"
 #include "../material.h"
+#include "../common.h"
 
 class Turbulent: public Material
 {
@@ -24,7 +25,7 @@ class Turbulent: public Material
 	virtual Material * clone() const;
 
 	/// Returns the material properties for a given point in space
-	virtual Properties getProperties(point<3> loc) const;
+	virtual Properties getProperties(Vector4d loc) const;
 };
 
 #endif //TURBULENT_H

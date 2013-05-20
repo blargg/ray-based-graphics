@@ -1,13 +1,13 @@
 #include "AreaLight.h"
-#include "func.h"
+#include "common.h"
 
 
-AreaLight::AreaLight(ray<3> orientation, vectre<3> up, double size,
+AreaLight::AreaLight(ray orientation, Vector4d up, double size,
         int numlights, double brightness) {
     this->orientation = orientation;
-    this->orientation.dir = this->orientation.dir.unit_vectre();
-    this->up = up.unit_vectre();
-    right = this->orientation.dir.cross_prod(up);
+    this->orientation.dir.normalize();
+    this->up = up.normalized();
+    right = cross(this->orientation.dir, this->up);
 
     this->size = size;
     this->numLights = numlights;
@@ -23,10 +23,9 @@ std::vector<Light> AreaLight::generateLights() {
     double dy = size / numLights;
     for(int x = 0; x < numLights; x++) {
         for(int y = 0; y < numLights; y++) {
-            point<3> position;
-            position = orientation.orig;
-            position = add(position, dx * x * right);
-            position = add(position, dy * y * up);
+            Vector4d position;
+            position = orientation.orig + (dx * x * right) + (dy * y * up);
+
             l.location = position;
             lights.push_back(l);
         }

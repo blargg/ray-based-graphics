@@ -10,8 +10,8 @@ class SphereTest : public ::testing::Test{
 
     public:
     virtual void SetUp(){
-        unit_sphere = Sphere(point<3>(0.0, 0.0, 0.0), 1);
-        s2 = Sphere(point<3>(100.0, 10.5, 0.0), 100);
+        unit_sphere = Sphere(Vector4d(0.0, 0.0, 0.0, 1), 1);
+        s2 = Sphere(Vector4d(100.0, 10.5, 0.0, 1), 100);
     }
 
     virtual void TearDown(){
@@ -21,55 +21,55 @@ class SphereTest : public ::testing::Test{
 };
 
 TEST_F(SphereTest, intersects){
-    ray<3> testRay;
-    testRay.orig = point<3>(-10, 0.0, 0.0);
-    testRay.dir = vectre<3>(1, 0, 0);
+    ray testRay;
+    testRay.orig = Vector4d(-10, 0.0, 0.0, 1);
+    testRay.dir = Vector4d(1, 0, 0, 0);
     EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects simple ray";
 
-    testRay.orig = point<3>(-10, 0.5, 0.0);
-    testRay.dir = vectre<3>(1, 0, 0);
+    testRay.orig = Vector4d(-10, 0.5, 0.0, 1);
+    testRay.dir = Vector4d(1, 0, 0, 0);
     EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects at a skew angle";
 
-    testRay.orig = point<3>(-10, 0.99, 0.0);
-    testRay.dir = vectre<3>(1, 0, 0);
+    testRay.orig = Vector4d(-10, 0.99, 0.0, 1);
+    testRay.dir = Vector4d(1, 0, 0, 0);
     EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Intersects at edge";
 
-    testRay.orig = point<3>(-10, 0.0, 0.0);
-    testRay.dir = vectre<3>(0, 1, 0);
+    testRay.orig = Vector4d(-10, 0.0, 0.0, 1);
+    testRay.dir = Vector4d(0, 1, 0, 0);
     EXPECT_LT(unit_sphere.intersection(testRay), 0.0) << "Line doesn't intersect the ray";
 
-    testRay.orig = point<3>(-10, 0.0, 0.0);
-    testRay.dir = vectre<3>(-1, 0, 0);
+    testRay.orig = Vector4d(-10, 0.0, 0.0, 1);
+    testRay.dir = Vector4d(-1, 0, 0, 0);
     EXPECT_LT(unit_sphere.intersection(testRay), 0.0) << "Sphere lies behind the ray origin";
 
-    testRay.orig = point<3>(0.0, 0.0, 0.0);
-    testRay.dir = vectre<3>(-1, 0, 0);
+    testRay.orig = Vector4d(0.0, 0.0, 0.0, 1);
+    testRay.dir = Vector4d(-1, 0, 0, 0);
     EXPECT_GT(unit_sphere.intersection(testRay), 0.0) << "Ray originates inside the sphere";
 }
 
 TEST_F(SphereTest, intersection_point){
-    ray<3> testRay;
-    testRay.orig = point<3>(-10, 0.0, 0.0);
-    testRay.dir = vectre<3>(1, 0.0, 0.0);
+    ray testRay;
+    testRay.orig = Vector4d(-10, 0.0, 0.0, 1);
+    testRay.dir = Vector4d(1, 0.0, 0.0, 0);
     EXPECT_DOUBLE_EQ(unit_sphere.intersection(testRay), 9.0) <<
         "Intersection should be about 9 units away";
 
-    testRay.orig = point<3>(-1.0, 10.5, 0.0);
-    testRay.dir = vectre<3>(1, 0, 0);
+    testRay.orig = Vector4d(-1.0, 10.5, 0.0, 1);
+    testRay.dir = Vector4d(1, 0, 0, 0);
     EXPECT_DOUBLE_EQ(s2.intersection(testRay), 1.0) <<
         "Should work at spheres not at the origin";
 }
 
 TEST_F(SphereTest, normals){
-    vectre<3> normal = unit_sphere.normal_vectre(point<3>(1.0, 0.0, 0.0));
-    EXPECT_DOUBLE_EQ(normal[0], 1.0);
-    EXPECT_DOUBLE_EQ(normal[1], 0.0);
-    EXPECT_DOUBLE_EQ(normal[2], 0.0);
+    Vector4d normal = unit_sphere.normal_vectre(Vector4d(1.0, 0.0, 0.0, 1));
+    EXPECT_DOUBLE_EQ(normal(0), 1.0);
+    EXPECT_DOUBLE_EQ(normal(1), 0.0);
+    EXPECT_DOUBLE_EQ(normal(2), 0.0);
 
-    normal = unit_sphere.normal_vectre(point<3>(0.0, 1.0, 0.0));
-    EXPECT_DOUBLE_EQ(normal[0], 0.0);
-    EXPECT_DOUBLE_EQ(normal[1], 1.0);
-    EXPECT_DOUBLE_EQ(normal[2], 0.0);
+    normal = unit_sphere.normal_vectre(Vector4d(0.0, 1.0, 0.0, 1));
+    EXPECT_DOUBLE_EQ(normal(0), 0.0);
+    EXPECT_DOUBLE_EQ(normal(1), 1.0);
+    EXPECT_DOUBLE_EQ(normal(2), 0.0);
 }
 
 } // namespace

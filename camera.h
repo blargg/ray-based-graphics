@@ -1,11 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <Eigen/Dense>
 #include "raytracer.h"
+#include "common.h"
 #include "film.h"
 #include "easypng.h"
 #include "ray.h"
-#include "func.h"
 
 /**
  * allocates space for an image, then renders the image, returning a pointer
@@ -17,7 +18,7 @@
  * up a vector pointing to the images' up direction
  */
 PNG* renderImage(Raytracer render, int imgSize, double worldSize,
-                 ray<3> position, vectre<3> up);
+                 ray position, Vector4d up);
 
 /**
  * takes a pointer to a film object, and adds color values to the film based
@@ -32,6 +33,6 @@ PNG* renderImage(Raytracer render, int imgSize, double worldSize,
  * numSamples the number of samples for each pixel in the film
  */
 void pathtraceImage(Film *imageFilm, Raytracer render, int imgSize, double worldSize,
-                 ray<3> position, vectre<3> up, int numSamples);
+                 ray position, Vector4d up, int numSamples);
 
 #endif // CAMERA_H

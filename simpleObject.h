@@ -1,18 +1,13 @@
 #ifndef SIMPLEOBJECT_H
 #define SIMPLEOBJECT_H
 
-// math dependencies
 #include "ray.h"
-#include "vectre.h"
-#include "point.h"
+#include "common.h"
 
-// reqired raytracing dependencies
 #include "drawable.h"
 #include "shape.h"
 #include "material.h"
 
-// not really required, but allows the default constructor to
-// not brake the system.
 #include "shapes/sphere.h"
 #include "materials/solidColor.h"
 
@@ -37,9 +32,9 @@ class SimpleObject: public Drawable
 
     virtual ~SimpleObject();
 
-    virtual double intersection(const ray<3> viewRay) const;
-    virtual vectre<3> normal_vectre(const point<3> surface) const;
-    virtual Properties getProperties(const point<3> location) const;
+    virtual double intersection(const ray viewRay) const;
+    virtual Vector4d normal_vectre(const Vector4d surface) const;
+    virtual Properties getProperties(const Vector4d location) const;
 
     void setShape(const Shape& s);
     void setMaterial(const Material& mat);

@@ -11,6 +11,14 @@
 
 using std::string;
 
+struct Camera
+{
+    int imgSize;
+    double worldSize;
+    ray position;
+    Vector4d up;
+};
+
 /**
  * allocates space for an image, then renders the image, returning a pointer
  *
@@ -20,8 +28,7 @@ using std::string;
  * position the position and direction of the image to render
  * up a vector pointing to the images' up direction
  */
-PNG* renderImage(Raytracer render, int imgSize, double worldSize,
-                 ray position, Vector4d up);
+PNG* renderImage(Raytracer render, Camera cam);
 
 /**
  * takes a pointer to a film object, and adds color values to the film based
@@ -35,14 +42,12 @@ PNG* renderImage(Raytracer render, int imgSize, double worldSize,
  * up the up direction for the camera
  * numSamples the number of samples for each pixel in the film
  */
-void pathtraceImage(Film *imageFilm, Raytracer render, int imgSize, double worldSize,
-                 ray position, Vector4d up, int numSamples);
+void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSamples);
 
 /**
  * Repeatedly renders a number of samples, then writes the current image to a file
  * based on the file_base name
  */
-void progressiveRender(string const file_base, Raytracer render, int imgSize, double worldSize,
-        ray position, Vector4d up, int sampleInterval);
+void progressiveRender(string const file_base, Raytracer render, Camera cam, int sampleInterval);
 
 #endif // CAMERA_H

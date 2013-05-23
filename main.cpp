@@ -47,21 +47,23 @@ int main()
     renderer.objList.push_back(new SimpleObject(s, SolidColor(p)));
     //renderer.objList.push_back(new SimpleObject(s, SphereTexture("texture2.png")));
 
-    ray orientation;
-    orientation.dir = Vector4d(1,0,0,0);
-    orientation.dir.normalize();
-    orientation.orig = Vector4d(-25,0,0,1);
-    Vector4d up(0,1,0,0);
-    //PNG *pic = renderImage(renderer, 500, 1.0, orientation, up);
-    //pic->writeToFile("output.png");
-    //delete pic;
+    Camera cam;
+    cam.imgSize = 500;
+    cam.position.dir = Vector4d(1,0,0,0);
+    cam.position.orig = Vector4d(-25,0,0,1);
+    cam.up = Vector4d(0,1,0,0);
+    cam.worldSize = 1.0;
 
-    //Film myFilm(500,500);
-    //pathtraceImage(&myFilm, renderer, 500, 1.0, orientation, up, 50);
+    PNG *pic = renderImage(renderer, cam);
+    pic->writeToFile("output.png");
+    delete pic;
+
+    //Film myFilm(cam.imgSize,cam.imgSize);
+    //pathtraceImage(&myFilm, renderer, cam, 50);
     //PNG pic = myFilm.writeImage();
     //pic.writeToFile("output.png");
 
-    progressiveRender("dump/out", renderer, 500, 1.0, orientation, up, 50);
+    //progressiveRender("dump/out", renderer, cam, 50);
 
     renderer.clear_objects();
     return 0;

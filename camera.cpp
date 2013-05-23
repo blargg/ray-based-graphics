@@ -101,3 +101,17 @@ void pathtraceImage(Film *imageFilm, Raytracer render, int imgSize, double world
     }
 
 }
+
+void progressiveRender(string const file_base, Raytracer render, int imgSize, double worldSize,
+        ray position, Vector4d up, int sampleInterval) {
+    int sampleNumber = 1;
+
+    Film myFilm(imgSize, imgSize);
+    while(1) {
+        pathtraceImage(&myFilm, render, imgSize, worldSize, position, up, sampleInterval);
+        PNG pic = myFilm.writeImage();
+        pic.writeToFile(file_base + std::to_string(sampleNumber) + ".png");
+
+        sampleNumber++;
+    }
+}

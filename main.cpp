@@ -56,10 +56,13 @@ int main()
     //pic->writeToFile("output.png");
     //delete pic;
 
-    Film myFilm(500,500);
-    pathtraceImage(&myFilm, renderer, 500, 1.0, orientation, up, 50);
-    PNG pic = myFilm.writeImage();
-    pic.writeToFile("output.png");
+    //Film myFilm(500,500);
+    //pathtraceImage(&myFilm, renderer, 500, 1.0, orientation, up, 50);
+    //PNG pic = myFilm.writeImage();
+    //pic.writeToFile("output.png");
+
+    progressiveRender("dump/out", renderer, 500, 1.0, orientation, up, 50);
+
     renderer.clear_objects();
     return 0;
 }

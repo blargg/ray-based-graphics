@@ -86,7 +86,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 
     // no object was intersected and the ray has left the scene. return this color.
     if(obj == NULL)
-        return Color(0,0,0.25);
+        return Color(0,0.25,0.25);
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );

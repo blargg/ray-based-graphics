@@ -13,12 +13,13 @@ class Film {
         void addColor(Color c, int x, int y);
         PNG writeImage();
     private:
-        Color **color_grid;
-        int **count_grid;
+        Color *color_grid;
+        int *count_grid;
         int height;
         int width;
 
         RGBAPixel makePixel(Color c);
+        int getIndex(int x, int y) const;
 };
 
 #endif // RT_FILM_H

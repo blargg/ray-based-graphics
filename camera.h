@@ -2,11 +2,14 @@
 #define CAMERA_H
 
 #include <Eigen/Dense>
+#include <string>
 #include "raytracer.h"
 #include "common.h"
 #include "film.h"
 #include "easypng.h"
 #include "ray.h"
+
+using std::string;
 
 /**
  * allocates space for an image, then renders the image, returning a pointer
@@ -34,5 +37,12 @@ PNG* renderImage(Raytracer render, int imgSize, double worldSize,
  */
 void pathtraceImage(Film *imageFilm, Raytracer render, int imgSize, double worldSize,
                  ray position, Vector4d up, int numSamples);
+
+/**
+ * Repeatedly renders a number of samples, then writes the current image to a file
+ * based on the file_base name
+ */
+void progressiveRender(string const file_base, Raytracer render, int imgSize, double worldSize,
+        ray position, Vector4d up, int sampleInterval);
 
 #endif // CAMERA_H

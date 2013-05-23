@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-g -fopenmp -O2
+FLAGS=-g -fopenmp -O2 -std=c++11
 WARNINGS= -Wall -Wno-unused-local-typedefs -Werror
 
 LIBS= -lpng

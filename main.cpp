@@ -37,9 +37,10 @@ int main()
 
     Properties p;
     p.color = Color(0,0,0);
-    p.emittance = Color(100,100,100);
+    p.specular = Color(0.1,0.1,0.1);
+    p.emittance = Color(1,1,1);
     Sphere lightShape(Vector4d(-20,20,0, 1), 5);
-    //renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
+    renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
 
     Sphere s(Vector4d(0,0,0,1), 10);
     p.color = Color(1,0.5,0.5);
@@ -54,16 +55,16 @@ int main()
     cam.up = Vector4d(0,1,0,0);
     cam.worldSize = 1.0;
 
-    PNG *pic = renderImage(renderer, cam);
-    pic->writeToFile("output.png");
-    delete pic;
+    //PNG *pic = renderImage(renderer, cam);
+    //pic->writeToFile("output.png");
+    //delete pic;
 
     //Film myFilm(cam.imgSize,cam.imgSize);
     //pathtraceImage(&myFilm, renderer, cam, 50);
     //PNG pic = myFilm.writeImage();
     //pic.writeToFile("output.png");
 
-    //progressiveRender("dump/out", renderer, cam, 50);
+    progressiveRender("dump/out", renderer, cam, 50);
 
     renderer.clear_objects();
     return 0;

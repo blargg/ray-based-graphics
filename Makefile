@@ -40,7 +40,7 @@ film.o : film.cpp film.h easypng.h color.h
 main.o : main.cpp
 	$(COMPILE) $<
 
-raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h
+raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h
 	$(COMPILE) $<
 
 ############### Geometry ####################

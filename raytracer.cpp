@@ -86,7 +86,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 
     // no object was intersected and the ray has left the scene. return this color.
     if(obj == NULL)
-        return Color(0,0.25,0.25);
+        return Color(0.3,0.3,0.3);
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
@@ -94,24 +94,28 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
     if( unit_normal.dot(viewRay.dir) > 0.0 )
         unit_normal = unit_normal * -1.0;
 
-    Vector4d up(0,1,0, 0);
-    Vector4d right = cross(up, unit_normal);
-    right.normalize();
-    up = cross(right, unit_normal);
+    double path = (double) rand() / (double)RAND_MAX;
 
-    double theta = ((double)rand() / (double)RAND_MAX) * (M_PI / 2.0);
-    double thi = ((double)rand() / (double)RAND_MAX) * (2.0 * M_PI);
-    double x = sin(theta) * cos(thi);
-    double y = sin(theta) * sin(thi);
-    double z = cos(theta);
+    if(path > 0.5) {
+        ray random_ray;
+        random_ray.dir = perturb(unit_normal, M_PI/2.0);
+        random_ray.orig = intersection;
 
-    ray random_ray;
-    random_ray.dir = x * right + y * up + z * unit_normal;
-    random_ray.orig = intersection;
+        Color lighting = pathtraceColor(random_ray, depth + 1);
+        retColor += objProp.color * lighting * unit_normal.dot(random_ray.dir);
+        retColor += objProp.emittance;
+        retColor *= 2.0;
+    }
+    else {
+        ray reflect_ray;
+        reflect_ray.orig = intersection;
+        reflect_ray.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
 
-    Color lighting = pathtraceColor(random_ray, depth + 1);
-    retColor += objProp.color * lighting * unit_normal.dot(random_ray.dir);
-    retColor += objProp.emittance;
+        Color lighting = pathtraceColor(reflect_ray, depth + 1);
+        retColor += objProp.specular * lighting;
+        retColor += objProp.emittance;
+        retColor *= 2.0;
+    }
 
     return retColor;
 }

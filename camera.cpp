@@ -82,9 +82,11 @@ void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSample
             for(int y = 0; y <= cam.imgSize / BLOCK_SIZE; y++) {
                 for(int xoff = 0; xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgSize; xoff++){
                     for(int yoff = 0; yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgSize; yoff++){
+                        double xRand = (double)rand() / (double)RAND_MAX;
+                        double yRand = (double)rand() / (double)RAND_MAX;
                         Vector4d screen_point = bot_right_corner
-                            + dx * (BLOCK_SIZE * x + xoff) * right
-                            + dy * (BLOCK_SIZE * y + yoff) * cam.up;
+                            + dx * (BLOCK_SIZE * x + xoff + xRand) * right
+                            + dy * (BLOCK_SIZE * y + yoff + yRand) * cam.up;
                         Vector4d currentDir = screen_point - start;
                         currentDir.normalize();
                         ray viewRay;

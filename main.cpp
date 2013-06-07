@@ -13,6 +13,7 @@
 #include "shapes/sphere.h"
 #include "shapes/plane.h"
 #include "shapes/triangle.h"
+#include "shapes/perturb_normals.h"
 
 #include "material.h"
 #include "materials/solidColor.h"
@@ -37,15 +38,15 @@ int main()
 
     Properties p;
     p.color = Color(0,0,0);
-    p.specular = Color(0.1,0.1,0.1);
     p.emittance = Color(1,1,1);
     Sphere lightShape(Vector4d(-20,20,0, 1), 5);
     renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
 
     Sphere s(Vector4d(0,0,0,1), 10);
     p.color = Color(1,0.5,0.5);
+    p.specular = Color(0.5,0.5,0.5);
     p.emittance = Color(0,0,0);
-    renderer.objList.push_back(new SimpleObject(s, SolidColor(p)));
+    renderer.objList.push_back(new SimpleObject(PerturbNormals(s,M_PI/6.0), SolidColor(p)));
     //renderer.objList.push_back(new SimpleObject(s, SphereTexture("texture2.png")));
 
     Camera cam;

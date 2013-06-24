@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../shapes/triangle.h"
+#include "../common.h"
 #include <Eigen/Dense>
 
 namespace{

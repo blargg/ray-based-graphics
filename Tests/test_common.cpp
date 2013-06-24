@@ -1,0 +1,34 @@
+#include <gtest/gtest.h>
+
+#include "../common.h"
+#include <Eigen/Dense>
+
+TEST(CommonTest, cross) {
+    Vector4d res = cross(Vector4d(1,0,0,0), Vector4d(0,1,0,0));
+    EXPECT_TRUE(res == Vector4d(0,0,1,0));
+
+    res = cross(Vector4d(1,2,3,0), Vector4d(4,5,6,0));
+    EXPECT_TRUE(res == Vector4d(-3,6,-3,0));
+
+    res = cross(Vector4d(-1,0,2,0), Vector4d(1,5,-1,0));
+    EXPECT_TRUE(res == Vector4d(-10,1,-5,0));
+}
+
+TEST(CommonTest, perturb) {
+    Vector4d res = perturb(Vector4d(1,0,0,0), M_PI/2.0);
+    EXPECT_GE(res(0), 0.0);
+
+    int i = 0;
+    Vector4d original;
+    for(i = 0; i < 100; i++) {
+        original = Vector4d::Random();
+        original.normalize();
+        res = perturb(original, M_PI/2.0);
+        EXPECT_LE(res.dot(original), 1.0);
+    }
+}
+
+int main(int argc, char **argv){
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

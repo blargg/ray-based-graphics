@@ -84,8 +84,16 @@ common.o : common.cpp common.h
 	$(COMPILE) $<
 
 ########################## Test Cases ########################################
-tests : Tests/Sphere.test Tests/Plane.test Tests/Triangle.test\
- Tests/Loader.test Tests/AreaLight.test
+TEST_EXES=Tests/Sphere.test Tests/Plane.test Tests/Triangle.test\
+		  Tests/Loader.test Tests/AreaLight.test Tests/Common.test
+
+run_tests : tests
+	$(foreach test, $(TEST_EXES), ./$(test) ;)
+
+tests : $(TEST_EXES)
+
+Tests/Common.test : Tests/test_common.cpp common.o
+	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/Ray.test : Tests/test_ray.cpp ray.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
@@ -96,13 +104,14 @@ Tests/Sphere.test : Tests/test_sphere.cpp shapes/sphere.o shape.o
 Tests/Plane.test : Tests/test_plane.cpp shapes/plane.o shape.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o
+Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/Loader.test : Tests/test_loader.cpp loader.o shape.o simpleObject.o $(SHAPES) materials/solidColor.o
+Tests/Loader.test : Tests/test_loader.cpp loader.o shape.o simpleObject.o\
+	$(SHAPES) materials/solidColor.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o
+Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 ############# Makefile utilities ################

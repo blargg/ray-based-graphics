@@ -17,6 +17,7 @@ using namespace Eigen;
 Vector4d cross(Vector4d a, Vector4d b);
 
 /* returns a perturbed (randomly offset) version of the given vector
+ * Note: the original vector must be normalized
  *
  * a the original vector to perturb
  * max_angle the maximum angle that the resulting vector can make with the

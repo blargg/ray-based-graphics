@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-g -fopenmp -O2 -std=c++11
+FLAGS=-g -fopenmp -std=c++11 -O2
 WARNINGS= -Wall -Wno-unused-local-typedefs -Werror
 
 LIBS= -lpng
@@ -28,7 +28,7 @@ MATERIALS_OBJ=$(MATERIALS_SRC:.cpp=.o)
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
+$(RTEXE) : main.o raytracer.o obj_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
 	$(LK) $(LIBS) -o $@ $^
 
 camera.o : camera.cpp camera.h
@@ -67,11 +67,11 @@ perlin.o : perlin.cpp perlin.h
 easypng.o : easypng.h easypng.cpp
 	$(COMPILE) easypng.cpp
 
-########################## Color and Properties ############################################
+########################## Color and Properties ###############################
 properties.o : properties.cpp properties.h color.h
 	$(COMPILE) $<
 
-loader.o : loader.cpp loader.h
+obj_loader.o : obj_loader.cpp obj_loader.h shapes/triangle.h simpleObject.h
 	$(COMPILE) $<
 
 AreaLight.o : AreaLight.cpp AreaLight.h
@@ -85,7 +85,7 @@ common.o : common.cpp common.h
 
 ########################## Test Cases ########################################
 TEST_EXES=Tests/Sphere.test Tests/Plane.test Tests/Triangle.test\
-		  Tests/Loader.test Tests/AreaLight.test Tests/Common.test
+		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test
 
 run_tests : tests
 	$(foreach test, $(TEST_EXES), ./$(test) ;)
@@ -107,8 +107,7 @@ Tests/Plane.test : Tests/test_plane.cpp shapes/plane.o shape.o
 Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/Loader.test : Tests/test_loader.cpp loader.o shape.o simpleObject.o\
-	$(SHAPES) materials/solidColor.o common.o
+Tests/ObjLoader.test : Tests/test_obj_loader.cpp obj_loader.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o common.o

@@ -5,9 +5,9 @@
 
 #include "raytracer.h"
 #include "film.h"
-#include "loader.h"
 #include "camera.h"
 #include "drawable.h"
+#include "obj_loader.h"
 
 #include "simpleObject.h"
 #include "shapes/sphere.h"
@@ -26,6 +26,7 @@
 #include "ray.h"
 #include "common.h"
 
+
 using std::vector;
 using std::min;
 using std::max;
@@ -34,7 +35,8 @@ using namespace std;
 int main()
 {
     Raytracer renderer;
-    renderer = loadScene("Scene.dat");
+    ObjLoader loader;
+    loader.load_to_list(renderer.objList, "res/obj/stove.obj");
 
     Properties p;
     p.color = Color(0,0,0);
@@ -42,17 +44,16 @@ int main()
     Sphere lightShape(Vector4d(-20,20,0, 1), 5);
     renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
 
-    Sphere s(Vector4d(0,0,0,1), 10);
-    p.color = Color(1,0.5,0.5);
-    p.specular = Color(0.5,0.5,0.5);
-    p.emittance = Color(0,0,0);
-    renderer.objList.push_back(new SimpleObject(PerturbNormals(s,M_PI/6.0), SolidColor(p)));
-    //renderer.objList.push_back(new SimpleObject(s, SphereTexture("texture2.png")));
+    //Sphere s(Vector4d(0,0,0,1), 10);
+    //p.color = Color(1,0.5,0.5);
+    //p.specular = Color(0.5,0.5,0.5);
+    //p.emittance = Color(0,0,0);
+    //renderer.objList.push_back(new SimpleObject(PerturbNormals(s,M_PI/6.0), SolidColor(p)));
 
     Camera cam;
     cam.imgSize = 500;
     cam.position.dir = Vector4d(1,0,0,0);
-    cam.position.orig = Vector4d(-25,0,0,1);
+    cam.position.orig = Vector4d(-10,0,0,1);
     cam.up = Vector4d(0,1,0,0);
     cam.worldSize = 1.0;
 

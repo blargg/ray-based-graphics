@@ -19,10 +19,6 @@ Shape* Sphere::clone() const
 
 double Sphere::intersection(const ray& viewRay) const
 {
-    //only takes rays with unit vectors
-    assert(viewRay.dir.squaredNorm() <= 1.0 + EPSILON);
-    assert(viewRay.dir.squaredNorm() >= 1.0 - EPSILON);
-
     double B = 2 * (viewRay.dir(0) * (viewRay.orig(0) - location(0)) +
                     viewRay.dir(1) * (viewRay.orig(1) - location(1)) +
                     viewRay.dir(2) * (viewRay.orig(2) - location(2)) );

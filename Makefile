@@ -4,7 +4,7 @@ WARNINGS= -Wall -Wno-unused-local-typedefs -Werror
 
 LIBS= -lpng
 EIGEN_DIR=/usr/include/eigen3
-INCS= -I /usr/include/eigen3
+INCS= -I $(EIGEN_DIR)
 COMPILE=$(CC) $(FLAGS) $(INCS) $(WARNINGS) -c
 
 LINKER=g++
@@ -74,6 +74,9 @@ properties.o : properties.cpp properties.h color.h
 obj_loader.o : obj_loader.cpp obj_loader.h shapes/triangle.h simpleObject.h
 	$(COMPILE) $<
 
+mtl_loader.o : mtl_loader.cpp mtl_loader.h properties.h materials/solidColor.h simpleObject.h
+	$(COMPILE) $<
+
 AreaLight.o : AreaLight.cpp AreaLight.h
 	$(COMPILE) $<
 
@@ -85,7 +88,8 @@ common.o : common.cpp common.h
 
 ########################## Test Cases ########################################
 TEST_EXES=Tests/Sphere.test Tests/Plane.test Tests/Triangle.test\
-		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test
+		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test\
+		  Tests/MtlLoader.test
 
 run_tests : tests
 	$(foreach test, $(TEST_EXES), ./$(test) ;)
@@ -107,7 +111,10 @@ Tests/Plane.test : Tests/test_plane.cpp shapes/plane.o shape.o
 Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/ObjLoader.test : Tests/test_obj_loader.cpp obj_loader.o
+Tests/ObjLoader.test : Tests/test_obj_loader.cpp obj_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
+	g++ -o $@ $^ $(TEST_OPTIONS)
+
+Tests/MtlLoader.test : Tests/test_mtl_loader.cpp mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o common.o

@@ -13,7 +13,7 @@ using std::cout;
 
 ObjLoader::ObjLoader() {
     curProp.color = Color(1,0.5,0.5);
-    //curProp.specular = Color(0.5,0.5,0.5);
+    curProp.specular = Color(0.5,0.5,0.5);
     curProp.emittance = Color(0,0,0);
 }
 

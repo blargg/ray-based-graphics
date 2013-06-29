@@ -10,11 +10,11 @@ MtlLoader::MtlLoader() {
 
 MtlLoader::~MtlLoader() { /* do nothing */ };
 
-void MtlLoader::add_to_map(map<string, SolidColor> &map, const char * filename) {
+void MtlLoader::add_to_map(map<string, SolidColor> &map, string filename) {
     string line;
     string command;
 
-    std::ifstream fs(filename);
+    std::ifstream fs(filename.c_str());
     while(getline(fs, line)){
         std::istringstream iss(line);
 
@@ -26,36 +26,30 @@ void MtlLoader::add_to_map(map<string, SolidColor> &map, const char * filename) 
             if(!unsetData) {
                 pushMat(map);
             }
-            string newName;
-            iss >> newName;
-            name = newName;
+            iss >> name;
             unsetData = false;
         }
         else if(command.compare("Ns") == 0){
-            double hardness;
-            iss >> hardness;
-            spec_hardness = hardness;
+            iss >> curProp.spec_power;
         }
         else if(command.compare("Ka") == 0) {
             double r, g, b;
             iss >> r >> g >> b;
-            ambient = Color(r,g,b);
+            curProp.emittance = Color(r,g,b);
         }
         else if(command.compare("Kd") == 0) {
             double r, g, b;
             iss >> r >> g >> b;
-            diffuse = Color(r,g,b);
+            curProp.color = Color(r,g,b);
         }
         else if(command.compare("Ks") == 0) {
             double r, g, b;
             iss >> r >> g >> b;
-            specular = Color(r,g,b);
+            curProp.specular = Color(r,g,b);
         }
         else if(command.compare("d") == 0 ||
                 command.compare("Tr") == 0) {
-            double d;
-            iss >> d;
-            dissolve = d;
+            iss >> curProp.tranparency;
         }
     }
 
@@ -63,13 +57,5 @@ void MtlLoader::add_to_map(map<string, SolidColor> &map, const char * filename) 
 }
 
 void MtlLoader::pushMat(map<string, SolidColor> &map) {
-    Properties p;
-    p.color = diffuse;
-    p.specular = specular;
-    p.spec_power = spec_hardness;
-    p.emittance = ambient;
-    p.i_refraction = index_refraction;
-    p.tranparency = dissolve;
-
-    map[name] = SolidColor(p);
+    map[name] = SolidColor(curProp);
 }

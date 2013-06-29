@@ -5,6 +5,7 @@
 #include <map>
 #include "color.h"
 #include "materials/solidColor.h"
+#include "properties.h"
 
 using std::map;
 using std::string;
@@ -18,17 +19,12 @@ public:
     /**
      * adds all materials from filename to the given map
      */
-    void add_to_map(map<string, SolidColor> &map, const char * filename);
+    void add_to_map(map<string, SolidColor> &map, string filename);
 
 private:
     bool unsetData;
     string name;
-    Color ambient;
-    Color diffuse;
-    Color specular;
-    double spec_hardness;
-    double dissolve;
-    double index_refraction;
+    Properties curProp;
 
     /**
      * adds the current discription of the material to the map

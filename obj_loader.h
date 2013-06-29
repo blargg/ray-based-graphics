@@ -5,8 +5,10 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
 #include <Eigen/Dense>
+
+#include "mtl_loader.h"
+
 #include "drawable.h"
 #include "simpleObject.h"
 #include "shapes/triangle.h"
@@ -23,11 +25,13 @@ public:
     ObjLoader ();
     virtual ~ObjLoader () {};
 
-    void load_to_list(vector<Drawable*> &objList, const char * filename);
+    void load_to_list(vector<Drawable*> &objList, std::string filename);
 
 private:
     vector<Vector4d> verts;
-    Properties curProp;
+    SolidColor curMaterial;
+    MtlLoader mloader;
+    map<string, SolidColor> materials;
 };
 
 #endif // LOADER_H

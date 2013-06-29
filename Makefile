@@ -28,7 +28,7 @@ MATERIALS_OBJ=$(MATERIALS_SRC:.cpp=.o)
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o obj_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
+$(RTEXE) : main.o raytracer.o obj_loader.o mtl_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
 	$(LK) $(LIBS) -o $@ $^
 
 camera.o : camera.cpp camera.h
@@ -37,7 +37,7 @@ camera.o : camera.cpp camera.h
 film.o : film.cpp film.h easypng.h color.h
 	$(COMPILE) $<
 
-main.o : main.cpp
+main.o : main.cpp obj_loader.h common.h film.h
 	$(COMPILE) $<
 
 raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h
@@ -71,7 +71,7 @@ easypng.o : easypng.h easypng.cpp
 properties.o : properties.cpp properties.h color.h
 	$(COMPILE) $<
 
-obj_loader.o : obj_loader.cpp obj_loader.h shapes/triangle.h simpleObject.h
+obj_loader.o : obj_loader.cpp obj_loader.h mtl_loader.h shapes/triangle.h simpleObject.h
 	$(COMPILE) $<
 
 mtl_loader.o : mtl_loader.cpp mtl_loader.h properties.h materials/solidColor.h simpleObject.h
@@ -111,7 +111,7 @@ Tests/Plane.test : Tests/test_plane.cpp shapes/plane.o shape.o
 Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/ObjLoader.test : Tests/test_obj_loader.cpp obj_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
+Tests/ObjLoader.test : Tests/test_obj_loader.cpp obj_loader.o mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/MtlLoader.test : Tests/test_mtl_loader.cpp mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o

@@ -9,19 +9,16 @@
 #include <cerrno>
 
 using std::string;
-using std::cout;
 
 ObjLoader::ObjLoader() {
-    curProp.color = Color(1,0.5,0.5);
-    curProp.specular = Color(0.5,0.5,0.5);
-    curProp.emittance = Color(0,0,0);
 }
 
-void ObjLoader::load_to_list(vector<Drawable*> &objList, const char * filename){
+void ObjLoader::load_to_list(vector<Drawable*> &objList, std::string filename){
     string line;
     string command;
 
-    std::ifstream fs(filename);
+    std::ifstream fs(filename.c_str());
+    string baseDir = filename.substr(0, filename.find_last_of('/') + 1);
     while(getline(fs, line)){
         std::istringstream iss(line);
 
@@ -45,7 +42,18 @@ void ObjLoader::load_to_list(vector<Drawable*> &objList, const char * filename){
             c--;
 
             objList.push_back(new SimpleObject(Triangle(verts[a],verts[b],verts[c]),
-                SolidColor(curProp)));
+                                               curMaterial));
+        }
+        else if(command.compare("mtllib") == 0) {
+            string file;
+            iss >> file;
+            file = baseDir + file;
+            mloader.add_to_map(materials, file);
+        }
+        else if(command.compare("usemtl") == 0) {
+            string materialName;
+            iss >> materialName;
+            curMaterial = materials[materialName];
         }
     }
 }

@@ -22,7 +22,7 @@ PNG Film::writeImage() {
         for(int y = 0; y < height; y++) {
             Color imgColor = color_grid[getIndex(x,y)];
             imgColor *= (1.0 / count_grid[getIndex(x,y)]);
-            (*output(x,y)) = makePixel(imgColor);
+            (*output(x,height - y - 1)) = makePixel(imgColor);
         }
     }
     return output;

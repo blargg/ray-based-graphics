@@ -28,6 +28,11 @@ TEST(CommonTest, perturb) {
     }
 }
 
+TEST(CommonTest, max3) {
+    EXPECT_EQ(max3<int>(10,1,2), 10) << "fail on ints";
+    EXPECT_DOUBLE_EQ(max3<double>(1.001, 2.02, 2.1), 2.1) << "fail on double";
+}
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

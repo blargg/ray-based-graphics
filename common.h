@@ -25,4 +25,15 @@ Vector4d cross(Vector4d a, Vector4d b);
  */
 Vector4d perturb(Vector4d a, double max_angle);
 
+/**
+ * returns the max of the three given values
+ */
+template <class T>
+T max3(T a, T b, T c) {
+    if(a > b)
+        return (a>c?a:c);
+    else
+        return (b>c?b:c);
+}
+
 #endif // RT_COMMON

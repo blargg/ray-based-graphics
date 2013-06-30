@@ -94,29 +94,23 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
     if( unit_normal.dot(viewRay.dir) > 0.0 )
         unit_normal = unit_normal * -1.0;
 
-    double path = (double) rand() / (double)RAND_MAX;
+    ray random_ray;
+    random_ray.dir = perturb(unit_normal, M_PI/2.0);
+    random_ray.dir.normalize();
+    random_ray.orig = intersection;
 
-    if(path > 0.5) {
-        ray random_ray;
-        random_ray.dir = perturb(unit_normal, M_PI/2.0);
-        random_ray.dir.normalize();
-        random_ray.orig = intersection;
+    Color diffuse_lighting = pathtraceColor(random_ray, depth + 1);
+    retColor += objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
+    retColor += objProp.emittance;
 
-        Color lighting = pathtraceColor(random_ray, depth + 1);
-        retColor += objProp.color * lighting * unit_normal.dot(random_ray.dir);
-        retColor += objProp.emittance;
-        retColor *= 2.0;
-    }
-    else {
+    if (max3<double>(objProp.specular.red, objProp.specular.green, objProp.specular.blue) > EPSILON) {
         ray reflect_ray;
         reflect_ray.orig = intersection;
         reflect_ray.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
         reflect_ray.dir.normalize();
 
-        Color lighting = pathtraceColor(reflect_ray, depth + 1);
-        retColor += objProp.specular * lighting;
-        retColor += objProp.emittance;
-        retColor *= 2.0;
+        Color specular_lighting = pathtraceColor(reflect_ray, depth + 1);
+        retColor += objProp.specular * specular_lighting;
     }
 
     return retColor;

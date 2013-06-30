@@ -38,13 +38,13 @@ int main()
 {
     Raytracer renderer;
     ObjLoader loader;
-    loader.load_to_list(renderer.objList, "res/obj/stove.obj");
+    loader.load_to_list(renderer.objList, "room.obj");
 
-    Properties p;
-    p.color = Color(0,0,0);
-    p.emittance = Color(1,1,1);
-    Sphere lightShape(Vector4d(-20,20,0, 1), 5);
-    renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
+    //Properties p;
+    //p.color = Color(0,0,0);
+    //p.emittance = Color(1,1,1);
+    //Sphere lightShape(Vector4d(-20,10,0, 1), 5);
+    //renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
 
     //Sphere s(Vector4d(0,0,0,1), 10);
     //p.color = Color(1,0.5,0.5);
@@ -54,8 +54,8 @@ int main()
 
     Camera cam;
     cam.imgSize = 500;
-    cam.position.dir = Vector4d(1,0,0,0);
-    cam.position.orig = Vector4d(-10,0,0,1);
+    cam.position.dir = Vector4d(-1,0,0,0);
+    cam.position.orig = Vector4d(10,0,0,1);
     cam.up = Vector4d(0,1,0,0);
     cam.worldSize = 1.0;
 
@@ -68,7 +68,7 @@ int main()
     //PNG pic = myFilm.writeImage();
     //pic.writeToFile("output.png");
 
-    progressiveRender("dump/out", renderer, cam, 50);
+    progressiveRender("dump/out", renderer, cam, 10);
 
     renderer.clear_objects();
     return 0;

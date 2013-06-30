@@ -25,6 +25,7 @@ TEST(CommonTest, perturb) {
         original.normalize();
         res = perturb(original, M_PI/2.0);
         EXPECT_LE(res.dot(original), 1.0);
+        EXPECT_GE(res.dot(original), 0.0);
     }
 }
 

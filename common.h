@@ -10,20 +10,28 @@
 using namespace Eigen;
 
 
-#define NDEBUG
 #define EPSILON 0.000000001
 
-// does a cross product ignoring the forth value
+
+/// does a cross product ignoring the forth value
 Vector4d cross(Vector4d a, Vector4d b);
 
-/* returns a perturbed (randomly offset) version of the given vector
- * Note: the original vector must be normalized
+/**
+ * returns a perturbed (randomly offset) version of the given vector
  *
- * a the original vector to perturb
- * max_angle the maximum angle that the resulting vector can make with the
+ * @pre the original vector must be normalized
+ * @param a the original vector to perturb
+ * @param max_angle the maximum angle that the resulting vector can make with the
  *   original (in radians)
+ * @returns a unit lenth vector perturb by at most max_angle
  */
 Vector4d perturb(Vector4d a, double max_angle);
+
+template <class T>
+inline bool isUnitVector(T v) {
+    float length = v.norm();
+    return length > 1 - EPSILON && length < 1 + EPSILON;
+}
 
 /**
  * returns the max of the three given values

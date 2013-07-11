@@ -1,5 +1,6 @@
 #include "raytracer.h"
 #include "common.h"
+#include <cassert>
 
 void Raytracer::clear_scene()
 {
@@ -96,7 +97,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 
     ray random_ray;
     random_ray.dir = perturb(unit_normal, M_PI/2.0);
-    random_ray.dir.normalize();
+    assert(isUnitVector<Vector4d>(random_ray.dir));
     random_ray.orig = intersection;
 
     Color diffuse_lighting = pathtraceColor(random_ray, depth + 1);
@@ -107,6 +108,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
         ray reflect_ray;
         reflect_ray.orig = intersection;
         reflect_ray.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
+        assert(isUnitVector<Vector4d>(reflect_ray.dir));
         reflect_ray.dir.normalize();
 
         Color specular_lighting = pathtraceColor(reflect_ray, depth + 1);
@@ -120,9 +122,12 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 //********************** Private Helper Functions **************************
 /**
  * finds the closest object and time to get there by the ray in the object list.
- * viewRay the ray to test
- * closestObject the index of the current closest object (gets modified)
- * bestTime the current best time of the closest object
+ * @param viewRay the ray to test
+ * @param closestObject the index of the current closest object (gets modified)
+ * @param bestTime the current best time of the closest object (is overwritten)
+ *
+ * @post *closestObj points to the closest object
+ * @post bestTime is the time to the closest object
  */
 void Raytracer::getClosestObject(const ray& viewRay, Drawable **closestObj, double& bestTime)
 {

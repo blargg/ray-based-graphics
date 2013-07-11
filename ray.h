@@ -11,6 +11,9 @@
 #include "common.h"
 using namespace Eigen;
 
+/**
+ * Defines a ray (point and vector).
+ */
 class ray
 {
     public:

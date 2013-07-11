@@ -14,18 +14,35 @@ TEST(CommonTest, cross) {
     EXPECT_TRUE(res == Vector4d(-10,1,-5,0));
 }
 
+TEST(CommonTest, isUnitVector) {
+    Vector4d v(1,0,0,0);
+    EXPECT_TRUE(isUnitVector<Vector4d>(v)) << "v is a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,1,1))) << "Vector3d:: that is not a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,0,-1))) << "Vector3d:: that is not a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,0,.001))) << "Vector3d:: that is not a unit vector";
+
+    for(int i = 0; i < 100; i++) {
+        Vector3d a = Vector3d::Random();
+        a.normalize();
+        EXPECT_TRUE(isUnitVector<Vector3d>(a)) << "random normalized vector";
+    }
+}
+
 TEST(CommonTest, perturb) {
     Vector4d res = perturb(Vector4d(1,0,0,0), M_PI/2.0);
     EXPECT_GE(res(0), 0.0);
+    EXPECT_TRUE(isUnitVector<Vector4d>(res)) << "result is not normalized";
 
     int i = 0;
     Vector4d original;
     for(i = 0; i < 100; i++) {
         original = Vector4d::Random();
+        original[3] = 0.0;
         original.normalize();
         res = perturb(original, M_PI/2.0);
-        EXPECT_LE(res.dot(original), 1.0);
-        EXPECT_GE(res.dot(original), 0.0);
+        EXPECT_LE(res.dot(original), 1.0) << "res or original to large?";
+        EXPECT_GE(res.dot(original), 0.0) << "angle over the limit.";
+        EXPECT_TRUE(isUnitVector<Vector4d>(res)) << "result is not normalized";
     }
 }
 

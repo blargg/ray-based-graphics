@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-g -fopenmp -std=c++11 -O2
+FLAGS=-g -D NDEBUG -fopenmp -std=c++11 -O2
 WARNINGS= -Wall -Wno-unused-local-typedefs -Werror
 
 LIBS= -lpng
@@ -28,8 +28,14 @@ MATERIALS_OBJ=$(MATERIALS_SRC:.cpp=.o)
 # allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
+.PHONY: debug $(RTEXE)
+
 $(RTEXE) : main.o raytracer.o obj_loader.o mtl_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
 	$(LK) $(LIBS) -o $@ $^
+
+debug : LINKER_FLAGS += -ltcmalloc -lprofiler
+debug : FLAGS += -U NDEBUG
+debug : $(RTEXE)
 
 camera.o : camera.cpp camera.h
 	$(COMPILE) $<

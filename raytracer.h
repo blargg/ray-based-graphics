@@ -1,11 +1,3 @@
-/**
- * @brief Class that maintains the scene objects and renders the scene.
- * Only renders individual rays. Pictures are rendered in a camera object,
- * wich would use this class to render a PNG.\n
- * NOTE: This class is pretty experimental. I don't really like how its set up and would like to change it.
- * For now I will just trust that the user of the class can manage the Drawable pointers properly.
- */
-
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
@@ -24,6 +16,9 @@
 using std::vector;
 using namespace Eigen;
 
+/**
+ * Defines several rendering algorithms and useful functions.
+ */
 class Raytracer
 {
     public:

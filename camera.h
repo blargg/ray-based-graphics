@@ -11,13 +11,23 @@
 
 using std::string;
 
+/**
+ * Represents the data to define a Camera.
+ * Takes the position, orientation, and sizes.
+ */
 struct Camera
 {
+    /// The height of the final image (eg a PNG) of the render.
     int imgHeight;
+    /// The width of the final image of the render.
     int imgWidth;
+    /// The height of the camera in the world.
     double worldHeight;
+    /// The height of the camera in the world.
     double worldWidth;
+    /// The position of the center and the direction to point.
     ray position;
+    /// The "up" direction for the camera.
     Vector4d up;
 };
 

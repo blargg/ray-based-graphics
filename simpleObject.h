@@ -13,6 +13,11 @@
 
 #include "assert.h"
 
+/**
+ * Drawable that pairs a shape with a material.
+ * Simply calls the appropiate functions of the objects you pass to it.
+ * This allows mixing of any shape with any material.
+ */
 class SimpleObject: public Drawable
 {
     private:
@@ -24,12 +29,33 @@ class SimpleObject: public Drawable
     void copy(const SimpleObject& other);
 
     public:
+    /**
+     * Initialize a SimpleObject with a sphere and a solid color
+     */
     SimpleObject();
+
+    /**
+     * Initialize the SimpleObject with the given shape and material.
+     * Copies the given shape and material to the internal object.
+     * @param s the shape for the simple object
+     * @param mat the material to use
+     */
     SimpleObject(const Shape& s, const Material& mat);
+
+    /**
+     * Makes a new SimpleObject as a copy of antoher.
+     */
     SimpleObject(const SimpleObject& other);
 
+    /**
+     * Defines the assignment operator.
+     */
     SimpleObject& operator=(SimpleObject const & rhs);
 
+    /**
+     * Cleans up the simple object.
+     * Deletes the internal shape and material.
+     */
     virtual ~SimpleObject();
 
     virtual double intersection(const ray viewRay) const;

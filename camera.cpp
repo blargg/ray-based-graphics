@@ -105,11 +105,22 @@ void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSample
 void progressiveRender(string const file_base, Raytracer render, Camera cam, int sampleInterval) {
     int sampleNumber = 1;
 
+    size_t split_point = file_base.find_last_of('/');
+    string baseDir;
+    string filename;
+    if(split_point == string::npos) {
+        baseDir = "";
+        filename = file_base;
+    } else {
+        baseDir = file_base.substr(0, split_point + 1);
+        filename = file_base.substr(split_point + 1);
+    }
+
     Film myFilm(cam.imgSize, cam.imgSize);
     while(1) {
         pathtraceImage(&myFilm, render, cam, sampleInterval);
         PNG pic = myFilm.writeImage();
-        pic.writeToFile(file_base + std::to_string(sampleNumber) + ".png");
+        pic.writeToFile(baseDir + std::to_string(sampleNumber) + "_" + filename);
 
         sampleNumber++;
     }

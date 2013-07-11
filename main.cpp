@@ -1,6 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <getopt.h>
+#include <stdlib.h>
 
 #include "easypng.h"
 
@@ -34,23 +36,58 @@ using std::min;
 using std::max;
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
+    int optChar;
+    int numSamples = 10;
+    string outputFileName = "dump/out.png";
+
+    enum {
+        raytrace, path_trace, progressive_p
+    } render_algorithm;
+    render_algorithm = progressive_p;
+
+    static struct option long_options[] = {
+        {"raytrace",     no_argument,        0,  'r'},
+        {"pathtrace",    required_argument,  0,  'p'},
+        {"progressive",  required_argument,  0,  'g'},
+        {"output",       required_argument,  0,  'o'}
+    };
+    while(1) {
+        int option_index = 0;
+        optChar = getopt_long(argc, argv, "rp:g:o:",
+                long_options, &option_index);
+        if(optChar == -1)
+            break;
+        switch(optChar) {
+            case 'r':
+                render_algorithm = raytrace;
+                break;
+
+            case 'p':
+                render_algorithm = path_trace;
+                numSamples = atoi(optarg);
+                break;
+
+            case 'g':
+                render_algorithm = progressive_p;
+                numSamples = atoi(optarg);
+                break;
+
+            case 'o':
+                outputFileName = optarg;
+                break;
+
+            case '?':
+                printf("unrecognized option\n");
+                break;
+            default:
+                printf("getopt returned character code 0%o\n", optChar);
+        }
+    }
+
     Raytracer renderer;
     ObjLoader loader;
-    loader.load_to_list(renderer.objList, "room.obj");
-
-    //Properties p;
-    //p.color = Color(0,0,0);
-    //p.emittance = Color(1,1,1);
-    //Sphere lightShape(Vector4d(-20,10,0, 1), 5);
-    //renderer.objList.push_back(new SimpleObject(lightShape, SolidColor(p)));
-
-    //Sphere s(Vector4d(0,0,0,1), 10);
-    //p.color = Color(1,0.5,0.5);
-    //p.specular = Color(0.5,0.5,0.5);
-    //p.emittance = Color(0,0,0);
-    //renderer.objList.push_back(new SimpleObject(PerturbNormals(s,M_PI/6.0), SolidColor(p)));
 
     Camera cam;
     cam.imgSize = 500;
@@ -59,17 +96,27 @@ int main()
     cam.up = Vector4d(0,1,0,0);
     cam.worldSize = 1.0;
 
-    //PNG *pic = renderImage(renderer, cam);
-    //pic->writeToFile("output.png");
-    //delete pic;
+    if(optind < argc) {
+        while (optind < argc) {
+            loader.load_to_list(renderer.objList, argv[optind++]);
+        }
+    }
 
-    //Film myFilm(cam.imgSize,cam.imgSize);
-    //pathtraceImage(&myFilm, renderer, cam, 50);
-    //PNG pic = myFilm.writeImage();
-    //pic.writeToFile("output.png");
+    if(render_algorithm == raytrace) {
+        PNG *pic = renderImage(renderer, cam);
+        pic->writeToFile(outputFileName);
+        delete pic;
+    }
 
-    progressiveRender("dump/out", renderer, cam, 10);
+    if(render_algorithm == path_trace) {
+        Film myFilm(cam.imgSize,cam.imgSize);
+        pathtraceImage(&myFilm, renderer, cam, numSamples);
+        PNG pic = myFilm.writeImage();
+        pic.writeToFile(outputFileName);
+    }
+
+    if(render_algorithm == progressive_p)
+        progressiveRender(outputFileName, renderer, cam, numSamples);
 
     renderer.clear_objects();
-    return 0;
 }

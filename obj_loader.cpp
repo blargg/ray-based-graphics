@@ -18,6 +18,9 @@ void ObjLoader::load_to_list(vector<Drawable*> &objList, std::string filename){
     string command;
 
     std::ifstream fs(filename.c_str());
+    if(!fs) {
+        std::cerr << "ObjLoader: Cannot load " << filename << " does not exist." << std::endl;
+    }
     string baseDir = filename.substr(0, filename.find_last_of('/') + 1);
     while(getline(fs, line)){
         std::istringstream iss(line);

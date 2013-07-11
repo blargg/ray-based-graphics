@@ -15,6 +15,11 @@ void MtlLoader::add_to_map(map<string, SolidColor> &map, string filename) {
     string command;
 
     std::ifstream fs(filename.c_str());
+    if(!fs) {
+        std::cerr << "MtlLoader: Cannot load " << filename << ". File does not exist." << std::endl;
+        return;
+    }
+
     while(getline(fs, line)){
         std::istringstream iss(line);
 

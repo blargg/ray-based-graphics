@@ -13,8 +13,10 @@ using std::string;
 
 struct Camera
 {
-    int imgSize;
-    double worldSize;
+    int imgHeight;
+    int imgWidth;
+    double worldHeight;
+    double worldWidth;
     ray position;
     Vector4d up;
 };
@@ -36,10 +38,7 @@ PNG* renderImage(Raytracer render, Camera cam);
  *
  * imgeFilm the pointer to the film to operate on
  * render the renderer for the scene
- * imgSize the size of the image to render
- * worldSize the size of the viewing window in the scene
- * position the location and direction of the camera
- * up the up direction for the camera
+ * cam the specification for the camera to render
  * numSamples the number of samples for each pixel in the film
  */
 void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSamples);

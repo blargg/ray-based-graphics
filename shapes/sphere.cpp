@@ -42,4 +42,16 @@ Vector4d Sphere::normal_vectre(const Vector4d& surface) const
     return surface - location;
 }
 
+double Sphere::getMinBound(int axis) const {
+    return location(axis) - radius;
+}
+
+double Sphere::getMaxBound(int axis) const {
+    return location(axis) - radius;
+}
+
+bool Sphere::intersectsBox(AABB box) const {
+    return true;
+}
+
 #undef EPSILON

@@ -24,3 +24,15 @@ double PerturbNormals::intersection(const ray& viewRay) const {
 Vector4d PerturbNormals::normal_vectre(const Vector4d& surface) const {
     return perturb(shape->normal_vectre(surface), angle);
 }
+
+double PerturbNormals::getMinBound(int axis) const {
+    return shape->getMinBound(axis);
+}
+
+double PerturbNormals::getMaxBound(int axis) const {
+    return shape->getMaxBound(axis);
+}
+
+bool PerturbNormals::intersectsBox(AABB box) const {
+    return shape->intersectsBox(box);
+}

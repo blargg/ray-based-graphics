@@ -1,9 +1,10 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include "ray.h"
 #include <Eigen/Dense>
+#include "ray.h"
 #include "common.h"
+#include "aabb.h"
 
 using namespace Eigen;
 
@@ -36,6 +37,9 @@ class Shape
     virtual double intersection(const ray& viewRay) const = 0;
     /// Gives the normal vectre for the given point.
     virtual Vector4d normal_vectre(const Vector4d& surface) const = 0;
+    virtual double getMinBound(int axis) const = 0;
+    virtual double getMaxBound(int axis) const = 0;
+    virtual bool intersectsBox(AABB box) const = 0;
 
 };
 #endif

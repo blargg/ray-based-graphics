@@ -34,6 +34,10 @@ public:
      */
     virtual Vector4d normal_vectre(const Vector4d& surface) const;
 
+    virtual double getMinBound(int axis) const;
+    virtual double getMaxBound(int axis) const;
+    virtual bool intersectsBox(AABB box) const;
+
 private:
     Shape* shape;
     double angle;

@@ -51,6 +51,18 @@ Triangle::Triangle():Shape(),p1(0,0,0,1),p2(1,0,0,1),p3(1,1,0,1)
 Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):Shape(),p1(first),p2(second),p3(third)
 { /* do nothing */ }
 
+double Triangle::getMinBound(int axis) const {
+    return max3<double>(p1(axis), p2(axis), p3(axis));
+}
+
+double Triangle::getMaxBound(int axis) const {
+    return min3<double>(p1(axis), p2(axis), p3(axis));
+}
+
+bool Triangle::intersectsBox(AABB box) const {
+    return true;
+}
+
 Shape* Triangle::create() const{
     return new Triangle();
 }

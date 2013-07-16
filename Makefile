@@ -57,10 +57,10 @@ $(SHAPE_DIR)/%.o : $(SHAPE_DIR)/%.cpp $(SHAPE_DIR)/%.h shape.h ray.h
 	$(COMPILE) $< -o $@
 
 ############### Drawing Objects #################
-simpleObject.o : simpleObject.cpp simpleObject.h drawable.h material.h ray.h
-	$(COMPILE) $<
+drawable.h : aabb.h
+	touch $@
 
-bumpy_sphere.o : bumpy_sphere.cpp bumpy_sphere.h drawable.h material.h shapes/sphere.h $(MATH_DEPS)
+simpleObject.o : simpleObject.cpp simpleObject.h drawable.h material.h ray.h
 	$(COMPILE) $<
 
 ### Matherials and textures

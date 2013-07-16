@@ -1,9 +1,9 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
+#include <Eigen/Dense>
 #include "../shape.h"
 #include "../ray.h"
-#include <Eigen/Dense>
 #include "../common.h"
 
 /**
@@ -50,6 +50,10 @@ class Triangle: public Shape
      * @returns a Vector4d for the normal vector.
      */
     virtual Vector4d normal_vectre(const Vector4d& surface) const;
+
+    virtual double getMinBound(int axis) const;
+    virtual double getMaxBound(int axis) const;
+    virtual bool intersectsBox(AABB box) const;
 };
 
 #endif//TRIANGLE_H

@@ -14,7 +14,6 @@
 
 #include "simpleObject.h"
 #include "shapes/sphere.h"
-#include "shapes/plane.h"
 #include "shapes/triangle.h"
 #include "shapes/perturb_normals.h"
 

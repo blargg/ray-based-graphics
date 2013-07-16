@@ -3,6 +3,7 @@
 
 #include "ray.h"
 #include "properties.h"
+#include "aabb.h"
 
 /**
  * @brief An interface for anything that can be drawn in the Ray tracing algorithm
@@ -36,6 +37,22 @@ class Drawable
      * @brief Gets the Properties of the Drawable at the given point.
      */
     virtual Properties getProperties(const Vector4d location) const = 0;
+
+    /**
+     * Returns the minimum bound for the drawable.
+     */
+    virtual double getMinBound(int axis) const = 0;
+
+    /**
+     * Returns the maximum bount for the drawable
+     */
+    virtual double getMaxBound(int axis) const = 0;
+
+    /**
+     * Checks if the Drawable intersects the aabox
+     * @returns true if the drawable intersects the box
+     */
+    virtual bool intersectsBox(AABB box) const = 0;
 };
 
 #endif

@@ -63,6 +63,18 @@ Properties SimpleObject::getProperties(const Vector4d location) const
 	return texture->getProperties(location);
 }
 
+double SimpleObject::getMinBound(int axis) const {
+    return shape->getMinBound(axis);
+}
+
+double SimpleObject::getMaxBound(int axis) const {
+    return shape->getMaxBound(axis);
+}
+
+bool SimpleObject::intersectsBox(AABB box) const {
+    return shape->intersectsBox(box);
+}
+
 void SimpleObject::setShape(const Shape& s)
 {
 	assert(shape != NULL);

@@ -44,4 +44,15 @@ T max3(T a, T b, T c) {
         return (b>c?b:c);
 }
 
+/**
+ * returns the minimum of the three given values
+ */
+template <class T>
+T min3(T a, T b, T c) {
+    if(a > b)
+        return (b < c?b:c);
+    else
+        return (a < c?a:c);
+}
+
 #endif // RT_COMMON

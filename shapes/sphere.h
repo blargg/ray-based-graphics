@@ -61,5 +61,9 @@ class Sphere: public Shape
      * @returns a normal vector for the surface.
      */
     virtual Vector4d normal_vectre(const Vector4d& surface) const;
+
+    virtual double getMinBound(int axis) const;
+    virtual double getMaxBound(int axis) const;
+    virtual bool intersectsBox(AABB box) const;
 };
 #endif

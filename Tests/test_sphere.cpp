@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../shapes/sphere.h"
+#include "../aabb.h"
 
 namespace{
 class SphereTest : public ::testing::Test{
@@ -70,6 +71,29 @@ TEST_F(SphereTest, normals){
     EXPECT_DOUBLE_EQ(normal(0), 0.0);
     EXPECT_DOUBLE_EQ(normal(1), 1.0);
     EXPECT_DOUBLE_EQ(normal(2), 0.0);
+}
+
+TEST_F(SphereTest, intersectsAABB) {
+    AABB box;
+    box.minCorner = Vector3d(-2,-2,-2);
+    box.maxCorner = Vector3d(2,2,2);
+    EXPECT_TRUE(unit_sphere.intersectsBox(box)) << "box completely holds shape";
+
+    box.minCorner = Vector3d(0,0,0);
+    box.maxCorner = Vector3d(2,2,2);
+    EXPECT_TRUE(unit_sphere.intersectsBox(box)) << "box partial overlap";
+
+    box.minCorner = Vector3d(0,0,0);
+    box.maxCorner = Vector3d(.2,.2,.2);
+    EXPECT_TRUE(unit_sphere.intersectsBox(box)) << "box inside shape";
+
+    box.minCorner = Vector3d(.9,.9,.9);
+    box.maxCorner = Vector3d(3,3,3);
+    EXPECT_FALSE(unit_sphere.intersectsBox(box)) << "intersects sphere's bounding box, but not sphere";
+
+    box.minCorner = Vector3d(2,2,2);
+    box.maxCorner = Vector3d(3,3,3);
+    EXPECT_FALSE(unit_sphere.intersectsBox(box)) << "clearly no intersection";
 }
 
 } // namespace

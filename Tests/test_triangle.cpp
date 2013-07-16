@@ -2,6 +2,7 @@
 
 #include "../shapes/triangle.h"
 #include "../common.h"
+#include "../aabb.h"
 #include <Eigen/Dense>
 
 namespace{
@@ -80,6 +81,26 @@ TEST_F(TriangleTest, normals){
     EXPECT_DOUBLE_EQ(normal[0], 0.0);
     EXPECT_DOUBLE_EQ(normal[1], 0.0);
     EXPECT_DOUBLE_EQ(normal[2], 1.0);
+}
+
+TEST_F(TriangleTest, intersectsAABB) {
+    AABB box;
+
+    box.minCorner = Vector3d(-1,-1,-1);
+    box.maxCorner = Vector3d(2,2,2);
+    EXPECT_TRUE(t1.intersectsBox(box)) << "Box entirely contains triangle";
+
+    box.minCorner = Vector3d(0,0,-1);
+    box.maxCorner = Vector3d(2,2,2);
+    EXPECT_TRUE(t1.intersectsBox(box)) << "Partial intersection";
+
+    box.minCorner = Vector3d(0,.6,-1);
+    box.maxCorner = Vector3d(.5,1,2);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "Close miss";
+
+    box.minCorner = Vector3d(3,3,3);
+    box.maxCorner = Vector3d(4,4,4);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "No intersection";
 }
 
 } // namespace

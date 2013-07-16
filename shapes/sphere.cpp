@@ -51,7 +51,18 @@ double Sphere::getMaxBound(int axis) const {
 }
 
 bool Sphere::intersectsBox(AABB box) const {
-    return true;
+    double dmin = 0.0;
+
+    for(int i = 0; i < 3; i++) {
+        if(location(i) < box.minCorner(i)){
+            dmin += (location(i) - box.minCorner(i)) * (location(i) - box.minCorner(i));
+        }
+        else if(location(i) > box.maxCorner(i)) {
+            dmin += (location(i) - box.maxCorner(i)) * (location(i) - box.maxCorner(i));
+        }
+    }
+
+    return dmin < (radius * radius);
 }
 
 #undef EPSILON

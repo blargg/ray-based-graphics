@@ -93,7 +93,7 @@ common.o : common.cpp common.h
 	$(COMPILE) $<
 
 ########################## Test Cases ########################################
-TEST_EXES=Tests/Sphere.test Tests/Plane.test Tests/Triangle.test\
+TEST_EXES=Tests/Sphere.test Tests/Triangle.test\
 		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test\
 		  Tests/MtlLoader.test
 
@@ -109,9 +109,6 @@ Tests/Ray.test : Tests/test_ray.cpp ray.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/Sphere.test : Tests/test_sphere.cpp shapes/sphere.o shape.o
-	g++ -o $@ $^ $(TEST_OPTIONS)
-
-Tests/Plane.test : Tests/test_plane.cpp shapes/plane.o shape.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/Triangle.test : Tests/test_triangle.cpp shapes/triangle.o shape.o common.o

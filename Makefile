@@ -89,13 +89,16 @@ AreaLight.o : AreaLight.cpp AreaLight.h
 ray.o : ray.cpp ray.h
 	$(COMPILE) $<
 
+kdtree.o : kdtree.cpp kdtree.h aabb.h ray.h drawable.h
+	$(COMPILE) $<
+
 common.o : common.cpp common.h
 	$(COMPILE) $<
 
 ########################## Test Cases ########################################
 TEST_EXES=Tests/Sphere.test Tests/Triangle.test\
 		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test\
-		  Tests/MtlLoader.test
+		  Tests/MtlLoader.test Tests/KDTree.test
 
 run_tests : tests
 	$(foreach test, $(TEST_EXES), ./$(test) ;)
@@ -121,6 +124,9 @@ Tests/MtlLoader.test : Tests/test_mtl_loader.cpp mtl_loader.o materials/solidCol
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o common.o
+	g++ -o $@ $^ $(TEST_OPTIONS)
+
+Tests/KDTree.test : Tests/test_kdtree.cpp kdtree.o obj_loader.o mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 ############# Makefile utilities ################

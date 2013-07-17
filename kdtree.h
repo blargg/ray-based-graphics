@@ -4,6 +4,7 @@
 #include <vector>
 #include "ray.h"
 #include "drawable.h"
+#include "aabb.h"
 using std::vector;
 
 /**
@@ -13,12 +14,13 @@ using std::vector;
  */
 struct KDNode {
 public:
+    KDNode():left(NULL),right(NULL),is_leaf(false)
+    { /* do nothing */};
 
     vector<Drawable *> objects;
     KDNode *left;
     KDNode *right;
 
-    int axis;
     double split_pos;
     bool is_leaf;
 };
@@ -56,12 +58,34 @@ public:
      * @param time will get set to the time of the intersection
      * @param object will point to the object or null if there was no intersection
      */
-    void intersection(ray viewRay, double &time, Drawable &*object);
+    void intersection(ray viewRay, double &time, Drawable **object);
 
 private:
     KDNode *root;
 
-    void buildTree(KDNode *node);
+    /// An AABB that can surround all objects in the scene.
+    AABB bounds;
+
+    static const double cost_traversal;
+    static const double cost_intersection;
+
+    /**
+     * recusively assembles the tree
+     */
+    void buildTree(KDNode *node, AABB curBounds, int curAxis);
+
+    /**
+     * determines the best split position for a node
+     */
+    double bestSplitPos(KDNode *node, AABB bounds, int axis, double &finalCost);
+
+    /**
+     * counts the number of primatives in the list that intersect
+     * the AABB
+     */
+    int numIntersections(const vector<Drawable *> &objList, AABB bounds);
+
+    double costSplit(const vector<Drawable *> &objList, AABB bounds, double split, int axis);
 };
 
 #endif // RT_KDTREE_H

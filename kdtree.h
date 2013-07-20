@@ -25,6 +25,17 @@ public:
     bool is_leaf;
 };
 
+
+/**
+ * Describes the intersection with a ray.
+ */
+struct IntersectionData {
+    /// time to the intersection
+    double time;
+    /// the object that was intersected
+    Drawable *obj;
+};
+
 /**
  * KDTree for drawable objects to speed ray intersection tests.
  * This allows you to add a set of drawables and it will handle
@@ -32,6 +43,12 @@ public:
  */
 class KDTree {
 public:
+
+    /**
+     * Makes a default tree with no objects.
+     */
+    KDTree();
+
     /**
      * Build a new KDTree that holds all the given objects
      *
@@ -55,10 +72,9 @@ public:
      * @note instead of returning values, you pass in references to change.
      * @pre time is set to the minimum time accepted for intersections (usually 0.0)
      * @param viewRay the ray to test intersections for.
-     * @param time will get set to the time of the intersection
-     * @param object will point to the object or null if there was no intersection
+     * @returns IntersectionData for the found intersection
      */
-    void intersection(ray viewRay, double &time, Drawable **object);
+    void intersection(ray viewRay, double &time, Drawable **obj);
 
 private:
     KDNode *root;
@@ -73,6 +89,19 @@ private:
      * recusively assembles the tree
      */
     void buildTree(KDNode *node, AABB curBounds, int curAxis);
+
+    /**
+     * Recursively search for the closest intersection in the tree.
+     * @param node the node to search from
+     * @param bounds the bounds for the node
+     * @param curAxis the axis that this node operates on
+     */
+    IntersectionData searchNode(KDNode *node, const ray &viewRay, double tmin, double tmax, int curAxis);
+
+    /**
+     * Finds the closest intersection with the ray if one exists.
+     */
+    IntersectionData closestIntersection(const vector<Drawable *> &objList, const ray &viewRay);
 
     /**
      * determines the best split position for a node

@@ -103,6 +103,8 @@ int main(int argc, char **argv)
         }
     }
 
+    renderer.objTree = KDTree(renderer.objList);
+
     if(render_algorithm == raytrace) {
         PNG *pic = renderImage(renderer, cam);
         pic->writeToFile(outputFileName);

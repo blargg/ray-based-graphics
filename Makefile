@@ -30,7 +30,7 @@ first : $(RTEXE)
 
 .PHONY: debug $(RTEXE)
 
-$(RTEXE) : main.o raytracer.o obj_loader.o mtl_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o
+$(RTEXE) : main.o raytracer.o obj_loader.o mtl_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o kdtree.o aabb.o
 	$(LK) $(LIBS) -o $@ $^
 
 debug : LINKER_FLAGS += -ltcmalloc -lprofiler
@@ -46,7 +46,7 @@ film.o : film.cpp film.h easypng.h color.h
 main.o : main.cpp obj_loader.h common.h film.h
 	$(COMPILE) $<
 
-raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h
+raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h kdtree.h
 	$(COMPILE) $<
 
 ############### Geometry ####################
@@ -92,13 +92,16 @@ ray.o : ray.cpp ray.h
 kdtree.o : kdtree.cpp kdtree.h aabb.h ray.h drawable.h
 	$(COMPILE) $<
 
+aabb.o : aabb.cpp aabb.h ray.h common.h
+	$(COMPILE) $<
+
 common.o : common.cpp common.h
 	$(COMPILE) $<
 
 ########################## Test Cases ########################################
 TEST_EXES=Tests/Sphere.test Tests/Triangle.test\
 		  Tests/ObjLoader.test Tests/AreaLight.test Tests/Common.test\
-		  Tests/MtlLoader.test Tests/KDTree.test
+		  Tests/MtlLoader.test Tests/KDTree.test Tests/AABB.test
 
 run_tests : tests
 	$(foreach test, $(TEST_EXES), ./$(test) ;)
@@ -126,7 +129,10 @@ Tests/MtlLoader.test : Tests/test_mtl_loader.cpp mtl_loader.o materials/solidCol
 Tests/AreaLight.test : Tests/test_arealight.cpp AreaLight.o common.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
-Tests/KDTree.test : Tests/test_kdtree.cpp kdtree.o obj_loader.o mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o
+Tests/AABB.test : Tests/test_aabb.cpp aabb.o ray.o common.o
+	g++ -o $@ $^ $(TEST_OPTIONS)
+
+Tests/KDTree.test : Tests/test_kdtree.cpp kdtree.o obj_loader.o mtl_loader.o materials/solidColor.o shapes/triangle.o simpleObject.o common.o shape.o shapes/sphere.o aabb.o
 	g++ -o $@ $^ $(TEST_OPTIONS)
 
 ############# Makefile utilities ################

@@ -131,18 +131,19 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
  */
 void Raytracer::getClosestObject(const ray& viewRay, Drawable **closestObj, double& bestTime)
 {
-    double current_intersection = 0.0;
-    for(unsigned int i = 0; i < objList.size(); ++i)
-    {
-        current_intersection = objList[i]->intersection(viewRay);
-        if(current_intersection > MIN_INTERSECTION_DIST &&
-          (bestTime < 0.0 || current_intersection < bestTime))
-        {
-            // Store the time of intersection and the object intersected.
-            bestTime = current_intersection;
-            *closestObj = objList[i];
-        }
-    }
+    objTree.intersection(viewRay, bestTime, closestObj);
+    //double current_intersection = 0.0;
+    //for(unsigned int i = 0; i < objList.size(); ++i)
+    //{
+        //current_intersection = objList[i]->intersection(viewRay);
+        //if(current_intersection > MIN_INTERSECTION_DIST &&
+          //(bestTime < 0.0 || current_intersection < bestTime))
+        //{
+            //// Store the time of intersection and the object intersected.
+            //bestTime = current_intersection;
+            //*closestObj = objList[i];
+        //}
+    //}
 }
 
 vector<Light> Raytracer::generateLights() {

@@ -53,11 +53,11 @@ Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):Shape(),p1(f
 { /* do nothing */ }
 
 double Triangle::getMinBound(int axis) const {
-    return max3<double>(p1(axis), p2(axis), p3(axis));
+    return min3<double>(p1(axis), p2(axis), p3(axis));
 }
 
 double Triangle::getMaxBound(int axis) const {
-    return min3<double>(p1(axis), p2(axis), p3(axis));
+    return max3<double>(p1(axis), p2(axis), p3(axis));
 }
 
 bool Triangle::intersectsBox(AABB box) const {

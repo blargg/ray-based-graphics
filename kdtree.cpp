@@ -2,9 +2,16 @@
 #include <assert.h>
 #include <algorithm>
 #include <stdio.h>
+#include <limits>
 
 const double KDTree::cost_traversal = 0.3;
 const double KDTree::cost_intersection = 1.0;
+
+KDTree::KDTree() {
+    root = new KDNode;
+    bounds.maxCorner = Vector3d(1,1,1);
+    bounds.minCorner = Vector3d(0,0,0);
+}
 
 KDTree::KDTree(vector<Drawable *> objList) {
     assert(objList.size() > 0);
@@ -34,7 +41,85 @@ KDTree::~KDTree() {
 void KDTree::freeAllObj() {
 }
 
-void KDTree::intersection(ray viewRay, double &time, Drawable **object) {
+void KDTree::intersection(ray viewRay, double &time, Drawable **obj) {
+    IntersectionData searchResult;
+    //searchResult = closestIntersection(root->objects, viewRay);
+    double tmin, tmax;
+    if(bounds.intersection(viewRay, tmin, tmax)) {
+        searchResult = searchNode(root, viewRay, tmin, tmax, 0);
+    } else {
+        IntersectionData intersection;
+        intersection.obj = NULL;
+        intersection.time = -1 * std::numeric_limits<double>::max();
+        searchResult = intersection;
+    }
+    time = searchResult.time;
+    *obj = searchResult.obj;
+}
+
+IntersectionData KDTree::searchNode(KDNode *node, const ray &viewRay, double tmin, double tmax, int curAxis) {
+    //return closestIntersection(node->objects, viewRay);
+
+    assert(tmin <= tmax);
+    assert(curAxis >=0 && curAxis < 3);
+    if(node->is_leaf) {
+        return closestIntersection(node->objects, viewRay);
+    }
+
+    int nextAxis = (curAxis + 1) % 3;
+    double tSplit = (node->split_pos - viewRay.orig(curAxis)) / viewRay.dir(curAxis);
+    KDNode *nearNode, *farNode;
+    if(viewRay.orig(curAxis) < node->split_pos) {
+        nearNode = node->left;
+        farNode = node->right;
+    } else {
+        nearNode = node->right;
+        farNode = node->left;
+    }
+
+
+    if(tSplit > tmax) {
+        return searchNode(nearNode, viewRay, tmin, tmax, nextAxis);
+    } else if (tSplit < tmin) {
+        if(tSplit > 0)
+            return searchNode(farNode, viewRay, tmin, tmax, nextAxis);
+        else if(tSplit < 0)
+            return searchNode(nearNode, viewRay, tmin, tmax, nextAxis);
+        else {
+            if(viewRay.dir(curAxis) < 0)
+                return searchNode(node->left, viewRay, tmin, tmax, nextAxis);
+            else
+                return searchNode(node->right, viewRay, tmin, tmax, nextAxis);
+        }
+    } else {
+        if(tSplit > 0) {
+            IntersectionData test = searchNode(nearNode, viewRay, tmin, tSplit, nextAxis);
+            if(test.obj != NULL && test.time < tSplit + EPSILON)
+                return test;
+            else
+                return searchNode(farNode, viewRay, tSplit, tmax, nextAxis);
+        } else {
+            return searchNode(nearNode, viewRay, tSplit, tmax, nextAxis);
+        }
+    }
+}
+
+IntersectionData KDTree::closestIntersection(const vector<Drawable *> &objList, const ray &viewRay) {
+    IntersectionData intersection;
+    intersection.obj = NULL;
+    intersection.time = std::numeric_limits<double>::max();
+
+    double tmp_time;
+    for(unsigned int i = 0; i < objList.size(); i++) {
+        Drawable *object = objList[i];
+        tmp_time = object->intersection(viewRay);
+        if(tmp_time > EPSILON && tmp_time < intersection.time) {
+            intersection.time = tmp_time;
+            intersection.obj = object;
+        }
+    }
+
+    return intersection;
 }
 
 void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
@@ -62,6 +147,8 @@ void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
     }
 
     node->split_pos =  potentialSplit;
+    assert(node->split_pos < curBounds.maxCorner(curAxis));
+    assert(node->split_pos > curBounds.minCorner(curAxis));
     node->left = new KDNode;
     node->right = new KDNode;
 
@@ -94,8 +181,8 @@ double KDTree::bestSplitPos(KDNode *node, AABB bounds, int axis, double &finalCo
     double bestSplit = splitPos[0];
     double bestCost = costSplit(node->objects, bounds, splitPos[0], axis);
     for(unsigned int i = 1; i < splitPos.size(); i++) {
-        //if(splitPos[i] < bounds.minCorner(axis) || splitPos[i] > bounds.maxCorner(axis))
-            //continue;
+        if(splitPos[i] < bounds.minCorner(axis) || splitPos[i] > bounds.maxCorner(axis))
+            continue;
         double currentCost = costSplit(node->objects, bounds, splitPos[i], axis);
         if(currentCost < bestCost) {
             bestSplit = splitPos[i];

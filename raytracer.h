@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 
 #include "drawable.h"
+#include "kdtree.h"
 #include "easypng.h"
 #include "light.h"
 #include "AreaLight.h"
@@ -29,6 +30,8 @@ class Raytracer
      * This is left for the user to decide.
      */
     vector<Drawable*> objList;
+
+    KDTree objTree;
     /// This is a list of all the lights in the scene.
     vector<Light> lightList;
 

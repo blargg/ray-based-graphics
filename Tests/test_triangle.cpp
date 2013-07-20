@@ -101,6 +101,18 @@ TEST_F(TriangleTest, intersectsAABB) {
     box.minCorner = Vector3d(3,3,3);
     box.maxCorner = Vector3d(4,4,4);
     EXPECT_FALSE(t1.intersectsBox(box)) << "No intersection";
+
+    box.minCorner = Vector3d(0,0,0);
+    box.maxCorner = Vector3d(1,1,1);
+    EXPECT_TRUE(t1.intersectsBox(box)) << "Triangle on face of box intersects";
+
+    box.minCorner = Vector3d(0,0,0.000001);
+    box.maxCorner = Vector3d(1,1,1);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "Triangle just misses the face of the box";
+
+    box.minCorner = Vector3d(0,0,-1);
+    box.maxCorner = Vector3d(1,1,-0.0000001);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "Triangle just misses the face of the box";
 }
 
 } // namespace

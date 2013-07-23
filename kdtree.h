@@ -50,11 +50,27 @@ public:
     KDTree();
 
     /**
+     * Copyies another KDTree into this one.
+     */
+    KDTree(const KDTree &other);
+
+    /**
      * Build a new KDTree that holds all the given objects
      *
      * @param  objList a list of object for the KDTree to manage
      */
     KDTree (vector<Drawable *> objList);
+
+    /**
+     * Assignment operator.
+     */
+    KDTree & operator=(const KDTree &other);
+
+    /**
+     * Cleans up tree, then rebuilds it with a new object list.
+     * Does not free the Drawables given to it.
+     */
+    void rebuildTree(vector<Drawable *> objList);
 
     /**
      * Removes the KDTree.
@@ -86,9 +102,26 @@ private:
     static const double cost_intersection;
 
     /**
+     * Recursively copies the node and returns the pointer.
+     * Allocates the node structure.
+     */
+    KDNode* copyTree(KDNode *node);
+
+    /**
+     * Recursively deletes the tree nodes, but not the object held inside.
+     */
+    void deleteTree(KDNode *node);
+
+    /**
      * recusively assembles the tree
      */
     void buildTree(KDNode *node, AABB curBounds, int curAxis);
+
+    /**
+     * Takes a list of objects and returns the smallest
+     * AABB that contians them all
+     */
+    AABB findBounds(vector<Drawable *> objList);
 
     /**
      * Recursively search for the closest intersection in the tree.

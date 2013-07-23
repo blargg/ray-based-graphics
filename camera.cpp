@@ -8,7 +8,7 @@
 using std::min;
 using std::max;
 
-PNG* renderImage(Raytracer render, Camera cam) {
+PNG* renderImage(Raytracer &render, Camera cam) {
 
     cam.up.normalize();
     cam.position.dir.normalize();
@@ -58,7 +58,7 @@ PNG* renderImage(Raytracer render, Camera cam) {
     return image;
 }
 
-void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSamples) {
+void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSamples) {
 
     cam.up.normalize();
     cam.position.dir.normalize();
@@ -101,7 +101,7 @@ void pathtraceImage(Film *imageFilm, Raytracer render, Camera cam, int numSample
 
 }
 
-void progressiveRender(string const file_base, Raytracer render, Camera cam, int sampleInterval) {
+void progressiveRender(string const file_base, Raytracer &render, Camera cam, int sampleInterval) {
     int sampleNumber = 1;
 
     size_t split_point = file_base.find_last_of('/');

@@ -13,29 +13,64 @@ KDTree::KDTree() {
     bounds.minCorner = Vector3d(0,0,0);
 }
 
+KDTree::KDTree(const KDTree &other) {
+    this->bounds = other.bounds;
+    this->root = copyTree(other.root);
+}
+
 KDTree::KDTree(vector<Drawable *> objList) {
     assert(objList.size() > 0);
 
     root = new KDNode;
     root->objects = objList;
-    double max[3], min[3];
-    for(int i = 0; i < 3; i++) {
-        max[i] = objList[0]->getMaxBound(i);
-        min[i] = objList[0]->getMinBound(i);
-    }
-
-    for(unsigned int i = 1; i < objList.size(); i++) {
-        for(int j = 0; j < 3; j++) {
-            max[j] = std::max(max[j], objList[i]->getMaxBound(j));
-            min[j] = std::min(min[j], objList[i]->getMinBound(j));
-        }
-    }
-    bounds.maxCorner = Vector3d(max[0], max[1], max[2]) + Vector3d::Constant(EPSILON);
-    bounds.minCorner = Vector3d(min[0], min[1], min[2]) - Vector3d::Constant(EPSILON);
+    bounds = findBounds(objList);
     buildTree(root, bounds, 0);
 }
 
 KDTree::~KDTree() {
+    deleteTree(this->root);
+}
+
+KDTree & KDTree::operator=(const KDTree &other) {
+    if(this != &other) {
+        deleteTree(this->root);
+        this->root = copyTree(other.root);
+        this->bounds = other.bounds;
+    }
+
+    return *this;
+}
+
+void KDTree::rebuildTree(vector<Drawable *> objList) {
+    assert(objList.size() > 0);
+
+    deleteTree(this->root);
+    root = new KDNode;
+    root->objects = objList;
+    bounds = findBounds(objList);
+    buildTree(root, bounds, 0);
+}
+
+KDNode* KDTree::copyTree(KDNode *node) {
+    if(node == NULL)
+        return NULL;
+    KDNode *newNode = new KDNode;
+    newNode->objects = node->objects;
+    newNode->split_pos = node->split_pos;
+    newNode->is_leaf = node->is_leaf;
+
+    newNode->left = copyTree(node->left);
+    newNode->right = copyTree(node->right);
+    return newNode;
+}
+
+void KDTree::deleteTree(KDNode *node) {
+    if(node == NULL)
+        return;
+
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
 }
 
 void KDTree::freeAllObj() {
@@ -127,17 +162,19 @@ void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
         return;
     }
 
-    node->is_leaf = false;
-
     double bestCost;
     double potentialSplit = bestSplitPos(node, curBounds, curAxis, bestCost);
 
-    if(bestCost > cost_intersection * node->objects.size()){
+    assert(cost_traversal > 0.0);
+    assert(cost_intersection > 0.0);
+    if(bestCost > (node->objects.size() - cost_traversal / cost_intersection) * curBounds.surfaceArea()){
         node->is_leaf = true;
         node->left = NULL;
         node->right = NULL;
         return;
     }
+
+    node->is_leaf = false;
 
     node->split_pos =  potentialSplit;
     assert(node->split_pos < curBounds.maxCorner(curAxis));
@@ -158,8 +195,28 @@ void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
     }
 
     int nextAxis = (curAxis + 1) % 3;
+    node->objects.clear();
     buildTree(node->left, leftBounds, nextAxis);
     buildTree(node->right, rightBounds, nextAxis);
+}
+
+AABB KDTree::findBounds(vector<Drawable *> objList) {
+    double max[3], min[3];
+    for(int i = 0; i < 3; i++) {
+        max[i] = objList[0]->getMaxBound(i);
+        min[i] = objList[0]->getMinBound(i);
+    }
+
+    for(unsigned int i = 1; i < objList.size(); i++) {
+        for(int j = 0; j < 3; j++) {
+            max[j] = std::max(max[j], objList[i]->getMaxBound(j));
+            min[j] = std::min(min[j], objList[i]->getMinBound(j));
+        }
+    }
+    AABB boundingBox;
+    boundingBox.maxCorner = Vector3d(max[0], max[1], max[2]) + Vector3d::Constant(EPSILON);
+    boundingBox.minCorner = Vector3d(min[0], min[1], min[2]) - Vector3d::Constant(EPSILON);
+    return boundingBox;
 }
 
 double KDTree::bestSplitPos(KDNode *node, AABB bounds, int axis, double &finalCost) {
@@ -173,9 +230,15 @@ double KDTree::bestSplitPos(KDNode *node, AABB bounds, int axis, double &finalCo
 
     double bestSplit = splitPos[0];
     double bestCost = costSplit(node->objects, bounds, splitPos[0], axis);
+    double recent = splitPos[0];
     for(unsigned int i = 1; i < splitPos.size(); i++) {
-        if(splitPos[i] < bounds.minCorner(axis) || splitPos[i] > bounds.maxCorner(axis))
+        if(splitPos[i] < recent + EPSILON)
             continue;
+        if(splitPos[i] < bounds.minCorner(axis))
+            continue;
+        if(splitPos[i] > bounds.maxCorner(axis))
+            break;
+        recent = splitPos[i];
         double currentCost = costSplit(node->objects, bounds, splitPos[i], axis);
         if(currentCost < bestCost) {
             bestSplit = splitPos[i];
@@ -196,17 +259,13 @@ int KDTree::numIntersections(const vector<Drawable *> &objList, AABB bounds) {
 }
 
 double KDTree::costSplit(const vector<Drawable *> &objList, AABB bounds, double split, int axis) {
-    double SAV = 1.0 / bounds.surfaceArea();
     AABB left = bounds;
     left.maxCorner(axis) = split;
-    double leftArea = left.surfaceArea();
     int leftCount = numIntersections(objList, left);
 
     AABB right = bounds;
     right.minCorner(axis) = split;
-    double rightArea = right.surfaceArea();
     int rightCount = numIntersections(objList, right);
 
-    return cost_traversal +
-        cost_intersection * (leftArea * leftCount * SAV + rightArea * rightCount * SAV);
+    return (left.surfaceArea() * leftCount + right.surfaceArea() * rightCount);
 }

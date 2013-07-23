@@ -43,7 +43,7 @@ camera.o : camera.cpp camera.h
 film.o : film.cpp film.h easypng.h color.h
 	$(COMPILE) $<
 
-main.o : main.cpp obj_loader.h common.h film.h
+main.o : main.cpp obj_loader.h common.h film.h camera.h
 	$(COMPILE) $<
 
 raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h kdtree.h

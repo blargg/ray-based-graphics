@@ -31,7 +31,9 @@ class Raytracer
      */
     vector<Drawable*> objList;
 
+    /// kdtree that manages all the objects in the scene
     KDTree objTree;
+
     /// This is a list of all the lights in the scene.
     vector<Light> lightList;
 

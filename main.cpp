@@ -89,12 +89,12 @@ int main(int argc, char **argv)
     ObjLoader loader;
 
     Camera cam;
-    cam.imgWidth = 1000;
+    cam.imgWidth = 500;
     cam.imgHeight = 500;
     cam.position.dir = Vector4d(-1,0,0,0);
     cam.position.orig = Vector4d(10,0,0,1);
     cam.up = Vector4d(0,1,0,0);
-    cam.worldWidth = 2.0;
+    cam.worldWidth = 1.0;
     cam.worldHeight = 1.0;
 
     if(optind < argc) {

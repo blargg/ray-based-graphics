@@ -23,7 +23,6 @@ void Raytracer::clear_lights()
 // ********************* Main Rendering function ****************************
 Color Raytracer::getColor(const ray& viewRay, int depth)
 {
-    //int closestObj = -1;
     double bestTime = -1.0;
     Drawable *obj = NULL;
     getClosestObject(viewRay, &obj, bestTime);

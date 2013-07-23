@@ -30,8 +30,8 @@ KDTree::KDTree(vector<Drawable *> objList) {
             min[j] = std::min(min[j], objList[i]->getMinBound(j));
         }
     }
-    bounds.maxCorner = Vector3d(max[0], max[1], max[2]);
-    bounds.minCorner = Vector3d(min[0], min[1], min[2]);
+    bounds.maxCorner = Vector3d(max[0], max[1], max[2]) + Vector3d::Constant(EPSILON);
+    bounds.minCorner = Vector3d(min[0], min[1], min[2]) - Vector3d::Constant(EPSILON);
     buildTree(root, bounds, 0);
 }
 
@@ -43,7 +43,6 @@ void KDTree::freeAllObj() {
 
 void KDTree::intersection(ray viewRay, double &time, Drawable **obj) {
     IntersectionData searchResult;
-    //searchResult = closestIntersection(root->objects, viewRay);
     double tmin, tmax;
     if(bounds.intersection(viewRay, tmin, tmax)) {
         searchResult = searchNode(root, viewRay, tmin, tmax, 0);
@@ -58,10 +57,8 @@ void KDTree::intersection(ray viewRay, double &time, Drawable **obj) {
 }
 
 IntersectionData KDTree::searchNode(KDNode *node, const ray &viewRay, double tmin, double tmax, int curAxis) {
-    //return closestIntersection(node->objects, viewRay);
-
     assert(tmin <= tmax);
-    assert(curAxis >=0 && curAxis < 3);
+    assert(curAxis >= 0 && curAxis < 3);
     if(node->is_leaf) {
         return closestIntersection(node->objects, viewRay);
     }
@@ -123,8 +120,6 @@ IntersectionData KDTree::closestIntersection(const vector<Drawable *> &objList, 
 }
 
 void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
-    printf("buildTree() called\n");
-    printf("number of objects = %d\n", (int)node->objects.size());
     if(node->objects.size() <= 5) {
         node->is_leaf = true;
         node->left = NULL;
@@ -138,8 +133,6 @@ void KDTree::buildTree(KDNode *node, AABB curBounds, int curAxis) {
     double potentialSplit = bestSplitPos(node, curBounds, curAxis, bestCost);
 
     if(bestCost > cost_intersection * node->objects.size()){
-        printf("bestCost = %f\n", bestCost);
-        printf("currentCost = %f\n", cost_intersection * node->objects.size());
         node->is_leaf = true;
         node->left = NULL;
         node->right = NULL;

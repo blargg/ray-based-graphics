@@ -60,7 +60,7 @@ class Sphere: public Shape
      * @param surface the point on the surface.
      * @returns a normal vector for the surface.
      */
-    virtual Vector4d normal_vectre(const Vector4d& surface) const;
+    virtual Vector4d normal_vector(const Vector4d& surface) const;
 
     virtual double getMinBound(int axis) const;
     virtual double getMaxBound(int axis) const;

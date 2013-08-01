@@ -4,9 +4,9 @@ double BumpySphere::intersection(const ray<3> viewRay) const {
     return sphere.intersection(viewRay);
 }
 
-vectre<3> BumpySphere::normal_vectre(const point<3> surface) const {
+vectre<3> BumpySphere::normal_vector(const point<3> surface) const {
     vectre<3> up(0,1,0);
-    vectre<3> normal = sphere.normal_vectre(surface).unit_vectre();
+    vectre<3> normal = sphere.normal_vector(surface).unit_vectre();
     vectre<3> right = up.cross_prod(normal);
     up = normal.cross_prod(up);
 

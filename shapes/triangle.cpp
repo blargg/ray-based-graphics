@@ -37,7 +37,7 @@ double Triangle::intersection(const ray &viewRay)const{
     return t;
 }
 
-Vector4d Triangle::normal_vectre(const Vector4d &surface)const{
+Vector4d Triangle::normal_vector(const Vector4d &surface)const{
     Vector4d edge1 = p2 - p1;
     Vector4d edge2 = p3 - p1;
     Vector3d e1 = edge1.head(3);

@@ -36,7 +36,7 @@ class Shape
     /// Gives the closest intersection in front of the ray.
     virtual double intersection(const ray& viewRay) const = 0;
     /// Gives the normal vectre for the given point.
-    virtual Vector4d normal_vectre(const Vector4d& surface) const = 0;
+    virtual Vector4d normal_vector(const Vector4d& surface) const = 0;
     virtual double getMinBound(int axis) const = 0;
     virtual double getMaxBound(int axis) const = 0;
     virtual bool intersectsBox(AABB box) const = 0;

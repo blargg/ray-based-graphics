@@ -59,7 +59,7 @@ class SimpleObject: public Drawable
     virtual ~SimpleObject();
 
     virtual double intersection(const ray viewRay) const;
-    virtual Vector4d normal_vectre(const Vector4d surface) const;
+    virtual Vector4d normal_vector(const Vector4d surface) const;
     virtual Properties getProperties(const Vector4d location) const;
     virtual double getMinBound(int axis) const;
     virtual double getMaxBound(int axis) const;

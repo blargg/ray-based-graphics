@@ -34,7 +34,7 @@ Color Raytracer::getColor(const ray& viewRay, int depth)
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
-    Vector4d unit_normal = obj->normal_vectre( intersection);
+    Vector4d unit_normal = obj->normal_vector( intersection);
     unit_normal.normalize();
 
     if( unit_normal.dot(viewRay.dir) > 0.0 )
@@ -90,7 +90,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
-    Vector4d unit_normal = obj->normal_vectre( intersection).normalized();
+    Vector4d unit_normal = obj->normal_vector( intersection).normalized();
     if( unit_normal.dot(viewRay.dir) > 0.0 )
         unit_normal = unit_normal * -1.0;
 

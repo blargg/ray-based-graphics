@@ -7,7 +7,7 @@
 
 /**
  * Wrapper shape that randomly perturbs the normals of the original shape.
- * Every call to normal_vectre() is randomly offset form the original shape.
+ * Every call to normal_vector() is randomly offset form the original shape.
  * This is for pathtracing algorithms and will look strange in raytracing algorithms.
  */
 class PerturbNormals: public Shape
@@ -32,7 +32,7 @@ public:
     /**
      * Takes the normal vector from the wrapped shape and randomly perturbs it.
      */
-    virtual Vector4d normal_vectre(const Vector4d& surface) const;
+    virtual Vector4d normal_vector(const Vector4d& surface) const;
 
     virtual double getMinBound(int axis) const;
     virtual double getMaxBound(int axis) const;

@@ -49,7 +49,7 @@ class Triangle: public Shape
      * @param surface a point on the surface
      * @returns a Vector4d for the normal vector.
      */
-    virtual Vector4d normal_vectre(const Vector4d& surface) const;
+    virtual Vector4d normal_vector(const Vector4d& surface) const;
 
     virtual double getMinBound(int axis) const;
     virtual double getMaxBound(int axis) const;

@@ -31,7 +31,7 @@ class Drawable
     /**
      * @brief Gets the normal vectre for the given point on the Drawable's surface.
      */
-    virtual Vector4d normal_vectre(const Vector4d surface) const = 0;
+    virtual Vector4d normal_vector(const Vector4d surface) const = 0;
 
     /**
      * @brief Gets the Properties of the Drawable at the given point.

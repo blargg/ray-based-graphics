@@ -51,10 +51,10 @@ double SimpleObject::intersection(const ray viewRay) const
 	return shape->intersection(viewRay);
 }
 
-Vector4d SimpleObject::normal_vectre(const Vector4d surface) const
+Vector4d SimpleObject::normal_vector(const Vector4d surface) const
 {
 	assert(shape != NULL);
-	return shape->normal_vectre(surface);
+	return shape->normal_vector(surface);
 }
 
 Properties SimpleObject::getProperties(const Vector4d location) const

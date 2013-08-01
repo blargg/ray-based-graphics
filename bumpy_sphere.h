@@ -22,7 +22,7 @@ class BumpySphere : public Drawable {
     { /* Do nothing */ }
 
     virtual double intersection(const ray<3> viewRay) const;
-    virtual vectre<3> normal_vectre(const point<3> surface) const;
+    virtual vectre<3> normal_vector(const point<3> surface) const;
     virtual Properties getProperties(const point<3> location) const;
 
     private:

@@ -17,6 +17,11 @@ MATH_DEPS=point.cpp point.h vectre.cpp vectre.h ray.cpp ray.h
 
 RTEXE=render
 
+SRCS = main.cpp raytracer.cpp obj_loader.cpp mtl_loader.cpp camera.cpp\
+	   simpleObject.cpp shape.cpp easypng.cpp properties.cpp perlin.cpp\
+	   AreaLight.cpp film.cpp ray.cpp common.cpp kdtree.cpp aabb.cpp
+SRCS_OBJ = ${SRCS:.cpp=.o}
+
 SHAPE_DIR=shapes
 SHAPES=$(wildcard $(SHAPE_DIR)/*.cpp)
 SHAPES_OBJ=$(SHAPES:.cpp=.o)
@@ -25,12 +30,9 @@ MATERIAL_DIR=materials
 MATERIALS_SRC=$(wildcard $(MATERIAL_DIR)/*.cpp)
 MATERIALS_OBJ=$(MATERIALS_SRC:.cpp=.o)
 
-# allows you to switch which is compiled with 'make' with no args
 first : $(RTEXE)
 
-.PHONY: debug $(RTEXE)
-
-$(RTEXE) : main.o raytracer.o obj_loader.o mtl_loader.o camera.o simpleObject.o $(SHAPES_OBJ) shape.o $(MATERIALS_OBJ) easypng.o properties.o perlin.o AreaLight.o film.o ray.o common.o kdtree.o aabb.o
+$(RTEXE) : $(SRCS_OBJ) $(SHAPES_OBJ) $(MATERIALS_OBJ)
 	$(LK) $(LIBS) -o $@ $^
 
 debug : LINKER_FLAGS += -ltcmalloc -lprofiler

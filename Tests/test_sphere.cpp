@@ -62,12 +62,12 @@ TEST_F(SphereTest, intersection_point){
 }
 
 TEST_F(SphereTest, normals){
-    Vector4d normal = unit_sphere.normal_vectre(Vector4d(1.0, 0.0, 0.0, 1));
+    Vector4d normal = unit_sphere.normal_vector(Vector4d(1.0, 0.0, 0.0, 1));
     EXPECT_DOUBLE_EQ(normal(0), 1.0);
     EXPECT_DOUBLE_EQ(normal(1), 0.0);
     EXPECT_DOUBLE_EQ(normal(2), 0.0);
 
-    normal = unit_sphere.normal_vectre(Vector4d(0.0, 1.0, 0.0, 1));
+    normal = unit_sphere.normal_vector(Vector4d(0.0, 1.0, 0.0, 1));
     EXPECT_DOUBLE_EQ(normal(0), 0.0);
     EXPECT_DOUBLE_EQ(normal(1), 1.0);
     EXPECT_DOUBLE_EQ(normal(2), 0.0);

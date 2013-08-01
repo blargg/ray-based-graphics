@@ -72,12 +72,12 @@ TEST_F(TriangleTest, intersection_point){
 }
 
 TEST_F(TriangleTest, normals){
-    Vector4d normal = t1.normal_vectre(Vector4d(1.0, 0.0, 0.0, 1));
+    Vector4d normal = t1.normal_vector(Vector4d(1.0, 0.0, 0.0, 1));
     EXPECT_DOUBLE_EQ(normal[0], 0.0);
     EXPECT_DOUBLE_EQ(normal[1], 0.0);
     EXPECT_DOUBLE_EQ(normal[2], 1.0);
 
-    normal = t1.normal_vectre(Vector4d(0.0, 1.0, 0.0, 0));
+    normal = t1.normal_vector(Vector4d(0.0, 1.0, 0.0, 0));
     EXPECT_DOUBLE_EQ(normal[0], 0.0);
     EXPECT_DOUBLE_EQ(normal[1], 0.0);
     EXPECT_DOUBLE_EQ(normal[2], 1.0);

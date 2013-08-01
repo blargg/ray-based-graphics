@@ -77,6 +77,7 @@ void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSampl
     double dy = (cam.worldHeight / cam.imgHeight);
 
     for(int count = 0; count < numSamples; count++) {
+#pragma omp parallel for
         for(int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
             for(int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
                 for(int xoff = 0; xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth; xoff++){

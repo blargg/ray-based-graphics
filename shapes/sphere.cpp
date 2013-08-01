@@ -37,7 +37,7 @@ double Sphere::intersection(const ray& viewRay) const
     return (-B + sqrt(B*B - 4*C) ) / 2.0;
 }
 
-Vector4d Sphere::normal_vectre(const Vector4d& surface) const
+Vector4d Sphere::normal_vector(const Vector4d& surface) const
 {
     return surface - location;
 }

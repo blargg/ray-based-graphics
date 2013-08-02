@@ -74,6 +74,22 @@ void KDTree::deleteTree(KDNode *node) {
 }
 
 void KDTree::freeAllObj() {
+    std::unordered_set<Drawable *> freedSet;
+    freeObjects(root, freedSet);
+}
+
+void KDTree::freeObjects(KDNode *node, std::unordered_set<Drawable *> &freedSet) {
+    if(node->is_leaf) {
+        for(unsigned int i = 0; i < node->objects.size(); i++) {
+            if(freedSet.count(node->objects[i]) == 0) {
+                freedSet.insert(node->objects[i]);
+                delete node->objects[i];
+            }
+        }
+    } else {
+        freeObjects(node->left, freedSet);
+        freeObjects(node->right, freedSet);
+    }
 }
 
 void KDTree::intersection(ray viewRay, double &time, Drawable **obj) {

@@ -101,6 +101,14 @@ TEST_F(KDTreeTest, intersection) {
         "again, or add more objects to the test scenes";
 }
 
+TEST_F(KDTreeTest, freeAllObjects) {
+    vector<Drawable *> testObjects;
+    ObjLoader loader;
+    loader.load_to_list(testObjects, "Tests/obj_example.obj");
+    KDTree testTree(testObjects);
+    testTree.freeAllObj();
+}
+
 } // namespace
 
 int main(int argc, char **argv){

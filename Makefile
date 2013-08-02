@@ -11,7 +11,7 @@ LINKER=g++
 LINKER_FLAGS= -fopenmp
 LK=$(LINKER) $(LINKER_FLAGS)
 
-TEST_OPTIONS= -lgtest $(INCS)
+TEST_OPTIONS= -lgtest -std=c++11 $(INCS)
 
 MATH_DEPS=point.cpp point.h vectre.cpp vectre.h ray.cpp ray.h
 

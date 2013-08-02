@@ -2,6 +2,7 @@
 #define RT_KDTREE_H
 
 #include <vector>
+#include <unordered_set>
 #include "ray.h"
 #include "drawable.h"
 #include "aabb.h"
@@ -79,6 +80,9 @@ public:
 
     /**
      * Frees all the obj managed by this KDTree.
+     * This is not a very efficient operation, it would
+     * be better to hold onto the vector used to build
+     * the tree to free the objects.
      */
     void freeAllObj();
 
@@ -111,6 +115,12 @@ private:
      * Recursively deletes the tree nodes, but not the object held inside.
      */
     void deleteTree(KDNode *node);
+
+    /**
+     * Recursively searches the tree for Drawable*, frees them, then
+     * adds them to the freeList
+     */
+    void freeObjects(KDNode *node, std::unordered_set<Drawable *> &freeList);
 
     /**
      * recusively assembles the tree

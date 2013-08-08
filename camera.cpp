@@ -62,7 +62,7 @@ void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSampl
 
     cam.up.normalize();
     cam.position.dir.normalize();
-    Vector4d right = cross(cam.up, cam.position.dir);
+    Vector4d right = cross(cam.position.dir, cam.up);
     right.normalize();
 
     double fov = (45 * M_PI) / 180;

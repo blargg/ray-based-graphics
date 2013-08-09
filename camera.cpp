@@ -43,7 +43,7 @@ PNG* renderImage(Raytracer &render, Camera cam) {
                     ray viewRay;
                     viewRay.dir = currentDir;
                     viewRay.orig = screen_point;
-                    Color c = render.getColor(viewRay, 3);
+                    Color c = render.getColor(viewRay);
                     *((*image)(BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff)) =
                         RGBAPixel(max(min( (int) (c.red * 255), 255), 0),
                                   max(min( (int) (c.green * 255), 255), 0),
@@ -92,7 +92,7 @@ void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSampl
                         ray viewRay;
                         viewRay.dir = currentDir;
                         viewRay.orig = screen_point;
-                        Color c = render.pathtraceColor(viewRay, 3);
+                        Color c = render.pathtraceColor(viewRay);
                         imageFilm->addColor(c, BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff);
                     }
                 }

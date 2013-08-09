@@ -48,10 +48,26 @@ class Raytracer
     void clear_lights();
 
     /// Renders the given ray and returns it's Color.
-    Color getColor(const ray& viewRay, int depth);
-    Color pathtraceColor(const ray& viewRay, int depth);
+    Color getColor(const ray& viewRay);
+
+    /**
+     * Pathtraces a sample viewRay.
+     *
+     * @param viewRay the ray to get the light of.
+     */
+    Color pathtraceColor(const ray& viewRay);
 
     private:
+
+    /**
+     * Private recursive call to raytrace color
+     */
+    Color getColor(const ray& viewRay, int curDepth, double curIndexRefraction);
+
+    /**
+     * Private recursive call to pathtrace a viewRay
+     */
+    Color pathtraceColor(const ray& viewRay, int curDepth, double curIndexRefraction);
 
     /// Color set aside for debugging purposes.
     static const Color DEBUG_COLOR;

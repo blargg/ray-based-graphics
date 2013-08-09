@@ -21,7 +21,11 @@ void Raytracer::clear_lights()
 }
 
 // ********************* Main Rendering function ****************************
-Color Raytracer::getColor(const ray& viewRay, int depth)
+Color Raytracer::getColor(const ray& viewRay) {
+    return getColor(viewRay, 0, 1.0);
+}
+
+Color Raytracer::getColor(const ray& viewRay, int depth, double curIndexRefraction)
 {
     double bestTime = -1.0;
     Drawable *obj = NULL;
@@ -68,14 +72,18 @@ Color Raytracer::getColor(const ray& viewRay, int depth)
     if(objProp.reflect > 0.0 && depth < 10)
     {
         ray reflect_ray(intersection, viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal);
-        Color reflect_color = getColor(reflect_ray, depth + 1);
+        Color reflect_color = getColor(reflect_ray, depth + 1, curIndexRefraction);
         retColor += objProp.reflect * reflect_color;
     }
 
     return retColor;
 }
 
-Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
+Color Raytracer::pathtraceColor(const ray& viewRay) {
+    return pathtraceColor(viewRay, 0, 1.0);
+}
+
+Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRefraction)
 {
     if(depth >= 10)
         return Color(0,0,0);
@@ -99,7 +107,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
     assert(isUnitVector<Vector4d>(random_ray.dir));
     random_ray.orig = intersection;
 
-    Color diffuse_lighting = pathtraceColor(random_ray, depth + 1);
+    Color diffuse_lighting = pathtraceColor(random_ray, depth + 1, curIndexRefraction);
     retColor += objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
     retColor += objProp.emittance;
 
@@ -110,7 +118,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth)
         assert(isUnitVector<Vector4d>(reflect_ray.dir));
         reflect_ray.dir.normalize();
 
-        Color specular_lighting = pathtraceColor(reflect_ray, depth + 1);
+        Color specular_lighting = pathtraceColor(reflect_ray, depth + 1, curIndexRefraction);
         retColor += objProp.specular * specular_lighting;
     }
 

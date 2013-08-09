@@ -1,4 +1,5 @@
 #include "common.h"
+#include <cmath>
 
 Vector4d cross(Vector4d a, Vector4d b) {
     Vector3d result = a.head<3>().cross(b.head<3>());
@@ -15,11 +16,15 @@ Vector4d perturb(Vector4d original, double max_angle){
     right.normalize();
     up = cross(right, a);
 
-    double theta = ((double)rand() / (double)RAND_MAX) * max_angle;
-    double thi = ((double)rand() / (double)RAND_MAX) * (2.0 * M_PI);
-    double x = sin(theta) * cos(thi);
-    double y = sin(theta) * sin(thi);
-    double z = cos(theta);
+    double u = ((double)rand() / (double)(RAND_MAX));
+    double v = ((double)rand() / (double)(RAND_MAX));
+    double theta = u * 2.0 * M_PI;
+    double minRand = cos(max_angle);
+    v = (v * (1 - minRand)) + minRand;
+    double phi = acos(v);
+    double x = sin(phi) * cos(theta);
+    double y = sin(phi) * sin(theta);
+    double z = cos(phi);
 
     return (x * right + y * up + z * a);
 }

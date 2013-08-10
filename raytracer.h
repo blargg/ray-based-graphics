@@ -24,6 +24,11 @@ class Raytracer
 {
     public:
     /**
+     * Default constructor to initialize the Raytracer.
+     */
+    Raytracer();
+
+    /**
      * @brief This is a list of all the objects in the scene.
      * It is public and lets the user manage the memory how they want.\n
      * NOTE: When the Raytracer gets deleted, it will not delete the objects in the list.
@@ -58,6 +63,8 @@ class Raytracer
     Color pathtraceColor(const ray& viewRay);
 
     private:
+
+    int max_recursion_depth;
 
     /**
      * Private recursive call to raytrace color

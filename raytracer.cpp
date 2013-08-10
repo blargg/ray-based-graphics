@@ -2,6 +2,9 @@
 #include "common.h"
 #include <cassert>
 
+Raytracer::Raytracer() {
+    max_recursion_depth = 5;
+}
 void Raytracer::clear_scene()
 {
     clear_objects();
@@ -69,7 +72,7 @@ Color Raytracer::getColor(const ray& viewRay, int depth, double curIndexRefracti
     }
 
     // cast more rays for reflections for a certain depth
-    if(objProp.reflect > 0.0 && depth < 10)
+    if(objProp.reflect > 0.0 && depth < max_recursion_depth)
     {
         ray reflect_ray(intersection, viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal);
         Color reflect_color = getColor(reflect_ray, depth + 1, curIndexRefraction);
@@ -85,7 +88,7 @@ Color Raytracer::pathtraceColor(const ray& viewRay) {
 
 Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRefraction)
 {
-    if(depth >= 10)
+    if(depth >= max_recursion_depth)
         return Color(0,0,0);
     double bestTime = -1.0;
     Drawable *obj = NULL;
@@ -99,8 +102,14 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRe
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
     Vector4d unit_normal = obj->normal_vector( intersection).normalized();
-    if( unit_normal.dot(viewRay.dir) > 0.0 )
+
+    bool inside_obj;
+    if( unit_normal.dot(viewRay.dir) > 0.0 ) {
         unit_normal = unit_normal * -1.0;
+        inside_obj = true;
+    } else {
+        inside_obj = false;
+    }
 
     ray random_ray;
     random_ray.dir = perturb(unit_normal, M_PI/2.0);
@@ -120,6 +129,24 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRe
 
         Color specular_lighting = pathtraceColor(reflect_ray, depth + 1, curIndexRefraction);
         retColor += objProp.specular * specular_lighting;
+    }
+
+    if(1 - objProp.tranparency > EPSILON) {
+        double next_index_refraction;
+        if(inside_obj)
+            next_index_refraction = 1.0;
+        else
+            next_index_refraction = objProp.i_refraction;
+
+        double n = curIndexRefraction / next_index_refraction;
+        double cosI = 1.0 * unit_normal.dot(viewRay.dir);
+        double cosT2 = 1.0 - n * n * (1.0 - cosI * cosI);
+        if(cosT2 > 0.0) {
+            ray transmit;
+            transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
+            transmit.orig = intersection;
+            retColor += pathtraceColor(transmit, depth + 1, next_index_refraction);
+        }
     }
 
     return retColor;

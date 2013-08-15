@@ -139,13 +139,27 @@ Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRe
             next_index_refraction = objProp.i_refraction;
 
         double n = curIndexRefraction / next_index_refraction;
-        double cosI = 1.0 * unit_normal.dot(viewRay.dir);
+        double cosI = unit_normal.dot(viewRay.dir);
         double cosT2 = 1.0 - n * n * (1.0 - cosI * cosI);
         if(cosT2 > 0.0) {
-            ray transmit;
-            transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
-            transmit.orig = intersection;
-            retColor += pathtraceColor(transmit, depth + 1, next_index_refraction);
+            double r0 = (curIndexRefraction - next_index_refraction) /
+                (curIndexRefraction + next_index_refraction);
+            r0 = r0 * r0;
+            double reflection_coef = r0 + (1-r0) * pow(1 + viewRay.dir.dot(unit_normal), 5);
+
+            if(1.0 - reflection_coef > EPSILON) {
+                ray transmit;
+                transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
+                transmit.orig = intersection;
+                retColor += (1.0 - reflection_coef) * pathtraceColor(transmit, depth + 1, next_index_refraction);
+            }
+
+            if(reflection_coef > EPSILON) {
+                ray internal_reflection;
+                internal_reflection.orig = intersection;
+                internal_reflection.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
+                retColor += reflection_coef * pathtraceColor(internal_reflection, depth+1, curIndexRefraction);
+            }
         }
     }
 

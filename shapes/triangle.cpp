@@ -67,7 +67,7 @@ bool Triangle::intersectsBox(AABB box) const {
     boxcenter[1] = bcenter[1];
     boxcenter[2] = bcenter[2];
     Vector3d bhalfsize = (box.maxCorner - box.minCorner) / 2.0;
-    bhalfsize += Vector3d::Constant(EPSILON * 10);
+    bhalfsize += Vector3d::Constant(EPSILON * 1000);
     float boxhalfsize[3];
     boxhalfsize[0] = bhalfsize[0];
     boxhalfsize[1] = bhalfsize[1];

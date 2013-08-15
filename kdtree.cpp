@@ -230,8 +230,8 @@ AABB KDTree::findBounds(vector<Drawable *> objList) {
         }
     }
     AABB boundingBox;
-    boundingBox.maxCorner = Vector3d(max[0], max[1], max[2]) + Vector3d::Constant(EPSILON);
-    boundingBox.minCorner = Vector3d(min[0], min[1], min[2]) - Vector3d::Constant(EPSILON);
+    boundingBox.maxCorner = Vector3d(max[0], max[1], max[2]);
+    boundingBox.minCorner = Vector3d(min[0], min[1], min[2]);
     return boundingBox;
 }
 

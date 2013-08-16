@@ -24,11 +24,11 @@ void Raytracer::clear_lights()
 }
 
 // ********************* Main Rendering function ****************************
-Color Raytracer::getColor(const ray& viewRay) {
-    return getColor(viewRay, 0, 1.0);
+Color Raytracer::trace(const ray& viewRay) {
+    return trace(viewRay, 0, 1.0);
 }
 
-Color Raytracer::getColor(const ray& viewRay, int depth, double curIndexRefraction)
+Color Raytracer::trace(const ray& viewRay, int depth, double curIndexRefraction)
 {
     double bestTime = -1.0;
     Drawable *obj = NULL;
@@ -75,97 +75,12 @@ Color Raytracer::getColor(const ray& viewRay, int depth, double curIndexRefracti
     if(objProp.reflect > 0.0 && depth < max_recursion_depth)
     {
         ray reflect_ray(intersection, viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal);
-        Color reflect_color = getColor(reflect_ray, depth + 1, curIndexRefraction);
+        Color reflect_color = trace(reflect_ray, depth + 1, curIndexRefraction);
         retColor += objProp.reflect * reflect_color;
     }
 
     return retColor;
 }
-
-Color Raytracer::pathtraceColor(const ray& viewRay) {
-    return pathtraceColor(viewRay, 0, 1.0);
-}
-
-Color Raytracer::pathtraceColor(const ray& viewRay, int depth, double curIndexRefraction)
-{
-    if(depth >= max_recursion_depth)
-        return Color(0,0,0);
-    double bestTime = -1.0;
-    Drawable *obj = NULL;
-    getClosestObject(viewRay, &obj, bestTime);
-    Vector4d intersection = viewRay(bestTime);
-
-    // no object was intersected and the ray has left the scene. return this color.
-    if(obj == NULL)
-        return Color(0.3,0.3,0.3);
-
-    Color retColor(0.0, 0.0, 0.0);
-    Properties objProp = obj->getProperties( intersection );
-    Vector4d unit_normal = obj->normal_vector( intersection).normalized();
-
-    bool inside_obj;
-    if( unit_normal.dot(viewRay.dir) > 0.0 ) {
-        unit_normal = unit_normal * -1.0;
-        inside_obj = true;
-    } else {
-        inside_obj = false;
-    }
-
-    ray random_ray;
-    random_ray.dir = perturb(unit_normal, M_PI/2.0);
-    assert(isUnitVector<Vector4d>(random_ray.dir));
-    random_ray.orig = intersection;
-
-    Color diffuse_lighting = pathtraceColor(random_ray, depth + 1, curIndexRefraction);
-    retColor += objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
-    retColor += objProp.emittance;
-
-    if (max3<double>(objProp.specular.red, objProp.specular.green, objProp.specular.blue) > EPSILON) {
-        ray reflect_ray;
-        reflect_ray.orig = intersection;
-        reflect_ray.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
-        assert(isUnitVector<Vector4d>(reflect_ray.dir));
-        reflect_ray.dir.normalize();
-
-        Color specular_lighting = pathtraceColor(reflect_ray, depth + 1, curIndexRefraction);
-        retColor += objProp.specular * specular_lighting;
-    }
-
-    if(1 - objProp.tranparency > EPSILON) {
-        double next_index_refraction;
-        if(inside_obj)
-            next_index_refraction = 1.0;
-        else
-            next_index_refraction = objProp.i_refraction;
-
-        double n = curIndexRefraction / next_index_refraction;
-        double cosI = unit_normal.dot(viewRay.dir);
-        double cosT2 = 1.0 - n * n * (1.0 - cosI * cosI);
-        if(cosT2 > 0.0) {
-            double r0 = (curIndexRefraction - next_index_refraction) /
-                (curIndexRefraction + next_index_refraction);
-            r0 = r0 * r0;
-            double reflection_coef = r0 + (1-r0) * pow(1 + viewRay.dir.dot(unit_normal), 5);
-
-            if(1.0 - reflection_coef > EPSILON) {
-                ray transmit;
-                transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
-                transmit.orig = intersection;
-                retColor += (1.0 - reflection_coef) * pathtraceColor(transmit, depth + 1, next_index_refraction);
-            }
-
-            if(reflection_coef > EPSILON) {
-                ray internal_reflection;
-                internal_reflection.orig = intersection;
-                internal_reflection.dir = viewRay.dir - (2.0 * (viewRay.dir.dot(unit_normal))) * unit_normal;
-                retColor += reflection_coef * pathtraceColor(internal_reflection, depth+1, curIndexRefraction);
-            }
-        }
-    }
-
-    return retColor;
-}
-
 
 //********************** Private Helper Functions **************************
 /**

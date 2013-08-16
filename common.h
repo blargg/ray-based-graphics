@@ -17,6 +17,19 @@ using namespace Eigen;
 Vector4d cross(Vector4d a, Vector4d b);
 
 /**
+ * Calculates the reflected vector.
+ * The viewVector is heading into the surface,
+ * the returned vector will be heading out of the surface
+ *
+ * @pre the given vectors are normalized
+ * @post the vector returned is normalized
+ * @param viewVector the vector viewing the Surface, heading into the surface
+ * @param normal the normal of the surface to reflect over
+ * @returns the reflected vector
+ */
+Vector4d reflectVector(Vector4d viewVector, Vector4d normal);
+
+/**
  * returns a perturbed (randomly offset) version of the given vector
  *
  * @pre the original vector must be normalized

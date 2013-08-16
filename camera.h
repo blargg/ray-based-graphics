@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #include <string>
 #include "raytracer.h"
+#include "pathtracer.h"
 #include "common.h"
 #include "film.h"
 #include "easypng.h"
@@ -51,12 +52,12 @@ PNG* renderImage(Raytracer &render, Camera cam);
  * cam the specification for the camera to render
  * numSamples the number of samples for each pixel in the film
  */
-void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSamples);
+void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamples);
 
 /**
  * Repeatedly renders a number of samples, then writes the current image to a file
  * based on the file_base name
  */
-void progressiveRender(string const file_base, Raytracer &render, Camera cam, int sampleInterval);
+void progressiveRender(string const file_base, PathTracer &render, Camera cam, int sampleInterval);
 
 #endif // CAMERA_H

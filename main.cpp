@@ -7,6 +7,7 @@
 #include "easypng.h"
 
 #include "raytracer.h"
+#include "pathtracer.h"
 #include "film.h"
 #include "camera.h"
 #include "drawable.h"
@@ -85,7 +86,6 @@ int main(int argc, char **argv)
         }
     }
 
-    Raytracer renderer;
     ObjLoader loader;
 
     Camera cam;
@@ -97,29 +97,39 @@ int main(int argc, char **argv)
     cam.worldWidth = 1.0;
     cam.worldHeight = 1.0;
 
+    vector<Drawable *> allObj;
+
     if(optind < argc) {
         while (optind < argc) {
-            loader.load_to_list(renderer.objList, argv[optind++]);
+            loader.load_to_list(allObj, argv[optind++]);
         }
     }
 
-    renderer.objTree.rebuildTree(renderer.objList);
-
     if(render_algorithm == raytrace) {
-        PNG *pic = renderImage(renderer, cam);
+        Raytracer rayTracer;
+        rayTracer.objTree.rebuildTree(allObj);
+        PNG *pic = renderImage(rayTracer, cam);
         pic->writeToFile(outputFileName);
         delete pic;
     }
 
     if(render_algorithm == path_trace) {
+        PathTracer pathTracer;
+        pathTracer.setObjects(allObj);
         Film myFilm(cam.imgWidth,cam.imgHeight);
-        pathtraceImage(&myFilm, renderer, cam, numSamples);
+        pathtraceImage(&myFilm, pathTracer, cam, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
     }
 
-    if(render_algorithm == progressive_p)
-        progressiveRender(outputFileName, renderer, cam, numSamples);
+    if(render_algorithm == progressive_p) {
+        PathTracer pathTracer;
+        pathTracer.setObjects(allObj);
+        progressiveRender(outputFileName, pathTracer, cam, numSamples);
+    }
 
-    renderer.clear_objects();
+    for(unsigned int i = 0; i < allObj.size(); i++) {
+        delete allObj[i];
+    }
+
 }

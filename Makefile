@@ -17,9 +17,9 @@ MATH_DEPS=point.cpp point.h vectre.cpp vectre.h ray.cpp ray.h
 
 RTEXE=render
 
-SRCS = main.cpp raytracer.cpp obj_loader.cpp mtl_loader.cpp camera.cpp\
-	   simpleObject.cpp shape.cpp easypng.cpp properties.cpp perlin.cpp\
-	   AreaLight.cpp film.cpp ray.cpp common.cpp kdtree.cpp aabb.cpp
+SRCS = main.cpp raytracer.cpp pathtracer.cpp obj_loader.cpp mtl_loader.cpp\
+	   camera.cpp simpleObject.cpp shape.cpp easypng.cpp properties.cpp\
+	   perlin.cpp AreaLight.cpp film.cpp ray.cpp common.cpp kdtree.cpp aabb.cpp
 SRCS_OBJ = ${SRCS:.cpp=.o}
 
 SHAPE_DIR=shapes
@@ -49,6 +49,9 @@ main.o : main.cpp obj_loader.h common.h film.h camera.h
 	$(COMPILE) $<
 
 raytracer.o : raytracer.cpp raytracer.h drawable.h easypng.o light.h properties.h ray.h common.h kdtree.h
+	$(COMPILE) $<
+
+pathtracer.o : pathtracer.cpp pathtracer.h drawable.h easypng.o light.h properties.h ray.h common.h kdtree.h
 	$(COMPILE) $<
 
 ############### Geometry ####################

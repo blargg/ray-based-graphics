@@ -43,7 +43,7 @@ PNG* renderImage(Raytracer &render, Camera cam) {
                     ray viewRay;
                     viewRay.dir = currentDir;
                     viewRay.orig = screen_point;
-                    Color c = render.getColor(viewRay);
+                    Color c = render.trace(viewRay);
                     *((*image)(BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff)) =
                         RGBAPixel(max(min( (int) (c.red * 255), 255), 0),
                                   max(min( (int) (c.green * 255), 255), 0),
@@ -58,7 +58,7 @@ PNG* renderImage(Raytracer &render, Camera cam) {
     return image;
 }
 
-void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSamples) {
+void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamples) {
 
     cam.up.normalize();
     cam.position.dir.normalize();
@@ -92,7 +92,7 @@ void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSampl
                         ray viewRay;
                         viewRay.dir = currentDir;
                         viewRay.orig = screen_point;
-                        Color c = render.pathtraceColor(viewRay);
+                        Color c = render.trace(viewRay);
                         imageFilm->addColor(c, BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff);
                     }
                 }
@@ -102,7 +102,7 @@ void pathtraceImage(Film *imageFilm, Raytracer &render, Camera cam, int numSampl
 
 }
 
-void progressiveRender(string const file_base, Raytracer &render, Camera cam, int sampleInterval) {
+void progressiveRender(string const file_base, PathTracer &render, Camera cam, int sampleInterval) {
     int sampleNumber = 1;
 
     size_t split_point = file_base.find_last_of('/');

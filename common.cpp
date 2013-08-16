@@ -6,6 +6,10 @@ Vector4d cross(Vector4d a, Vector4d b) {
     return Vector4d(result(0), result(1), result(2), 0);
 }
 
+Vector4d reflectVector(Vector4d viewVector, Vector4d normal) {
+    return viewVector - 2.0 * viewVector.dot(normal) * normal;
+}
+
 Vector4d perturb(Vector4d original, double max_angle){
     Vector4d a = original;
     Vector4d up(0,1,0,0);

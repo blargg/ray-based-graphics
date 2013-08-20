@@ -84,6 +84,8 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
             if(reflection_coef > EPSILON) {
                 retColor += reflection_coef * trace(reflect_ray, depth+1, curIndexRefraction);
             }
+        } else {
+            retColor += trace(reflect_ray, depth + 1, curIndexRefraction);
         }
     }
 

@@ -40,6 +40,7 @@ class Shape
     virtual double getMinBound(int axis) const = 0;
     virtual double getMaxBound(int axis) const = 0;
     virtual bool intersectsBox(AABB box) const = 0;
+    virtual Vector4d randomSurfacePoint() const = 0;
 
 };
 #endif

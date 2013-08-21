@@ -105,6 +105,24 @@ TEST_F(TriangleTest, intersectsAABB) {
     box.minCorner = Vector3d(0,0,0);
     box.maxCorner = Vector3d(1,1,1);
     EXPECT_TRUE(t1.intersectsBox(box)) << "Triangle on face of box intersects";
+
+    box.minCorner = Vector3d(0,0,0.000002);
+    box.maxCorner = Vector3d(1,1,1);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "Triangle just misses the face of the box";
+
+    box.minCorner = Vector3d(0,0,-1);
+    box.maxCorner = Vector3d(1,1,-0.000002);
+    EXPECT_FALSE(t1.intersectsBox(box)) << "Triangle just misses the face of the box";
+}
+
+TEST_F(TriangleTest, randomSurfacePoint) {
+    for(int i = 0; i < 100; i++) {
+        Vector4d randomPoint = t1.randomSurfacePoint();
+        EXPECT_DOUBLE_EQ(0.0, randomPoint(2));
+        EXPECT_TRUE(randomPoint(0) < 1.0);
+        EXPECT_TRUE(randomPoint(1) < 1.0);
+        EXPECT_TRUE(randomPoint(0) > randomPoint(1));
+    }
 }
 
 } // namespace

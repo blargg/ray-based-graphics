@@ -96,6 +96,18 @@ TEST_F(SphereTest, intersectsAABB) {
     EXPECT_FALSE(unit_sphere.intersectsBox(box)) << "clearly no intersection";
 }
 
+TEST_F(SphereTest, randomSurfacePoint) {
+    for(int i = 0; i < 100; i++) {
+        Vector4d randomPoint = unit_sphere.randomSurfacePoint();
+        EXPECT_DOUBLE_EQ(1.0, (randomPoint - Vector4d(0,0,0,1)).norm());
+    }
+
+    for(int i = 0; i < 100; i++) {
+        Vector4d randomPoint = s2.randomSurfacePoint();
+        EXPECT_DOUBLE_EQ(100.0, (randomPoint - Vector4d(100.0, 10.5, 0.0,1)).norm());
+    }
+}
+
 } // namespace
 
 int main(int argc, char **argv){

@@ -53,6 +53,12 @@ class Drawable
      * @returns true if the drawable intersects the box
      */
     virtual bool intersectsBox(AABB box) const = 0;
+
+    /**
+     * Returns a random point on the surface of the object.
+     * Used for bidirectional pathtracing algorithms.
+     */
+    virtual Vector4d randomSurfacePoint() const = 0;
 };
 
 #endif

@@ -88,3 +88,7 @@ void SimpleObject::setMaterial(const Material& mat)
     delete texture;
     texture = mat.clone();
 }
+
+Vector4d SimpleObject::randomSurfacePoint() const {
+    return shape->randomSurfacePoint();
+}

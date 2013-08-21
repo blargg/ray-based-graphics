@@ -64,6 +64,7 @@ class SimpleObject: public Drawable
     virtual double getMinBound(int axis) const;
     virtual double getMaxBound(int axis) const;
     virtual bool intersectsBox(AABB box) const;
+    virtual Vector4d randomSurfacePoint() const;
 
     void setShape(const Shape& s);
     void setMaterial(const Material& mat);

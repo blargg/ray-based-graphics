@@ -65,4 +65,13 @@ bool Sphere::intersectsBox(AABB box) const {
     return dmin < (radius * radius);
 }
 
-#undef EPSILON
+Vector4d Sphere::randomSurfacePoint() const {
+    double u = ((double)rand() / (double)(RAND_MAX));
+    double v = ((double)rand() / (double)(RAND_MAX));
+    double theta = u * 2.0 * M_PI;
+    double phi = acos(2 * v - 1);
+    return location + radius * Vector4d(sin(phi) * cos(theta),
+                                        sin(phi) * sin(theta),
+                                        cos(phi),
+                                        0);
+}

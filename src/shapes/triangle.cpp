@@ -89,6 +89,21 @@ bool Triangle::intersectsBox(AABB box) const {
     return triBoxOverlap(boxcenter, boxhalfsize, triverts);
 }
 
+Vector4d Triangle::randomSurfacePoint() const {
+    double u = (double) rand() / (double) RAND_MAX;
+    double v = (double) rand() / (double) RAND_MAX;
+
+    if(u > 1.0 - v) {
+        u = 1.0 - u;
+        v = 1.0 - v;
+    }
+
+    Vector4d e1, e2;
+    e1 = p2 - p1;
+    e2 = p3 - p1;
+    return e1 * u + e2 * v;
+}
+
 Shape* Triangle::create() const{
     return new Triangle();
 }

@@ -30,7 +30,7 @@ MATERIAL_DIR=materials
 MATERIALS_SRC=$(wildcard $(MATERIAL_DIR)/*.cpp)
 MATERIALS_OBJ=$(MATERIALS_SRC:.cpp=.o)
 
-first : $(RTEXE)
+all : $(RTEXE)
 
 $(RTEXE) : $(SRCS_OBJ) $(SHAPES_OBJ) $(MATERIALS_OBJ)
 	$(LK) $(LIBS) -o $@ $^
@@ -68,7 +68,7 @@ drawable.h : aabb.h
 simpleObject.o : simpleObject.cpp simpleObject.h drawable.h material.h ray.h
 	$(COMPILE) $<
 
-### Matherials and textures
+### Materials and textures
 $(MATERIAL_DIR)/%.o : $(MATERIAL_DIR)/%.cpp $(MATERIAL_DIR)/%.h material.h perlin.h
 	$(COMPILE) $< -o $@
 

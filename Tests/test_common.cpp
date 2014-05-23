@@ -14,6 +14,8 @@ TEST(CommonTest, cross) {
     EXPECT_TRUE(res == Vector4d(-10,1,-5,0));
 }
 
+// TODO test reflectVector
+
 TEST(CommonTest, isUnitVector) {
     Vector4d v(1,0,0,0);
     EXPECT_TRUE(isUnitVector<Vector4d>(v)) << "v is a unit vector";

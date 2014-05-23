@@ -1,0 +1,16 @@
+
+def build(bld):
+    tests = [
+            ('common', 'common'),
+            ('ray', 'ray'),
+            ('aabb','aabb'),
+            ('sphere', ['sphere', 'shape']),
+            ('kdtree', []]
+
+    for t in tests:
+        bld.program(
+                features='test',
+                source='test_' + t[0] + ".cpp",
+                target= t[0] + '.test',
+                lib=['gtest'],
+                use=t[1])

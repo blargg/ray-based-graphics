@@ -19,14 +19,15 @@ TEST(CommonTest, cross) {
 TEST(CommonTest, isUnitVector) {
     Vector4d v(1,0,0,0);
     EXPECT_TRUE(isUnitVector<Vector4d>(v)) << "v is a unit vector";
-    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,1,1))) << "Vector3d:: that is not a unit vector";
-    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,0,-1))) << "Vector3d:: that is not a unit vector";
-    EXPECT_FALSE(isUnitVector<Vector3d>(Vector3d(1,0,.001))) << "Vector3d:: that is not a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector4d>(Vector4d(1,1,1,0))) << "Vector4d:: that is not a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector4d>(Vector4d(1,0,-1,0))) << "Vector4d:: that is not a unit vector";
+    EXPECT_FALSE(isUnitVector<Vector4d>(Vector4d(1,0,.001,0))) << "Vector4d:: that is not a unit vector";
 
     for(int i = 0; i < 100; i++) {
-        Vector3d a = Vector3d::Random();
+        Vector4d a = Vector4d::Random();
+        a[3] = 0.0;
         a.normalize();
-        EXPECT_TRUE(isUnitVector<Vector3d>(a)) << "random normalized vector";
+        EXPECT_TRUE(isUnitVector<Vector4d>(a)) << "random normalized vector";
     }
 }
 
@@ -51,6 +52,24 @@ TEST(CommonTest, perturb) {
 TEST(CommonTest, max3) {
     EXPECT_EQ(max3<int>(10,1,2), 10) << "fail on ints";
     EXPECT_DOUBLE_EQ(max3<double>(1.001, 2.02, 2.1), 2.1) << "fail on double";
+}
+
+TEST(CommonTest, reflectVector) {
+    Vector4d a(1,1,1,0);
+    a.normalize();
+    Vector4d reflected = reflectVector(a, Vector4d(1,0,0,0));
+    EXPECT_TRUE(isUnitVector<Vector4d>(reflected));
+
+    for(int i = 0; i < 100; i++) {
+        Vector4d original = Vector4d::Random();
+        Vector4d normal = Vector4d::Random();
+        original[3] = 0.0;
+        original.normalize();
+        normal[3] = 0.0;
+        normal.normalize();
+        reflected = reflectVector(original, normal);
+        EXPECT_TRUE(isUnitVector<Vector4d>(reflected)) << "result is not normalized";
+    }
 }
 
 int main(int argc, char **argv){

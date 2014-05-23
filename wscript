@@ -19,6 +19,7 @@ def configure(conf):
     conf.find_program('cp', var='COPY')
 
     conf.env.CXXFLAGS = ["-g", "-O2", "-std=c++11"]
+    conf.env.DEFINES = []
 
 def build(bld):
     bld.recurse('src')

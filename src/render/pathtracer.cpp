@@ -2,7 +2,7 @@
 
 PathTracer::PathTracer() {
     maxDepth = 5;
-    exitSceneColor = Color(0.3, 0.3, 0.3);
+    exitSceneColor = Color(50.3, 50.3, 50.3);
     indexRefractionScene = 1.0;
 }
 
@@ -13,6 +13,7 @@ Color PathTracer::trace(const ray& viewRay) {
 Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction) {
     if(depth >= maxDepth)
         return Color(0,0,0);
+    assert(isUnitVector<Vector4d>(viewRay.dir));
     double bestTime = -1.0;
     Drawable *obj = NULL;
     objTree.intersection(viewRay, bestTime, &obj);

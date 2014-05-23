@@ -8,6 +8,7 @@
 #include "render/pathtracer.h"
 #include "render/camera.h"
 #include "file_loader/obj_loader.h"
+#include "file_loader/assimp_loader.h"
 
 
 using std::vector;
@@ -77,10 +78,8 @@ int main(int argc, char **argv) {
 
     vector<Drawable *> allObj;
 
-    if (optind < argc) {
-        while (optind < argc) {
-            loader.load_to_list(allObj, argv[optind++]);
-        }
+    while (optind < argc) {
+        assimp_append(argv[optind++], allObj);
     }
 
     if (render_algorithm == raytrace) {

@@ -12,20 +12,21 @@ def build(bld):
             target=dest)
 
     tests = [
-            ('common', 'common'),
-            ('ray', 'ray'),
-            ('aabb','aabb'),
-            ('arealight', 'AreaLight'),
-            ('sphere', ['sphere', 'shape']),
-            ('triangle', ['triangle', 'shape']),
-            ('mtl_loader', ['mtl_loader']),
-            ('obj_loader', ['obj_loader']),
-            ('kdtree', ['kdtree', 'obj_loader'])]
+        ('common', 'common'),
+        ('ray', 'ray'),
+        ('aabb', 'aabb'),
+        ('arealight', 'AreaLight'),
+        ('sphere', ['sphere', 'shape']),
+        ('triangle', ['triangle', 'shape']),
+        ('mtl_loader', ['mtl_loader']),
+        ('obj_loader', ['obj_loader']),
+        ('assimp_loader', ['assimp_loader']),
+        ('kdtree', ['kdtree', 'obj_loader'])]
 
     for t in tests:
         bld.program(
-                features='test',
-                source='test_' + t[0] + ".cpp",
-                target= t[0] + '.test',
-                lib=['gtest'],
-                use=t[1])
+            features='test',
+            source='test_' + t[0] + ".cpp",
+            target=t[0] + '.test',
+            lib=['gtest', 'assimp'],
+            use=t[1])

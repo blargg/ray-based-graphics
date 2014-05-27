@@ -3,9 +3,9 @@
 
 #include <string>
 #include <map>
-#include "color.h"
-#include "materials/solidColor.h"
-#include "properties.h"
+#include "../color.h"
+#include "../materials/solidColor.h"
+#include "../properties.h"
 
 using std::map;
 using std::string;

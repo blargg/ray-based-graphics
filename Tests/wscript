@@ -5,7 +5,7 @@ def build(bld):
             ('ray', 'ray'),
             ('aabb','aabb'),
             ('sphere', ['sphere', 'shape']),
-            ('kdtree', []]
+            ('kdtree', ['kdtree', 'obj_loader'])]
 
     for t in tests:
         bld.program(

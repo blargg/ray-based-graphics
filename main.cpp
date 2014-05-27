@@ -3,6 +3,7 @@
 #include <string>
 #include <getopt.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "easypng.h"
 
@@ -11,7 +12,7 @@
 #include "film.h"
 #include "camera.h"
 #include "drawable.h"
-#include "obj_loader.h"
+#include "file_loader/obj_loader.h"
 
 #include "simpleObject.h"
 #include "shapes/sphere.h"

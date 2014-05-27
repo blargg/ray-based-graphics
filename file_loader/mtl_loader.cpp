@@ -2,7 +2,7 @@
 #include "mtl_loader.h"
 #include <iostream>
 #include <fstream>
-#include "properties.h"
+#include "../properties.h"
 
 MtlLoader::MtlLoader() {
     unsetData = true;

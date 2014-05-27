@@ -9,13 +9,13 @@
 
 #include "mtl_loader.h"
 
-#include "drawable.h"
-#include "simpleObject.h"
-#include "shapes/triangle.h"
+#include "../drawable.h"
+#include "../simpleObject.h"
+#include "../shapes/triangle.h"
 
-#include "material.h"
-#include "properties.h"
-#include "materials/solidColor.h"
+#include "../material.h"
+#include "../properties.h"
+#include "../materials/solidColor.h"
 
 using std::vector;
 

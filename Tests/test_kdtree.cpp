@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include "../kdtree.h"
-#include "../obj_loader.h"
+#include "../file_loader/obj_loader.h"
 
 namespace {
 class KDTreeTest : public ::testing::Test {

@@ -5,7 +5,7 @@
 #include <limits>
 
 #include "common.h"
-#include "shape.h"
+#include "shapes/shape.h"
 #include "ray.h"
 
 /**

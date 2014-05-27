@@ -1,8 +1,8 @@
 #ifndef TURBULENT_H
 #define TURBULENT_H
 
-#include "perlin.h"
-#include "material.h"
+#include "materials/perlin.h"
+#include "materials/material.h"
 #include "common.h"
 
 class Turbulent: public Material

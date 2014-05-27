@@ -2,7 +2,7 @@
 #define TRIANGLE_H
 
 #include <Eigen/Dense>
-#include "shape.h"
+#include "shapes/shape.h"
 #include "ray.h"
 #include "common.h"
 

@@ -1,3 +1,4 @@
 def build(bld):
+    bld.objects(source='shape.cpp', target='shape')
     bld.objects(source='triangle.cpp', target='triangle', use='shape')
     bld.objects(source='sphere.cpp', target='sphere', use='shape')

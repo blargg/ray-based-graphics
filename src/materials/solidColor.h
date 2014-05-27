@@ -1,7 +1,7 @@
 #ifndef SOLIDCOLOR_H
 #define SOLIDCOLOR_H
 
-#include "material.h"
+#include "materials/material.h"
 #include "properties.h"
 #include "common.h"
 #include <Eigen/Dense>

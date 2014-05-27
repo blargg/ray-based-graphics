@@ -13,7 +13,7 @@
 #include "simpleObject.h"
 #include "shapes/triangle.h"
 
-#include "material.h"
+#include "materials/material.h"
 #include "properties.h"
 #include "materials/solidColor.h"
 

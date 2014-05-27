@@ -10,8 +10,7 @@ def build(bld):
     objects = ['easypng',
             'common',
             'ray',
-            'aabb',
-            'shape' ]
+            'aabb']
 
     for obj in objects:
         bld.objects(source=obj+'.cpp', target=obj)

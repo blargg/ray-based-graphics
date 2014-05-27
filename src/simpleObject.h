@@ -5,8 +5,8 @@
 #include "common.h"
 
 #include "drawable.h"
-#include "shape.h"
-#include "material.h"
+#include "shapes/shape.h"
+#include "materials/material.h"
 
 #include "shapes/sphere.h"
 #include "materials/solidColor.h"

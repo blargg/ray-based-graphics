@@ -1,7 +1,7 @@
 #ifndef CHECKE_BOARD_TEXTURE_H
 #define CHECKE_BOARD_TEXTURE_H
 
-#include "material.h"
+#include "materials/material.h"
 #include "properties.h"
 #include "common.h"
 

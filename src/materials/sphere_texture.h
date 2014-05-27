@@ -3,7 +3,7 @@
 
 #include <string>
 #include "easypng.h"
-#include "material.h"
+#include "materials/material.h"
 #include "properties.h"
 #include "common.h"
 

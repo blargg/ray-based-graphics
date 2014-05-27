@@ -1,7 +1,7 @@
 #ifndef RT_PERTURB_NORMALS_H
 #define RT_PERTURB_NORMALS_H
 
-#include "shape.h"
+#include "shapes/shape.h"
 #include "common.h"
 #include "ray.h"
 

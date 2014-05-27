@@ -19,7 +19,7 @@
 #include "shapes/triangle.h"
 #include "shapes/perturb_normals.h"
 
-#include "material.h"
+#include "materials/material.h"
 #include "materials/solidColor.h"
 #include "materials/turbulent.h"
 #include "materials/sphere_texture.h"

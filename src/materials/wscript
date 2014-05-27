@@ -1,2 +1,9 @@
 def build(bld):
+    bld.objects(source='perlin.cpp', target='perlin')
+    bld.objects(source='turbulent.cpp', target='turbulent',
+                use='common perlin')
+    bld.objects(source='checkerBoardTexture.cpp', target='checkerBoardTexture',
+                use='common')
+    bld.objects(source='sphere_texture.cpp', target='sphere_texture',
+                use='common')
     bld.objects(source='solidColor.cpp', target='solidColor', use='common')

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <vector>
-#include "../AreaLight.h"
-#include "../light.h"
+#include "AreaLight.h"
+#include "light.h"
 
 using std::vector;
 

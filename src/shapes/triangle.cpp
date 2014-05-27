@@ -1,8 +1,8 @@
 #include "triangle.h"
 #include <assert.h>
 #include <limits>
-#include "../common.h"
-#include "../triBoxOverlap.h"
+#include "common.h"
+#include "triBoxOverlap.h"
 
 
 /**

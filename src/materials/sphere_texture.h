@@ -2,10 +2,10 @@
 #define RT_SPHERE_TEXTURE_H
 
 #include <string>
-#include "../easypng.h"
-#include "../material.h"
-#include "../properties.h"
-#include "../common.h"
+#include "easypng.h"
+#include "material.h"
+#include "properties.h"
+#include "common.h"
 
 /**
  * @brief A material for a file loaded texture. Forms a sphere around the orign

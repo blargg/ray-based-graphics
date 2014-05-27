@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../obj_loader.h"
+#include "obj_loader.h"
 
 TEST(obj_loader, obj_load) {
     vector<Drawable*> list;

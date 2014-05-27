@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../mtl_loader.h"
+#include "mtl_loader.h"
 #include <map>
 #include <string>
 

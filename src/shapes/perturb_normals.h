@@ -1,9 +1,9 @@
 #ifndef RT_PERTURB_NORMALS_H
 #define RT_PERTURB_NORMALS_H
 
-#include "../shape.h"
-#include "../common.h"
-#include "../ray.h"
+#include "shape.h"
+#include "common.h"
+#include "ray.h"
 
 /**
  * Wrapper shape that randomly perturbs the normals of the original shape.

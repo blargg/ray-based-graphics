@@ -4,9 +4,9 @@
 #include <assert.h>
 #include <limits>
 
-#include "../common.h"
-#include "../shape.h"
-#include "../ray.h"
+#include "common.h"
+#include "shape.h"
+#include "ray.h"
 
 /**
  * Defines a sphere Shape.

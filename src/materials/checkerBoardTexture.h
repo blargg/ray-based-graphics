@@ -1,9 +1,9 @@
 #ifndef CHECKE_BOARD_TEXTURE_H
 #define CHECKE_BOARD_TEXTURE_H
 
-#include "../material.h"
-#include "../properties.h"
-#include "../common.h"
+#include "material.h"
+#include "properties.h"
+#include "common.h"
 
 /**
  * @brief A material of to different properties. Alternates between the two properties in a grid-like pattern

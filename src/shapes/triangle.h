@@ -2,9 +2,9 @@
 #define TRIANGLE_H
 
 #include <Eigen/Dense>
-#include "../shape.h"
-#include "../ray.h"
-#include "../common.h"
+#include "shape.h"
+#include "ray.h"
+#include "common.h"
 
 /**
  * Triangle shape.

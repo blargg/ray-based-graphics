@@ -1,9 +1,9 @@
 #ifndef SOLIDCOLOR_H
 #define SOLIDCOLOR_H
 
-#include "../material.h"
-#include "../properties.h"
-#include "../common.h"
+#include "material.h"
+#include "properties.h"
+#include "common.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;

@@ -2,8 +2,8 @@
 
 #include <Eigen/Dense>
 #include <math.h>
-#include "../aabb.h"
-#include "../ray.h"
+#include "aabb.h"
+#include "ray.h"
 
 TEST(AABBTest, surfaceArea) {
     AABB box;

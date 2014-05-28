@@ -1,7 +1,7 @@
 #include "camera.h"
 #include <math.h>
 #include <omp.h>
-#include "common.h"
+#include "core/common.h"
 
 #define BLOCK_SIZE 32
 

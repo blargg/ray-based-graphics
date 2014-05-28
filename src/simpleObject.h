@@ -2,7 +2,7 @@
 #define SIMPLEOBJECT_H
 
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 
 #include "drawable.h"
 #include "shapes/shape.h"

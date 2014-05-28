@@ -1,5 +1,5 @@
 #include "raytracer.h"
-#include "common.h"
+#include "core/common.h"
 #include <cassert>
 
 Raytracer::Raytracer() {

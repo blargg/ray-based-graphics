@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "easypng.h"
+#include "core/easypng.h"
 
 #include "raytracer.h"
 #include "pathtracer.h"
@@ -28,7 +28,7 @@
 #include "light.h"
 #include "properties.h"
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 
 
 using std::vector;

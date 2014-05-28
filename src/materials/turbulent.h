@@ -3,7 +3,7 @@
 
 #include "materials/perlin.h"
 #include "materials/material.h"
-#include "common.h"
+#include "core/common.h"
 
 class Turbulent: public Material
 {

@@ -9,7 +9,7 @@
  *       - created 01/07/2012
  *================================================================*/
 
-#include "easypng.h"
+#include "core/easypng.h"
 
 // RGBAPixel functions
 

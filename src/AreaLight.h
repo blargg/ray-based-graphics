@@ -4,8 +4,8 @@
 #include <vector>
 #include "ray.h"
 #include "light.h"
-#include "color.h"
-#include "common.h"
+#include "core/color.h"
+#include "core/common.h"
 
 class AreaLight {
     public:

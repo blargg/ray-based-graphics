@@ -1,7 +1,7 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
-#include "color.h"
+#include "core/color.h"
 
 /**
  * @brief A struct to hold all the properties a material can have.

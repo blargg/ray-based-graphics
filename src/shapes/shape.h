@@ -3,7 +3,7 @@
 
 #include <Eigen/Dense>
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 #include "aabb.h"
 
 using namespace Eigen;

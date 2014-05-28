@@ -5,9 +5,9 @@
 #include <string>
 #include "raytracer.h"
 #include "pathtracer.h"
-#include "common.h"
+#include "core/common.h"
 #include "film.h"
-#include "easypng.h"
+#include "core/easypng.h"
 #include "ray.h"
 
 using std::string;

@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 #include "shapes/shape.h"
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 
 /**
  * Triangle shape.

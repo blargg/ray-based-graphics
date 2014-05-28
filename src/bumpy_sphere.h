@@ -1,7 +1,7 @@
 #ifndef RT_BUMPY_SPHERE_H
 #define RT_BUMPY_SPHERE_H
 
-#include "easypng.h"
+#include "core/easypng.h"
 
 #include "ray.h"
 #include "drawable.h"

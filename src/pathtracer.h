@@ -6,9 +6,9 @@
 
 #include "drawable.h"
 #include "kdtree.h"
-#include "easypng.h"
+#include "core/easypng.h"
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 
 class PathTracer {
 public:

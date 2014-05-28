@@ -3,7 +3,7 @@
 
 #include "materials/material.h"
 #include "properties.h"
-#include "common.h"
+#include "core/common.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;

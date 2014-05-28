@@ -3,7 +3,7 @@
 
 #include "materials/material.h"
 #include "properties.h"
-#include "common.h"
+#include "core/common.h"
 
 /**
  * @brief A material of to different properties. Alternates between the two properties in a grid-like pattern

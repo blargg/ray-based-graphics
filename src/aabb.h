@@ -2,7 +2,7 @@
 #define RT_AABB_H
 
 #include <Eigen/Dense>
-#include "common.h"
+#include "core/common.h"
 #include "ray.h"
 using namespace Eigen;
 

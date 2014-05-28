@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include "color.h"
+#include "core/color.h"
 #include "materials/solidColor.h"
 #include "properties.h"
 

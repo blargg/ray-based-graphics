@@ -8,7 +8,7 @@
 #define RAY_H
 
 #include <Eigen/Dense>
-#include "common.h"
+#include "core/common.h"
 using namespace Eigen;
 
 /**

@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <limits>
 
-#include "common.h"
+#include "core/common.h"
 #include "shapes/shape.h"
 #include "ray.h"
 

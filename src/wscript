@@ -7,9 +7,7 @@ def build(bld):
             use='easypng common camera pathtracer raytracer obj_loader',
             lib=['png', 'gomp'])
 
-    objects = ['easypng',
-            'common',
-            'ray',
+    objects = [ 'ray',
             'aabb']
 
     for obj in objects:
@@ -23,6 +21,7 @@ def build(bld):
     bld.objects(source='AreaLight.cpp', target='AreaLight', use='ray common')
     bld.objects(source='camera.cpp', target='camera', use='common film easypng ratracer pathtracer ray')
 
+    bld.recurse('core')
     bld.recurse('shapes')
     bld.recurse('file_loader')
     bld.recurse('materials')

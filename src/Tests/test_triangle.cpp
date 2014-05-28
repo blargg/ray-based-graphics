@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "shapes/triangle.h"
-#include "common.h"
+#include "core/common.h"
 #include "aabb.h"
 #include <Eigen/Dense>
 

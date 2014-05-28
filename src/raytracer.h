@@ -6,11 +6,11 @@
 
 #include "drawable.h"
 #include "kdtree.h"
-#include "easypng.h"
+#include "core/easypng.h"
 #include "light.h"
 #include "AreaLight.h"
 #include "ray.h"
-#include "common.h"
+#include "core/common.h"
 
 #define MIN_INTERSECTION_DIST (1.0e-10)
 

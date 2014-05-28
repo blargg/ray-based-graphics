@@ -2,9 +2,9 @@
 #define RT_FILM_H
 
 #include <string>
-#include "common.h"
-#include "color.h"
-#include "easypng.h"
+#include "core/common.h"
+#include "core/color.h"
+#include "core/easypng.h"
 
 /**
  * Manages collected image data.

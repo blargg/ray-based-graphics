@@ -1,5 +1,5 @@
 #include "AreaLight.h"
-#include "common.h"
+#include "core/common.h"
 
 
 AreaLight::AreaLight(ray orientation, Vector4d up, double size,

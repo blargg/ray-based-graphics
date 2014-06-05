@@ -5,9 +5,9 @@
 #include <Eigen/Dense>
 
 #include "drawable.h"
-#include "kdtree.h"
+#include "kdtree/kdtree.h"
 #include "core/easypng.h"
-#include "ray.h"
+#include "core/ray.h"
 #include "core/common.h"
 
 class PathTracer {

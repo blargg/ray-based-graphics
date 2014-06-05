@@ -1,10 +1,7 @@
 def build(bld):
     import os
     srcs = bld.path.ant_glob('*.cpp')
-    print(srcs)
     for s in srcs:
         src = os.path.basename(s.abspath())
-        print("src = " + src)
         dest = os.path.splitext(src)[0]
-        print("dest = " + dest)
         bld.objects(source=src, target=dest)

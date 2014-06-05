@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "ray.h"
+#include "core/ray.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;

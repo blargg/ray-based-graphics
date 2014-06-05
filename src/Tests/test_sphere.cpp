@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "shapes/sphere.h"
-#include "aabb.h"
+#include "kdtree/aabb.h"
 
 namespace{
 class SphereTest : public ::testing::Test{

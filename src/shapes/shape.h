@@ -2,9 +2,9 @@
 #define SHAPE_H
 
 #include <Eigen/Dense>
-#include "ray.h"
+#include "core/ray.h"
 #include "core/common.h"
-#include "aabb.h"
+#include "kdtree/aabb.h"
 
 using namespace Eigen;
 

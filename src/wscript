@@ -7,13 +7,11 @@ def build(bld):
             use='easypng common camera pathtracer raytracer obj_loader',
             lib=['png', 'gomp'])
 
-    objects = [ 'ray',
-            'aabb']
+    objects = []
 
     for obj in objects:
         bld.objects(source=obj+'.cpp', target=obj)
 
-    bld.objects(source='kdtree.cpp', target='kdtree', use='aabb')
     bld.objects(source='simpleObject.cpp', target='simpleObject', use='sphere solidColor')
     bld.objects(source='film.cpp', target='film', use='common easypng')
     bld.objects(source='pathtracer.cpp', target='pathtracer', use='ray film common kdtree easypng')
@@ -25,6 +23,7 @@ def build(bld):
     bld.recurse('shapes')
     bld.recurse('file_loader')
     bld.recurse('materials')
+    bld.recurse('kdtree')
 
     if bld.env.TEST:
         bld.recurse('Tests')

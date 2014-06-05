@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
-#include "kdtree.h"
+#include "kdtree/kdtree.h"
 #include "file_loader/obj_loader.h"
 
 namespace {

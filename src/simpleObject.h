@@ -1,7 +1,7 @@
 #ifndef SIMPLEOBJECT_H
 #define SIMPLEOBJECT_H
 
-#include "ray.h"
+#include "core/ray.h"
 #include "core/common.h"
 
 #include "drawable.h"

@@ -3,7 +3,7 @@
 
 #include <Eigen/Dense>
 #include "shapes/shape.h"
-#include "ray.h"
+#include "core/ray.h"
 #include "core/common.h"
 
 /**

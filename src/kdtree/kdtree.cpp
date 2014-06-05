@@ -1,4 +1,4 @@
-#include "kdtree.h"
+#include "kdtree/kdtree.h"
 #include <assert.h>
 #include <algorithm>
 #include <stdio.h>

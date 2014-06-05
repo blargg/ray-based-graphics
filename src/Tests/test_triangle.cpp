@@ -2,7 +2,7 @@
 
 #include "shapes/triangle.h"
 #include "core/common.h"
-#include "aabb.h"
+#include "kdtree/aabb.h"
 #include <Eigen/Dense>
 
 namespace{

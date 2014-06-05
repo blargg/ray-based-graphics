@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <unordered_set>
-#include "ray.h"
+#include "core/ray.h"
 #include "drawable.h"
-#include "aabb.h"
+#include "kdtree/aabb.h"
 using std::vector;
 
 /**

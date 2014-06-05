@@ -6,7 +6,7 @@
 
 #include "core/common.h"
 #include "shapes/shape.h"
-#include "ray.h"
+#include "core/ray.h"
 
 /**
  * Defines a sphere Shape.

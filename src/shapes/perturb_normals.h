@@ -3,7 +3,7 @@
 
 #include "shapes/shape.h"
 #include "core/common.h"
-#include "ray.h"
+#include "core/ray.h"
 
 /**
  * Wrapper shape that randomly perturbs the normals of the original shape.

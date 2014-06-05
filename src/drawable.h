@@ -1,9 +1,9 @@
 #ifndef DRAWBLE_H
 #define DRAWBLE_H
 
-#include "ray.h"
+#include "core/ray.h"
 #include "properties.h"
-#include "aabb.h"
+#include "kdtree/aabb.h"
 
 /**
  * @brief An interface for anything that can be drawn in the Ray tracing algorithm

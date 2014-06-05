@@ -1,4 +1,4 @@
-#include "aabb.h"
+#include "kdtree/aabb.h"
 #include <algorithm>
 
 float AABB::surfaceArea() {

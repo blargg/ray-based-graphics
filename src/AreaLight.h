@@ -2,7 +2,7 @@
 #define RT_AREALIGHT_H
 
 #include <vector>
-#include "ray.h"
+#include "core/ray.h"
 #include "light.h"
 #include "core/color.h"
 #include "core/common.h"

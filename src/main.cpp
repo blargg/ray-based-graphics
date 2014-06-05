@@ -27,7 +27,7 @@
 #include "AreaLight.h"
 #include "light.h"
 #include "properties.h"
-#include "ray.h"
+#include "core/ray.h"
 #include "core/common.h"
 
 

@@ -16,6 +16,7 @@ def configure(conf):
     sourcedir = str(conf.path.abspath())
     sourcedir += "/src"
     conf.env.append_value('INCLUDES', [sourcedir, '/usr/include/eigen3'])
+    conf.find_program('cp', var='COPY')
 
     conf.env.CXXFLAGS = ["-g", "-O2", "-std=c++11"]
 

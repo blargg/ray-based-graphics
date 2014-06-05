@@ -3,7 +3,7 @@
 
 #include "core/easypng.h"
 
-#include "ray.h"
+#include "core/ray.h"
 #include "drawable.h"
 #include "properties.h"
 #include "shapes/sphere.h"

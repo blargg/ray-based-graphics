@@ -8,7 +8,7 @@
 #include "core/common.h"
 #include "film.h"
 #include "core/easypng.h"
-#include "ray.h"
+#include "core/ray.h"
 
 using std::string;
 

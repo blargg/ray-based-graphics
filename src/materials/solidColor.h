@@ -2,7 +2,7 @@
 #define SOLIDCOLOR_H
 
 #include "materials/material.h"
-#include "properties.h"
+#include "core/properties.h"
 #include "core/common.h"
 #include <Eigen/Dense>
 

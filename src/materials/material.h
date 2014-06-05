@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "properties.h"
+#include "core/properties.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;

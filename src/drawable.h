@@ -2,7 +2,7 @@
 #define DRAWBLE_H
 
 #include "core/ray.h"
-#include "properties.h"
+#include "core/properties.h"
 #include "kdtree/aabb.h"
 
 /**

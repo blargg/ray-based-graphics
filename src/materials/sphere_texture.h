@@ -4,7 +4,7 @@
 #include <string>
 #include "core/easypng.h"
 #include "materials/material.h"
-#include "properties.h"
+#include "core/properties.h"
 #include "core/common.h"
 
 /**

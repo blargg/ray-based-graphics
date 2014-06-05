@@ -14,7 +14,7 @@
 #include "shapes/triangle.h"
 
 #include "materials/material.h"
-#include "properties.h"
+#include "core/properties.h"
 #include "materials/solidColor.h"
 
 using std::vector;

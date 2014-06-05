@@ -5,7 +5,7 @@
 
 #include "core/ray.h"
 #include "drawable.h"
-#include "properties.h"
+#include "core/properties.h"
 #include "shapes/sphere.h"
 #include "materials/solidColor.h"
 

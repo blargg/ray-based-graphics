@@ -5,7 +5,7 @@
 #include <map>
 #include "core/color.h"
 #include "materials/solidColor.h"
-#include "properties.h"
+#include "core/properties.h"
 
 using std::map;
 using std::string;

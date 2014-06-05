@@ -1,4 +1,4 @@
-#include "properties.h"
+#include "core/properties.h"
 
 Properties operator*(const Properties& p, const double x)
 {

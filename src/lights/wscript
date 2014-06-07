@@ -1,0 +1,2 @@
+def build(bld):
+    bld.objects(source='AreaLight.cpp', target='AreaLight', use='ray common')

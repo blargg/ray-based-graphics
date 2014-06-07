@@ -1,4 +1,4 @@
-#include "AreaLight.h"
+#include "lights/AreaLight.h"
 #include "core/common.h"
 
 

@@ -24,8 +24,8 @@
 #include "materials/turbulent.h"
 #include "materials/sphere_texture.h"
 
-#include "AreaLight.h"
-#include "core/light.h"
+#include "lights/AreaLight.h"
+#include "lights/light.h"
 #include "core/properties.h"
 #include "core/ray.h"
 #include "core/common.h"

@@ -7,8 +7,8 @@
 #include "drawables/drawable.h"
 #include "kdtree/kdtree.h"
 #include "core/easypng.h"
-#include "core/light.h"
-#include "AreaLight.h"
+#include "lights/light.h"
+#include "lights/AreaLight.h"
 #include "core/ray.h"
 #include "core/common.h"
 

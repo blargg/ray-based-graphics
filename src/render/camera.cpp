@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "render/camera.h"
 #include <math.h>
 #include <omp.h>
 #include "core/common.h"

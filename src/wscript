@@ -3,7 +3,7 @@ def build(bld):
     bld.add_post_fun(waf_unit_test.summary)
     bld.program(
             source='main.cpp',
-            target='render',
+            target='renderer',
             use='easypng common camera pathtracer raytracer obj_loader',
             lib=['png', 'gomp'])
 
@@ -13,17 +13,14 @@ def build(bld):
         bld.objects(source=obj+'.cpp', target=obj)
 
     bld.objects(source='simpleObject.cpp', target='simpleObject', use='sphere solidColor')
-    bld.objects(source='film.cpp', target='film', use='common easypng')
-    bld.objects(source='pathtracer.cpp', target='pathtracer', use='ray film common kdtree easypng')
-    bld.objects(source='raytracer.cpp', target='raytracer', use='kdtree ray common AreaLight')
     bld.objects(source='AreaLight.cpp', target='AreaLight', use='ray common')
-    bld.objects(source='camera.cpp', target='camera', use='common film easypng ratracer pathtracer ray')
 
     bld.recurse('core')
     bld.recurse('shapes')
     bld.recurse('file_loader')
     bld.recurse('materials')
     bld.recurse('kdtree')
+    bld.recurse('render')
 
     if bld.env.TEST:
         bld.recurse('Tests')

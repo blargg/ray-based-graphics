@@ -1,4 +1,4 @@
-#include "pathtracer.h"
+#include "render/pathtracer.h"
 
 PathTracer::PathTracer() {
     maxDepth = 5;

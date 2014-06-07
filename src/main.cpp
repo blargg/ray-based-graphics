@@ -7,10 +7,10 @@
 
 #include "core/easypng.h"
 
-#include "raytracer.h"
-#include "pathtracer.h"
-#include "film.h"
-#include "camera.h"
+#include "render/raytracer.h"
+#include "render/pathtracer.h"
+#include "render/film.h"
+#include "render/camera.h"
 #include "drawable.h"
 #include "file_loader/obj_loader.h"
 

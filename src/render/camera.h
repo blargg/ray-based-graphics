@@ -3,10 +3,10 @@
 
 #include <Eigen/Dense>
 #include <string>
-#include "raytracer.h"
-#include "pathtracer.h"
+#include "render/raytracer.h"
+#include "render/pathtracer.h"
 #include "core/common.h"
-#include "film.h"
+#include "render/film.h"
 #include "core/easypng.h"
 #include "core/ray.h"
 

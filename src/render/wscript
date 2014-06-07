@@ -1,0 +1,5 @@
+def build(bld):
+    bld.objects(source='film.cpp', target='film', use='common easypng')
+    bld.objects(source='camera.cpp', target='camera', use='common film easypng ratracer pathtracer ray')
+    bld.objects(source='raytracer.cpp', target='raytracer', use='kdtree ray common AreaLight')
+    bld.objects(source='pathtracer.cpp', target='pathtracer', use='ray film common kdtree easypng')

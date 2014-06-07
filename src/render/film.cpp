@@ -1,4 +1,4 @@
-#include "film.h"
+#include "render/film.h"
 #include <algorithm>
 
 using std::min;

@@ -1,0 +1,2 @@
+def build(bld):
+    bld.objects(source='simpleObject.cpp', target='simpleObject', use='sphere solidColor')

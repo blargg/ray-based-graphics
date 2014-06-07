@@ -11,10 +11,10 @@
 #include "render/pathtracer.h"
 #include "render/film.h"
 #include "render/camera.h"
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "file_loader/obj_loader.h"
 
-#include "simpleObject.h"
+#include "drawables/simpleObject.h"
 #include "shapes/sphere.h"
 #include "shapes/triangle.h"
 #include "shapes/perturb_normals.h"
@@ -25,7 +25,7 @@
 #include "materials/sphere_texture.h"
 
 #include "AreaLight.h"
-#include "light.h"
+#include "core/light.h"
 #include "core/properties.h"
 #include "core/ray.h"
 #include "core/common.h"

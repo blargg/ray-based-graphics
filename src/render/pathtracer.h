@@ -4,7 +4,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "kdtree/kdtree.h"
 #include "core/easypng.h"
 #include "core/ray.h"

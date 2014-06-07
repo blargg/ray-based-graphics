@@ -9,8 +9,8 @@
 
 #include "mtl_loader.h"
 
-#include "drawable.h"
-#include "simpleObject.h"
+#include "drawables/drawable.h"
+#include "drawables/simpleObject.h"
 #include "shapes/triangle.h"
 
 #include "materials/material.h"

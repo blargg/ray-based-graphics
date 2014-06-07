@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "AreaLight.h"
-#include "light.h"
+#include "core/light.h"
 
 using std::vector;
 

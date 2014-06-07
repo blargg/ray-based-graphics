@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_set>
 #include "core/ray.h"
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "kdtree/aabb.h"
 using std::vector;
 

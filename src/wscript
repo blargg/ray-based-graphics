@@ -12,7 +12,6 @@ def build(bld):
     for obj in objects:
         bld.objects(source=obj+'.cpp', target=obj)
 
-    bld.objects(source='simpleObject.cpp', target='simpleObject', use='sphere solidColor')
     bld.objects(source='AreaLight.cpp', target='AreaLight', use='ray common')
 
     bld.recurse('core')
@@ -21,6 +20,7 @@ def build(bld):
     bld.recurse('materials')
     bld.recurse('kdtree')
     bld.recurse('render')
+    bld.recurse('drawables')
 
     if bld.env.TEST:
         bld.recurse('Tests')

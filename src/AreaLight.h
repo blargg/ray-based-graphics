@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "core/ray.h"
-#include "light.h"
+#include "core/light.h"
 #include "core/color.h"
 #include "core/common.h"
 

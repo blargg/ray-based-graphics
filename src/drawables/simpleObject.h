@@ -4,7 +4,7 @@
 #include "core/ray.h"
 #include "core/common.h"
 
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "shapes/shape.h"
 #include "materials/material.h"
 

@@ -4,10 +4,10 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "kdtree/kdtree.h"
 #include "core/easypng.h"
-#include "light.h"
+#include "core/light.h"
 #include "AreaLight.h"
 #include "core/ray.h"
 #include "core/common.h"

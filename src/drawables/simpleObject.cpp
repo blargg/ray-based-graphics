@@ -1,4 +1,4 @@
-#include "simpleObject.h"
+#include "drawables/simpleObject.h"
 
 SimpleObject::SimpleObject()
 {

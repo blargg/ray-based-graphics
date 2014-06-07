@@ -4,7 +4,7 @@
 #include "core/easypng.h"
 
 #include "core/ray.h"
-#include "drawable.h"
+#include "drawables/drawable.h"
 #include "core/properties.h"
 #include "shapes/sphere.h"
 #include "materials/solidColor.h"

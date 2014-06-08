@@ -21,12 +21,13 @@ Building requires the following libraries
 
 To build the project:
 ```
-make
+waf configure build
 ```
+The program will be written to build/src/renderer
 
 Example to render a scene:
 ```
-./render -p 100 -o output.png scene.obj
+renderer -p 100 -o output.png scene.obj
 ```
 
 This will render the scene defined by 'scene.obj' with 100 samples per pixel.
@@ -42,11 +43,5 @@ Testing requires googletest.
 
 To build the tests:
 ```
-make tests
-```
-This will compile all the tests in the Tests folder.
-
-To build and run all tests:
-```
-make run_tests
+waf configure --test build
 ```

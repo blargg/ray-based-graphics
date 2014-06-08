@@ -15,9 +15,11 @@ def build(bld):
             ('common', 'common'),
             ('ray', 'ray'),
             ('aabb','aabb'),
+            ('arealight', 'AreaLight'),
             ('sphere', ['sphere', 'shape']),
             ('triangle', ['triangle', 'shape']),
             ('mtl_loader', ['mtl_loader']),
+            ('obj_loader', ['obj_loader']),
             ('kdtree', ['kdtree', 'obj_loader'])]
 
     for t in tests:

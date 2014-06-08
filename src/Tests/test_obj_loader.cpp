@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "obj_loader.h"
+#include "file_loader/obj_loader.h"
 
 TEST(obj_loader, obj_load) {
     vector<Drawable*> list;
     ObjLoader loader;
-    loader.load_to_list(list, "Tests/obj_example.obj");
+    loader.load_to_list(list, "obj_example.obj");
 
 }
 

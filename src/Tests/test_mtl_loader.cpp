@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "mtl_loader.h"
+#include "file_loader/mtl_loader.h"
 #include <map>
 #include <string>
 
@@ -10,7 +10,7 @@ using std::string;
 TEST(MtlLoader, load_to_map) {
     map<string, SolidColor> materials;
     MtlLoader mloader;
-    mloader.add_to_map(materials, "Tests/stove.mtl");
+    mloader.add_to_map(materials, "stove.mtl");
 
     EXPECT_EQ(materials.size(), 2) << "Wrong number of materials loaded.";
     EXPECT_GT(materials.count("TestMat"), 0) << "Could not find TestMat.";

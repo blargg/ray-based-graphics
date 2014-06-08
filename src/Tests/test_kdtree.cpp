@@ -13,8 +13,8 @@ protected:
 public:
     virtual void SetUp() {
         ObjLoader loader;
-        loader.load_to_list(objList, "Tests/obj_example.obj");
-        loader.load_to_list(complexScene, "Tests/complex_scene.obj");
+        loader.load_to_list(objList, "obj_example.obj");
+        loader.load_to_list(complexScene, "complex_scene.obj");
     }
 
     virtual void TearDown() {
@@ -104,7 +104,7 @@ TEST_F(KDTreeTest, intersection) {
 TEST_F(KDTreeTest, freeAllObjects) {
     vector<Drawable *> testObjects;
     ObjLoader loader;
-    loader.load_to_list(testObjects, "Tests/obj_example.obj");
+    loader.load_to_list(testObjects, "obj_example.obj");
     KDTree testTree(testObjects);
     testTree.freeAllObj();
 }

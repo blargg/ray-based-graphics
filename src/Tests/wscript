@@ -1,10 +1,23 @@
 
 def build(bld):
+    # TODO ensure that this executes before the tests
+    import os
+    static_ext = 'static'
+    static_files = bld.path.ant_glob('*.' + static_ext)
+    for f in static_files:
+        src = f.path_from(bld.path)
+        dest = os.path.splitext(src)[0]
+        bld(rule='${COPY} ${SRC} ${TGT}',
+            source=src,
+            target=dest)
+
     tests = [
             ('common', 'common'),
             ('ray', 'ray'),
             ('aabb','aabb'),
             ('sphere', ['sphere', 'shape']),
+            ('triangle', ['triangle', 'shape']),
+            ('mtl_loader', ['mtl_loader']),
             ('kdtree', ['kdtree', 'obj_loader'])]
 
     for t in tests:

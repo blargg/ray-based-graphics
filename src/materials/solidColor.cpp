@@ -8,15 +8,15 @@ SolidColor::SolidColor(Properties p):myProperties(p)
 
 Material * SolidColor::create() const
 {
-	return new SolidColor();
+    return new SolidColor();
 }
 
 Material * SolidColor::clone() const
 {
-	return new SolidColor(*this);
+    return new SolidColor(*this);
 }
 
 Properties SolidColor::getProperties(Vector4d loc) const
 {
-	return myProperties;
+    return myProperties;
 }

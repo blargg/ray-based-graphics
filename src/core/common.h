@@ -1,5 +1,5 @@
-#ifndef RT_COMMON
-#define RT_COMMON
+#ifndef SRC_CORE_COMMON_H_
+#define SRC_CORE_COMMON_H_
 
 /**
  * A set of common functions and macros.
@@ -51,10 +51,10 @@ inline bool isUnitVector(T v) {
  */
 template <class T>
 T max3(T a, T b, T c) {
-    if(a > b)
-        return (a>c?a:c);
+    if (a > b)
+        return (a > c?a:c);
     else
-        return (b>c?b:c);
+        return (b > c?b:c);
 }
 
 /**
@@ -62,10 +62,10 @@ T max3(T a, T b, T c) {
  */
 template <class T>
 T min3(T a, T b, T c) {
-    if(a > b)
+    if (a > b)
         return (b < c?b:c);
     else
         return (a < c?a:c);
 }
 
-#endif // RT_COMMON
+#endif // SRC_CORE_COMMON_H_

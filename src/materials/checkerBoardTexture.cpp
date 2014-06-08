@@ -8,22 +8,22 @@ Material * CheckerBoardTexture::clone() const
 
 Properties CheckerBoardTexture::getProperties(Vector4d loc) const
 {
-	bool useFirst = true;
+    bool useFirst = true;
 
-	double temp = loc[0] / size;
-	if( (int) temp % 2 == 1) // if odd, alternate useFirst
-		useFirst = !useFirst;
+    double temp = loc[0] / size;
+    if( (int) temp % 2 == 1) // if odd, alternate useFirst
+        useFirst = !useFirst;
 
-	temp = loc[1] / size;
-	if( (int) temp % 2 == 1) // if odd, alternate useFirst
-		useFirst = !useFirst;
+    temp = loc[1] / size;
+    if( (int) temp % 2 == 1) // if odd, alternate useFirst
+        useFirst = !useFirst;
 
-	temp = loc[2] / size;
-	if( (int) temp % 2 == 1) // if odd, alternate useFirst
-		useFirst = !useFirst;
+    temp = loc[2] / size;
+    if( (int) temp % 2 == 1) // if odd, alternate useFirst
+        useFirst = !useFirst;
 
-	if(useFirst)
-		return prop1;
+    if(useFirst)
+        return prop1;
 
-	return prop2;
+    return prop2;
 }

@@ -1,44 +1,21 @@
-#include <vector>
-#include <iostream>
-#include <string>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "core/easypng.h"
+#include <vector>
+#include <string>
 
 #include "render/raytracer.h"
 #include "render/pathtracer.h"
-#include "render/film.h"
 #include "render/camera.h"
-#include "drawables/drawable.h"
 #include "file_loader/obj_loader.h"
-
-#include "drawables/simpleObject.h"
-#include "shapes/sphere.h"
-#include "shapes/triangle.h"
-#include "shapes/perturb_normals.h"
-
-#include "materials/material.h"
-#include "materials/solidColor.h"
-#include "materials/turbulent.h"
-#include "materials/sphere_texture.h"
-
-#include "lights/AreaLight.h"
-#include "lights/light.h"
-#include "core/properties.h"
-#include "core/ray.h"
-#include "core/common.h"
 
 
 using std::vector;
 using std::string;
 using std::min;
 using std::max;
-using namespace std;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int optChar;
     int numSamples = 10;
     string outputFileName = "dump/out.png";
@@ -54,13 +31,13 @@ int main(int argc, char **argv)
         {"progressive",  required_argument,  0,  'g'},
         {"output",       required_argument,  0,  'o'}
     };
-    while(1) {
+    while (1) {
         int option_index = 0;
         optChar = getopt_long(argc, argv, "rp:g:o:",
                 long_options, &option_index);
-        if(optChar == -1)
+        if (optChar == -1)
             break;
-        switch(optChar) {
+        switch (optChar) {
             case 'r':
                 render_algorithm = raytrace;
                 break;
@@ -92,21 +69,21 @@ int main(int argc, char **argv)
     Camera cam;
     cam.imgWidth = 500;
     cam.imgHeight = 500;
-    cam.position.dir = Vector4d(-1,0,0,0);
-    cam.position.orig = Vector4d(10,0,0,1);
-    cam.up = Vector4d(0,1,0,0);
+    cam.position.dir = Vector4d(-1, 0, 0, 0);
+    cam.position.orig = Vector4d(10, 0, 0, 1);
+    cam.up = Vector4d(0, 1, 0, 0);
     cam.worldWidth = 1.0;
     cam.worldHeight = 1.0;
 
     vector<Drawable *> allObj;
 
-    if(optind < argc) {
+    if (optind < argc) {
         while (optind < argc) {
             loader.load_to_list(allObj, argv[optind++]);
         }
     }
 
-    if(render_algorithm == raytrace) {
+    if (render_algorithm == raytrace) {
         Raytracer rayTracer;
         rayTracer.objTree.rebuildTree(allObj);
         PNG *pic = renderImage(rayTracer, cam);
@@ -114,23 +91,22 @@ int main(int argc, char **argv)
         delete pic;
     }
 
-    if(render_algorithm == path_trace) {
+    if (render_algorithm == path_trace) {
         PathTracer pathTracer;
         pathTracer.setObjects(allObj);
-        Film myFilm(cam.imgWidth,cam.imgHeight);
+        Film myFilm(cam.imgWidth, cam.imgHeight);
         pathtraceImage(&myFilm, pathTracer, cam, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
     }
 
-    if(render_algorithm == progressive_p) {
+    if (render_algorithm == progressive_p) {
         PathTracer pathTracer;
         pathTracer.setObjects(allObj);
         progressiveRender(outputFileName, pathTracer, cam, numSamples);
     }
 
-    for(unsigned int i = 0; i < allObj.size(); i++) {
+    for (unsigned int i = 0; i < allObj.size(); i++) {
         delete allObj[i];
     }
-
 }

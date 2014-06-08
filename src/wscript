@@ -2,15 +2,10 @@ def build(bld):
     from waflib.Tools import waf_unit_test
     bld.add_post_fun(waf_unit_test.summary)
     bld.program(
-            source='main.cpp',
-            target='renderer',
-            use='easypng common camera pathtracer raytracer obj_loader',
-            lib=['png', 'gomp'])
-
-    objects = []
-
-    for obj in objects:
-        bld.objects(source=obj+'.cpp', target=obj)
+        source='main.cpp',
+        target='renderer',
+        use='easypng common camera pathtracer raytracer obj_loader',
+        lib=['png', 'gomp'])
 
     bld.recurse('core')
     bld.recurse('shapes')

@@ -14,8 +14,7 @@ using namespace Eigen;
 /**
  * Defines a ray (point and vector).
  */
-class ray
-{
+class ray {
     public:
     /**
      * @brief Where the origin of the ray is.
@@ -29,10 +28,10 @@ class ray
     /**
      * @brief Makes a ray with the default point and vectre objects
      *
-     * Simply allows the default constructors for the point orig and the vectre dir
-     * to be called
+     * Simply allows the default constructors for the point orig and the vectre
+     * dir to be called
      */
-    ray(){ /* do nothing */ };
+    ray() { /* do nothing */ };
 
     /**
      * @brief Makes a new ray with the given origin and direction.

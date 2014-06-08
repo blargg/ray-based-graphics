@@ -12,37 +12,37 @@
  */
 class CheckerBoardTexture: public Material
 {
-	private:
-	/// The first set of properties to use
-	Properties prop1;
-	/// The second set.
-	Properties prop2;
+    private:
+    /// The first set of properties to use
+    Properties prop1;
+    /// The second set.
+    Properties prop2;
 
-	/// The size of one length of the cube.
-	double size;
+    /// The size of one length of the cube.
+    double size;
 
-	public:
+    public:
 
-	/**
-	 * @brief Constructs the material from the given properties and size
-	 *
-	 * @param firstProp One of the properties of the pattern. Defaults to red.
-	 * @param secondProp The other set of properties of the pattern. Defaults to blue.
-	 * @param scale The size of the cube pattern. Defaults to 10.0
-	 */
-	CheckerBoardTexture(Properties firstProp = Properties(Color(1.0,0.0,0.0)),
-			   			Properties secondProp = Properties(Color(0.0,0.0,1.0)), double scale = 10.0):
-						prop1(firstProp),prop2(secondProp),size(scale)
-	{ /* Do nothing */ }
+    /**
+     * @brief Constructs the material from the given properties and size
+     *
+     * @param firstProp One of the properties of the pattern. Defaults to red.
+     * @param secondProp The other set of properties of the pattern. Defaults to blue.
+     * @param scale The size of the cube pattern. Defaults to 10.0
+     */
+    CheckerBoardTexture(Properties firstProp = Properties(Color(1.0,0.0,0.0)),
+                        Properties secondProp = Properties(Color(0.0,0.0,1.0)), double scale = 10.0):
+                        prop1(firstProp),prop2(secondProp),size(scale)
+    { /* Do nothing */ }
 
     virtual ~CheckerBoardTexture(){ /* Do noting */ }
 
-	/// Allows the material to be constructed virtually.
-	virtual Material * create() const;
-	/// Allows the material to be copied virtually.
-	virtual Material * clone() const;
-	/// Returns the properties of the material at the given point.
-	virtual Properties getProperties(Vector4d loc) const;
+    /// Allows the material to be constructed virtually.
+    virtual Material * create() const;
+    /// Allows the material to be copied virtually.
+    virtual Material * clone() const;
+    /// Returns the properties of the material at the given point.
+    virtual Properties getProperties(Vector4d loc) const;
 };
 
 #endif

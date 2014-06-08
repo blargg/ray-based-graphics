@@ -10,11 +10,11 @@ Vector4d reflectVector(Vector4d viewVector, Vector4d normal) {
     return viewVector - 2.0 * viewVector.dot(normal) * normal;
 }
 
-Vector4d perturb(Vector4d original, double max_angle){
+Vector4d perturb(Vector4d original, double max_angle) {
     Vector4d a = original;
-    Vector4d up(0,1,0,0);
-    if(a == up || a == (-1 * up))
-        up = Vector4d(1,0,0,0);
+    Vector4d up(0, 1, 0, 0);
+    if (a == up || a == (-1 * up))
+        up = Vector4d(1, 0, 0, 0);
 
     Vector4d right = cross(up, a);
     right.normalize();

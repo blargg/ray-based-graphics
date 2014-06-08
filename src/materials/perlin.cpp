@@ -46,7 +46,7 @@ static double grad(int hash, double x, double y, double z) {
             v = h<4||h==12||h==13 ? y : z;
     return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
 }
-   
+
 double noise(double x, double y, double z) {
 
     perlin & myPerlin = perlin::getInstance();

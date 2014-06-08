@@ -1,7 +1,9 @@
-#include "render/camera.h"
 #include <math.h>
 #include <omp.h>
+#include <string>
+
 #include "core/common.h"
+#include "render/camera.h"
 
 #define BLOCK_SIZE 32
 
@@ -30,10 +32,14 @@ PNG* renderImage(Raytracer &render, Camera cam) {
 #pragma omp parallel
     {
 #pragma omp for
-    for(int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
-        for(int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
-            for(int xoff = 0; xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth; xoff++){
-                for(int yoff = 0; yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight; yoff++){
+    for (int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
+        for (int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
+            for (int xoff = 0;
+                 xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth;
+                 xoff++) {
+                for (int yoff = 0;
+                     yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight;
+                     yoff++) {
                     Vector4d screen_point = bot_right_corner +
                         dx * (BLOCK_SIZE * x + xoff) * right +
                         dy * (BLOCK_SIZE * y + yoff) * cam.up;
@@ -45,20 +51,20 @@ PNG* renderImage(Raytracer &render, Camera cam) {
                     viewRay.orig = screen_point;
                     Color c = render.trace(viewRay);
                     *((*image)(BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff)) =
-                        RGBAPixel(max(min( (int) (c.red * 255), 255), 0),
-                                  max(min( (int) (c.green * 255), 255), 0),
-                                  max(min( (int) (c.blue * 255), 255), 0) );
+                        RGBAPixel(max(min((int) (c.red * 255), 255), 0),
+                                  max(min((int) (c.green * 255), 255), 0),
+                                  max(min((int) (c.blue * 255), 255), 0) );
                 }
             }
         }
     }
-
     }
 
     return image;
 }
 
-void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamples) {
+void pathtraceImage(Film *imageFilm, PathTracer &render,
+        Camera cam, int numSamples) {
 
     cam.up.normalize();
     cam.position.dir.normalize();
@@ -76,12 +82,16 @@ void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamp
     double dx = (cam.worldWidth / cam.imgWidth);
     double dy = (cam.worldHeight / cam.imgHeight);
 
-    for(int count = 0; count < numSamples; count++) {
+    for (int count = 0; count < numSamples; count++) {
 #pragma omp parallel for
-        for(int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
-            for(int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
-                for(int xoff = 0; xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth; xoff++){
-                    for(int yoff = 0; yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight; yoff++){
+        for (int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
+            for (int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
+                for (int xoff = 0;
+                     xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth;
+                     xoff++) {
+                    for (int yoff = 0;
+                         yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight;
+                         yoff++) {
                         double xRand = (double)rand() / (double)RAND_MAX;
                         double yRand = (double)rand() / (double)RAND_MAX;
                         Vector4d screen_point = bot_right_corner
@@ -93,22 +103,24 @@ void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamp
                         viewRay.dir = currentDir;
                         viewRay.orig = screen_point;
                         Color c = render.trace(viewRay);
-                        imageFilm->addColor(c, BLOCK_SIZE * x + xoff, BLOCK_SIZE * y + yoff);
+                        imageFilm->addColor(c,
+                                BLOCK_SIZE * x + xoff,
+                                BLOCK_SIZE * y + yoff);
                     }
                 }
             }
         }
     }
-
 }
 
-void progressiveRender(string const file_base, PathTracer &render, Camera cam, int sampleInterval) {
+void progressiveRender(string const file_base, PathTracer &render,
+        Camera cam, int sampleInterval) {
     int sampleNumber = 1;
 
     size_t split_point = file_base.find_last_of('/');
     string baseDir;
     string filename;
-    if(split_point == string::npos) {
+    if (split_point == string::npos) {
         baseDir = "";
         filename = file_base;
     } else {
@@ -117,7 +129,7 @@ void progressiveRender(string const file_base, PathTracer &render, Camera cam, i
     }
 
     Film myFilm(cam.imgWidth, cam.imgHeight);
-    while(1) {
+    while (1) {
         pathtraceImage(&myFilm, render, cam, sampleInterval);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(baseDir + std::to_string(sampleNumber) + "_" + filename);

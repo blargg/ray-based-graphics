@@ -26,6 +26,45 @@ Matrix4d convert_matrix(aiMatrix4x4 tmp) {
     return m;
 }
 
+Color convert_color(aiColor3D original) {
+    return Color(
+            original.r,
+            original.g,
+            original.b);
+}
+
+SolidColor getMaterial(const aiScene *sc, unsigned int index) {
+    Properties prop;
+    aiMaterial *mat = sc->mMaterials[index];
+    aiColor3D tmpColor(0.0, 0.0, 0.0);
+
+    // diffuse
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_DIFFUSE, tmpColor)) {
+        printf("problem with diffuse color\n");
+    }
+    prop.color = convert_color(tmpColor);
+
+    // specular
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_SPECULAR, tmpColor)) {
+        printf("problem with specular color\n");
+    }
+    prop.specular = convert_color(tmpColor);
+
+    // emissive
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_EMISSIVE, tmpColor)) {
+        printf("problem with emissive color\n");
+    }
+    prop.emittance = convert_color(tmpColor);
+
+    // transparency
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_OPACITY, prop.tranparency)) {
+        printf("problem with emissive color\n");
+    }
+    printf("transparency %f\n", prop.tranparency);
+
+    return SolidColor(prop);
+}
+
 Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
     aiVector3D vertex = mesh->mVertices[index];
     return Vector4d(
@@ -36,7 +75,8 @@ Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
             );
 }
 
-void processFace(const aiMesh *mesh, unsigned int index, vector<Drawable *> &list) {
+void processFace(const aiScene *sc, const aiMesh *mesh,
+        unsigned int index, vector<Drawable *> &list) {
     aiFace face = mesh->mFaces[index];
     if (face.mNumIndices != 3) {
         printf("assimp_loader: cannot handle arbitrary polygons\n");
@@ -47,16 +87,7 @@ void processFace(const aiMesh *mesh, unsigned int index, vector<Drawable *> &lis
     Vector4d b = getPoint(mesh, face.mIndices[1]);
     Vector4d c = getPoint(mesh, face.mIndices[2]);
 
-    Properties prop;
-    prop.color = Color(0.3, 0.05, 0.5);
-    prop.i_refraction = 1.33;
-    prop.emittance = Color(0,0,0);
-    prop.reflect = 0.0;
-    prop.specular = Color(0.0, 0.0, 0.0);
-    prop.spec_power = 10.0;
-    prop.tranparency = 1.0;
-
-    SolidColor mat(prop);
+    SolidColor mat = getMaterial(sc, mesh->mMaterialIndex);
     list.push_back(
             new SimpleObject(
                 Triangle(a, b, c),
@@ -64,9 +95,9 @@ void processFace(const aiMesh *mesh, unsigned int index, vector<Drawable *> &lis
 
 }
 
-void processMesh(const aiMesh *mesh, vector<Drawable *> &list) {
+void processMesh(const aiScene *sc, const aiMesh *mesh, vector<Drawable *> &list) {
     for (int f = 0; f < mesh->mNumFaces; f++) {
-        processFace(mesh, f, list);
+        processFace(sc, mesh, f, list);
     }
 }
 
@@ -74,7 +105,7 @@ void recurse(const aiScene *sc, const aiNode *nd, vector<Drawable *> &list) {
     aiMatrix4x4 tmp = nd->mTransformation;
     Matrix4d m = convert_matrix(tmp);
     for (int i = 0; i < sc->mNumMeshes; i++) {
-        processMesh(sc->mMeshes[i], list);
+        processMesh(sc, sc->mMeshes[i], list);
     }
 }
 

@@ -17,6 +17,9 @@
 #include "drawables/simpleObject.h"
 
 void assimp_append(std::string filename, std::vector<Drawable*> &list);
+
 Matrix4d convert_matrix(aiMatrix4x4 orig);
+Color convert_color(aiColor3D original);
+
 
 #endif // ASSIMP_LOADER_H

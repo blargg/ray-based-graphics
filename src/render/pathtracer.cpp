@@ -2,7 +2,7 @@
 
 PathTracer::PathTracer() {
     maxDepth = 5;
-    exitSceneColor = Color(50.3, 50.3, 50.3);
+    exitSceneColor = Color(1.3, 1.3, 1.3);
     indexRefractionScene = 1.0;
 }
 
@@ -59,7 +59,7 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
     }
 
     // refraction
-    if(1 - objProp.tranparency > EPSILON) {
+    if(objProp.tranparency > EPSILON) {
         double next_index_refraction;
         if(inside_obj)
             next_index_refraction = indexRefractionScene;

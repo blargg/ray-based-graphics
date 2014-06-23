@@ -29,7 +29,8 @@ TEST(assimp_loader, conversion_test) {
 TEST(assimp_loader, assimp_load) {
 
     vector<Drawable *> list;
-    assimp_append("obj_example.obj", list);
+    const aiScene *sc = getScene("obj_example.obj");
+    assimp_append(sc, list);
     EXPECT_EQ(list.size(), 28);
 }
 

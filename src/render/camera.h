@@ -18,10 +18,6 @@ using std::string;
  */
 struct Camera
 {
-    /// The height of the final image (eg a PNG) of the render.
-    int imgHeight;
-    /// The width of the final image of the render.
-    int imgWidth;
     /// The height of the camera in the world.
     double worldHeight;
     /// The height of the camera in the world.
@@ -41,7 +37,7 @@ struct Camera
  * position the position and direction of the image to render
  * up a vector pointing to the images' up direction
  */
-PNG* renderImage(Raytracer &render, Camera cam);
+PNG* renderImage(Raytracer &render, Camera cam, int imgWidth, int imgHeight);
 
 /**
  * takes a pointer to a film object, and adds color values to the film based
@@ -58,6 +54,6 @@ void pathtraceImage(Film *imageFilm, PathTracer &render, Camera cam, int numSamp
  * Repeatedly renders a number of samples, then writes the current image to a file
  * based on the file_base name
  */
-void progressiveRender(string const file_base, PathTracer &render, Camera cam, int sampleInterval);
+void progressiveRender(string const file_base, PathTracer &render, Camera cam, int imgWidth, int imgHeight, int sampleInterval);
 
 #endif // CAMERA_H

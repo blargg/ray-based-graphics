@@ -68,8 +68,8 @@ int main(int argc, char **argv) {
     ObjLoader loader;
 
     Camera cam;
-    cam.imgWidth = 500;
-    cam.imgHeight = 500;
+    int imgWidth = 500;
+    int imgHeight = 500;
     cam.position.dir = Vector4d(-1, 0, 0, 0);
     cam.position.orig = Vector4d(10, 0, 0, 1);
     cam.up = Vector4d(0, 1, 0, 0);
@@ -79,13 +79,14 @@ int main(int argc, char **argv) {
     vector<Drawable *> allObj;
 
     while (optind < argc) {
-        assimp_append(argv[optind++], allObj);
+        const aiScene* sc = getScene(argv[optind++]);
+        assimp_append(sc, allObj);
     }
 
     if (render_algorithm == raytrace) {
         Raytracer rayTracer;
         rayTracer.objTree.rebuildTree(allObj);
-        PNG *pic = renderImage(rayTracer, cam);
+        PNG *pic = renderImage(rayTracer, cam, imgWidth, imgHeight);
         pic->writeToFile(outputFileName);
         delete pic;
     }
@@ -93,7 +94,7 @@ int main(int argc, char **argv) {
     if (render_algorithm == path_trace) {
         PathTracer pathTracer;
         pathTracer.setObjects(allObj);
-        Film myFilm(cam.imgWidth, cam.imgHeight);
+        Film myFilm(imgWidth, imgHeight);
         pathtraceImage(&myFilm, pathTracer, cam, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
@@ -102,7 +103,7 @@ int main(int argc, char **argv) {
     if (render_algorithm == progressive_p) {
         PathTracer pathTracer;
         pathTracer.setObjects(allObj);
-        progressiveRender(outputFileName, pathTracer, cam, numSamples);
+        progressiveRender(outputFileName, pathTracer, cam, imgWidth, imgHeight, numSamples);
     }
 
     for (unsigned int i = 0; i < allObj.size(); i++) {

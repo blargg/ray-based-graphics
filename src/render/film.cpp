@@ -28,6 +28,11 @@ PNG Film::writeImage() {
     return output;
 }
 
+void Film::writeFile(std::string filename) {
+    PNG pic = writeImage();
+    pic.writeToFile(filename);
+}
+
 RGBAPixel Film::makePixel(Color c) {
     return RGBAPixel(max(min(c.red * 255, 255.), 0.),
             max(min(c.green * 255, 255.), 0.),
@@ -36,4 +41,12 @@ RGBAPixel Film::makePixel(Color c) {
 
 int Film::getIndex(int x, int y) const {
     return x + y * width;
+}
+
+int Film::getHeight() {
+    return height;
+}
+
+int Film::getWidth() {
+    return width;
 }

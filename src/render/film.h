@@ -19,11 +19,21 @@ class Film {
         /// Adds color contribution to pixel (x,y)
         void addColor(Color c, int x, int y);
 
+        /// Get the height of the image in pixels
+        int getHeight();
+        /// Get the width of the image in pixels
+        int getWidth();
+
         /**
          * Converts the film into a PNG image.
          * @returns the PNG constructed
          */
         PNG writeImage();
+
+        /**
+         * Writes the film to the file given by filename
+         */
+        void writeFile(std::string filename);
     private:
         Color *color_grid;
         int *count_grid;

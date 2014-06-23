@@ -58,9 +58,8 @@ SolidColor getMaterial(const aiScene *sc, unsigned int index) {
 
     // transparency
     if (AI_SUCCESS != mat->Get(AI_MATKEY_OPACITY, prop.tranparency)) {
-        printf("problem with emissive color\n");
+        printf("problem with transparency\n");
     }
-    printf("transparency %f\n", prop.tranparency);
 
     return SolidColor(prop);
 }
@@ -109,16 +108,30 @@ void recurse(const aiScene *sc, const aiNode *nd, vector<Drawable *> &list) {
     }
 }
 
-void assimp_append(std::string filename, std::vector<Drawable *> &list) {
+void assimp_append(const aiScene *sc, std::vector<Drawable *> &list) {
+    recurse(sc, sc->mRootNode, list);
+}
+
+const aiScene *getScene(std::string filename) {
     Assimp::Importer importer;
 
-    const aiScene* scene = importer.ReadFile( filename,
+    importer.ReadFile( filename,
             aiProcess_Triangulate           |
             aiProcess_JoinIdenticalVertices);
 
+    const aiScene* scene = importer.GetOrphanedScene();
     if (!scene) {
         printf("Assimp: could not load scene\n");
     }
 
-    recurse(scene, scene->mRootNode, list);
+    return scene;
+}
+
+Camera assimp_getCamera(const aiScene *sc) {
+    // TODO check if there are any cameras
+    Camera cam;
+    aiCamera *aiCam = sc->mCameras[0];
+
+    // TODO implement
+    return cam;
 }

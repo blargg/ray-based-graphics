@@ -10,7 +10,7 @@
 using std::min;
 using std::max;
 
-PNG* renderImage(Raytracer &render, Camera cam) {
+PNG* renderImage(Raytracer &render, Camera cam, int imgWidth, int imgHeight) {
 
     cam.up.normalize();
     cam.position.dir.normalize();
@@ -24,21 +24,21 @@ PNG* renderImage(Raytracer &render, Camera cam) {
     Vector4d bot_right_corner = cam.position.orig -
         (cam.worldWidth / 2.0) * right -
         (cam.worldHeight / 2.0) * cam.up;
-    PNG *image = new PNG(cam.imgWidth, cam.imgHeight);
-    double dx = (cam.worldWidth / cam.imgWidth);
-    double dy = (cam.worldHeight / cam.imgHeight);
+    PNG *image = new PNG(imgWidth, imgHeight);
+    double dx = (cam.worldWidth / imgWidth);
+    double dy = (cam.worldHeight / imgHeight);
 
     omp_set_num_threads(4);
 #pragma omp parallel
     {
 #pragma omp for
-    for (int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
-        for (int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
+    for (int x = 0; x <= imgWidth / BLOCK_SIZE; x++) {
+        for (int y = 0; y <= imgHeight / BLOCK_SIZE; y++) {
             for (int xoff = 0;
-                 xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth;
+                 xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < imgWidth;
                  xoff++) {
                 for (int yoff = 0;
-                     yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight;
+                     yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < imgHeight;
                      yoff++) {
                     Vector4d screen_point = bot_right_corner +
                         dx * (BLOCK_SIZE * x + xoff) * right +
@@ -79,18 +79,18 @@ void pathtraceImage(Film *imageFilm, PathTracer &render,
         - (cam.worldWidth / 2) * right
         - (cam.worldHeight / 2) * cam.up;
 
-    double dx = (cam.worldWidth / cam.imgWidth);
-    double dy = (cam.worldHeight / cam.imgHeight);
+    double dx = (cam.worldWidth / imageFilm->getWidth());
+    double dy = (cam.worldHeight / imageFilm->getHeight());
 
     for (int count = 0; count < numSamples; count++) {
 #pragma omp parallel for
-        for (int x = 0; x <= cam.imgWidth / BLOCK_SIZE; x++) {
-            for (int y = 0; y <= cam.imgHeight / BLOCK_SIZE; y++) {
+        for (int x = 0; x <= imageFilm->getWidth() / BLOCK_SIZE; x++) {
+            for (int y = 0; y <= imageFilm->getHeight() / BLOCK_SIZE; y++) {
                 for (int xoff = 0;
-                     xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < cam.imgWidth;
+                     xoff < BLOCK_SIZE && x * BLOCK_SIZE + xoff < imageFilm->getWidth();
                      xoff++) {
                     for (int yoff = 0;
-                         yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < cam.imgHeight;
+                         yoff < BLOCK_SIZE && y * BLOCK_SIZE + yoff < imageFilm->getHeight();
                          yoff++) {
                         double xRand = (double)rand() / (double)RAND_MAX;
                         double yRand = (double)rand() / (double)RAND_MAX;
@@ -114,7 +114,7 @@ void pathtraceImage(Film *imageFilm, PathTracer &render,
 }
 
 void progressiveRender(string const file_base, PathTracer &render,
-        Camera cam, int sampleInterval) {
+        Camera cam, int width, int height, int sampleInterval) {
     int sampleNumber = 1;
 
     size_t split_point = file_base.find_last_of('/');
@@ -128,7 +128,7 @@ void progressiveRender(string const file_base, PathTracer &render,
         filename = file_base.substr(split_point + 1);
     }
 
-    Film myFilm(cam.imgWidth, cam.imgHeight);
+    Film myFilm(width, height);
     while (1) {
         pathtraceImage(&myFilm, render, cam, sampleInterval);
         PNG pic = myFilm.writeImage();

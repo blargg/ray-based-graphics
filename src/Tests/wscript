@@ -21,7 +21,8 @@ def build(bld):
         ('mtl_loader', ['mtl_loader']),
         ('obj_loader', ['obj_loader']),
         ('assimp_loader', ['assimp_loader']),
-        ('kdtree', ['kdtree', 'obj_loader'])]
+        ('kdtree', ['kdtree', 'obj_loader']),
+        ('perturb_normals', ['sphere', 'ray'])]
 
     for t in tests:
         bld.program(

@@ -10,37 +10,28 @@
  * Every call to normal_vector() is randomly offset form the original shape.
  * This is for pathtracing algorithms and will look strange in raytracing algorithms.
  */
-class PerturbNormals: public Shape
+template<class T>
+class PerturbNormals: public T
 {
 public:
-    /**
-     * Constructs the new shape.
-     * @param s the original shape to wrap.
-     * @param angle the maximum angle (radians) that a vector will get offset by.
-     */
-    PerturbNormals (const Shape& s, double angle);
-    virtual ~PerturbNormals ();
 
-    virtual Shape* create() const;
-    virtual Shape* clone() const;
+    // TODO
+    // clone and create cause a problem
+    // requires more information about the template object
+    using T::T;
 
-    /**
-     * Passes the information to the shape it wraps for the intersection
-     */
-    virtual double intersection(const ray& viewRay) const;
+    double angle = M_PI/8;
 
     /**
      * Takes the normal vector from the wrapped shape and randomly perturbs it.
      */
-    virtual Vector4d normal_vector(const Vector4d& surface) const;
+    virtual Vector4d normal_vector(const Vector4d& surface) const {
+        return perturb(T::normal_vector(surface), angle);
+    }
 
-    virtual double getMinBound(int axis) const;
-    virtual double getMaxBound(int axis) const;
-    virtual bool intersectsBox(AABB box) const;
-
-private:
-    Shape* shape;
-    double angle;
+    virtual void setAngle(const double a) {
+        angle = a;
+    }
 };
 
 #endif // RT_PERTURB_NORMALS_H

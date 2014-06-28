@@ -2,7 +2,7 @@
 
 PathTracer::PathTracer() {
     maxDepth = 5;
-    exitSceneColor = Color(1.3, 1.3, 1.3);
+    exitSceneColor = Color(0.3, 0.3, 0.3);
     indexRefractionScene = 1.0;
 }
 

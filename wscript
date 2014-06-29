@@ -1,13 +1,17 @@
 top = '.'
 out = 'build'
 
-from waflib import Utils
-from waflib.TaskGen import feature, before_method
 
 def options(opt):
     opt.load('compiler_cxx waf_unit_test')
-    opt.add_option('--eigen_dir', action='store', default='/usr/include/eigen3', help='Directory where eigen is installed')
-    opt.add_option('--test', action='store_true', default=False, help='Set to build and run tests')
+    opt.add_option('--eigen_dir',
+                   action='store',
+                   default='/usr/include/eigen3',
+                   help='Directory where eigen is installed')
+    opt.add_option('--test',
+                   action='store_true',
+                   default=False,
+                   help='Set to build and run tests')
 
 
 def copy_env(conf, name):

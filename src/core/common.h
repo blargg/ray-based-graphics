@@ -68,4 +68,4 @@ T min3(T a, T b, T c) {
         return (a < c?a:c);
 }
 
-#endif // SRC_CORE_COMMON_H_
+#endif  // SRC_CORE_COMMON_H_

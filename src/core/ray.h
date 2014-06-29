@@ -4,11 +4,12 @@
  * contains a point and a vectre
  * has several methods to help manage them
  */
-#ifndef RAY_H
-#define RAY_H
+#ifndef SRC_CORE_RAY_H_
+#define SRC_CORE_RAY_H_
 
 #include <Eigen/Dense>
 #include "core/common.h"
+
 using namespace Eigen;
 
 /**
@@ -31,7 +32,7 @@ class ray {
      * Simply allows the default constructors for the point orig and the vectre
      * dir to be called
      */
-    ray() { /* do nothing */ };
+    ray() { /* do nothing */ }
 
     /**
      * @brief Makes a new ray with the given origin and direction.
@@ -55,4 +56,4 @@ class ray {
 };
 
 
-#endif
+#endif  // SRC_CORE_RAY_H_

@@ -23,7 +23,7 @@ To build the project:
 ```
 waf configure build
 ```
-The program will be written to build/src/renderer
+The program will be written to build/release/src/renderer
 
 Example to render a scene:
 ```
@@ -45,3 +45,10 @@ To build the tests:
 ```
 waf configure --test build
 ```
+
+Debug build
+```
+waf debug
+```
+The output will be in build/debug/
+The executable will be named build/debug/src/renderer

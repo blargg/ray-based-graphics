@@ -1,6 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
-
+#ifndef SRC_CORE_COLOR_H_
+#define SRC_CORE_COLOR_H_
 /**
  * @brief Simple RGBA color struct.
  *
@@ -30,7 +29,7 @@ struct Color {
     /**
      * @brief Constructs a black fully opaque color
      */
-    Color():red(0.0),green(0.0),blue(0.0) { /* Do nothing */ }
+    Color():red(0.0), green(0.0), blue(0.0) { /* Do nothing */ }
 
     /**
      * @brief Constructs a color from the given R G B A values
@@ -40,7 +39,8 @@ struct Color {
      * @param blue blue value
      * @param alpha alpha value. Defaults to 1.0 (fully opaque).
      */
-    Color(double r,double g,double b):red(r),green(g),blue(b) { /* Do nothing */ }
+    Color(double r, double g, double b):red(r), green(g), blue(b)
+    { /* Do nothing */ }
 
     /// Multiplication operator for Color
     inline Color& operator*=(const double x) {
@@ -85,7 +85,4 @@ inline Color operator*(const double x, const Color& theColor) {
     return retColor;
 }
 
-
-
-
-#endif // COLOR_H
+#endif  // SRC_CORE_COLOR_H_

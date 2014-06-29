@@ -1,5 +1,5 @@
-#ifndef PROPERTIES_H
-#define PROPERTIES_H
+#ifndef SRC_CORE_PROPERTIES_H_
+#define SRC_CORE_PROPERTIES_H_
 
 #include "core/color.h"
 
@@ -67,8 +67,9 @@ struct Properties {
      * - spec_power is set to 1.0
      */
     Properties():
-        color(Color()),reflect(0.0),i_refraction(1.33),specular(0.7,0.7,0.7),
-        spec_power(25.55),emittance(Color()) { /* Do nothing */ }
+        color(Color()), reflect(0.0), i_refraction(1.33),
+        specular(0.7, 0.7, 0.7), spec_power(25.55), emittance(Color())
+    { /* Do nothing */ }
 
     Properties(Color cColor,
             double reflection = 0.0,
@@ -76,8 +77,8 @@ struct Properties {
             Color specularVal = Color(0.7, 0.7, 0.7),
             double power = 25.55,
             Color emit = Color(1.0, 1.0, 1.0)):
-        color(cColor),reflect(reflection),i_refraction(index_of_refraction),
-        specular(specularVal),spec_power(power),emittance(emit)
+        color(cColor), reflect(reflection), i_refraction(index_of_refraction),
+        specular(specularVal), spec_power(power), emittance(emit)
     { /* Do nothing */ }
 
     /// Scales the properties by x.
@@ -111,4 +112,4 @@ Properties operator*(const double x, const Properties& p);
 
 Properties operator+(const Properties& prop1, const Properties& prop2);
 
-#endif // PROPERTIES_H
+#endif  // SRC_CORE_PROPERTIES_H_

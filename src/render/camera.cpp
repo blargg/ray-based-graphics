@@ -1,5 +1,4 @@
 #include <math.h>
-#include <omp.h>
 #include <string>
 
 #include "core/common.h"
@@ -28,10 +27,6 @@ PNG* renderImage(Raytracer &render, Camera cam, int imgWidth, int imgHeight) {
     double dx = (cam.worldWidth / imgWidth);
     double dy = (cam.worldHeight / imgHeight);
 
-    omp_set_num_threads(4);
-#pragma omp parallel
-    {
-#pragma omp for
     for (int x = 0; x <= imgWidth / BLOCK_SIZE; x++) {
         for (int y = 0; y <= imgHeight / BLOCK_SIZE; y++) {
             for (int xoff = 0;
@@ -58,7 +53,6 @@ PNG* renderImage(Raytracer &render, Camera cam, int imgWidth, int imgHeight) {
             }
         }
     }
-    }
 
     return image;
 }
@@ -83,7 +77,6 @@ void pathtraceImage(Film *imageFilm, PathTracer &render,
     double dy = (cam.worldHeight / imageFilm->getHeight());
 
     for (int count = 0; count < numSamples; count++) {
-#pragma omp parallel for
         for (int x = 0; x <= imageFilm->getWidth() / BLOCK_SIZE; x++) {
             for (int y = 0; y <= imageFilm->getHeight() / BLOCK_SIZE; y++) {
                 for (int xoff = 0;

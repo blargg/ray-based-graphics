@@ -54,6 +54,14 @@ TEST(CommonTest, max3) {
     EXPECT_DOUBLE_EQ(max3<double>(1.001, 2.02, 2.1), 2.1) << "fail on double";
 }
 
+TEST(CommonTest, vmax) {
+    EXPECT_EQ(vmax(1, 2, 3), 3) << "ints";
+    EXPECT_EQ(vmax(1, 8, 3), 8) << "ints";
+    EXPECT_EQ(vmax(11, 9, -1), 11) << "ints";
+
+    EXPECT_DOUBLE_EQ(vmax(1.0, 2.5, 4.4), 4.4) << "doubles";
+}
+
 TEST(CommonTest, reflectVector) {
     Vector4d a(1,1,1,0);
     a.normalize();

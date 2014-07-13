@@ -57,6 +57,18 @@ T max3(T a, T b, T c) {
         return (b > c?b:c);
 }
 
+template <typename T>
+T vmax(T x) {
+    return x;
+}
+
+template <typename T, typename...Args>
+T vmax(T x, Args... xs) {
+    if (x > vmax(xs...))
+        return x;
+    return vmax(xs...);
+}
+
 /**
  * returns the minimum of the three given values
  */

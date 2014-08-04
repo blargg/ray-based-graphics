@@ -20,7 +20,8 @@
 const aiScene *getScene(std::string filename);
 
 // adds the basic geometry data of the scene to the list given
-void assimp_append(const aiScene *sc, std::vector<Drawable*> &list);
+void assimp_append(const aiScene *sc, std::vector<Drawable*> &list,
+        std::vector<Drawable*> &lights);
 
 // gets the first camera in the scene
 Camera assimp_getCamera(const aiScene *sc);

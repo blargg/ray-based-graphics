@@ -72,15 +72,16 @@ int main(int argc, char **argv) {
     int imgHeight = 500;
     cam.position.dir = Vector4d(-1, 0, 0, 0);
     cam.position.orig = Vector4d(10, 0, 0, 1);
-    cam.up = Vector4d(0, 1, 0, 0);
+    cam.up = Vector4d(0, 0, 1, 0);
     cam.worldWidth = 1.0;
     cam.worldHeight = 1.0;
 
     vector<Drawable *> allObj;
+    vector<Drawable *> lights;
 
     while (optind < argc) {
         const aiScene* sc = getScene(argv[optind++]);
-        assimp_append(sc, allObj);
+        assimp_append(sc, allObj, lights);
     }
 
     if (render_algorithm == raytrace) {

@@ -1,6 +1,8 @@
 #include "file_loader/assimp_loader.h"
 
 #include <stdio.h>
+#include <algorithm>
+#include "util/log.h"
 
 using std::vector;
 
@@ -64,6 +66,15 @@ SolidColor getMaterial(const aiScene *sc, unsigned int index) {
     return SolidColor(prop);
 }
 
+bool materialIsEmmissive(const aiScene *sc, unsigned int index) {
+    aiMaterial *mat = sc->mMaterials[index];
+    aiColor3D tmpColor(0.0, 0.0, 0.0);
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_EMISSIVE, tmpColor)) {
+        return false;
+    }
+    return vmax(tmpColor.r, tmpColor.g, tmpColor.b) > 0.01;
+}
+
 Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
     aiVector3D vertex = mesh->mVertices[index];
     return Vector4d(
@@ -75,12 +86,10 @@ Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
 }
 
 void processFace(const aiScene *sc, const aiMesh *mesh,
-        unsigned int index, vector<Drawable *> &list) {
+        unsigned int index, vector<Drawable *> &list,
+        vector<Drawable *> &lights) {
     aiFace face = mesh->mFaces[index];
-    if (face.mNumIndices != 3) {
-        printf("assimp_loader: cannot handle arbitrary polygons\n");
-        return;
-    }
+    LOG_IF(face.mNumIndices != 3, "cannot handle arbitrary polygons\n");
 
     Vector4d a = getPoint(mesh, face.mIndices[0]);
     Vector4d b = getPoint(mesh, face.mIndices[1]);
@@ -92,24 +101,34 @@ void processFace(const aiScene *sc, const aiMesh *mesh,
                 Triangle(a, b, c),
                 mat));
 
+    if (materialIsEmmissive(sc, mesh->mMaterialIndex)) {
+        lights.push_back(
+                new SimpleObject(
+                    Triangle(a, b, c),
+                    mat));
+    }
+
 }
 
-void processMesh(const aiScene *sc, const aiMesh *mesh, vector<Drawable *> &list) {
+void processMesh(const aiScene *sc, const aiMesh *mesh,
+        vector<Drawable *> &list, vector<Drawable *> &lights) {
     for (int f = 0; f < mesh->mNumFaces; f++) {
-        processFace(sc, mesh, f, list);
+        processFace(sc, mesh, f, list, lights);
     }
 }
 
-void recurse(const aiScene *sc, const aiNode *nd, vector<Drawable *> &list) {
+void recurse(const aiScene *sc, const aiNode *nd, vector<Drawable *> &list,
+        vector<Drawable *> &lights) {
     aiMatrix4x4 tmp = nd->mTransformation;
     Matrix4d m = convert_matrix(tmp);
     for (int i = 0; i < sc->mNumMeshes; i++) {
-        processMesh(sc, sc->mMeshes[i], list);
+        processMesh(sc, sc->mMeshes[i], list, lights);
     }
 }
 
-void assimp_append(const aiScene *sc, std::vector<Drawable *> &list) {
-    recurse(sc, sc->mRootNode, list);
+void assimp_append(const aiScene *sc, vector<Drawable *> &list,
+        vector<Drawable *> &lights) {
+    recurse(sc, sc->mRootNode, list, lights);
 }
 
 const aiScene *getScene(std::string filename) {

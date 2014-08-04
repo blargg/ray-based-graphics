@@ -3,4 +3,4 @@ def build(bld):
                 use='mtl_loader triangle solidColor simpleObject')
     bld.objects(source='mtl_loader.cpp', target='mtl_loader', use='solidColor')
     bld.objects(source='assimp_loader.cpp', target='assimp_loader',
-                use='triangle solidColor simpleObject Camera')
+                use='triangle solidColor simpleObject Camera log')

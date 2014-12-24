@@ -10,6 +10,7 @@
 #include "file_loader/obj_loader.h"
 #include "file_loader/assimp_loader.h"
 
+#include "util/log.h"
 
 using std::vector;
 using std::string;
@@ -78,6 +79,11 @@ int main(int argc, char **argv) {
 
     vector<Drawable *> allObj;
     vector<Drawable *> lights;
+
+    if (optind >= argc) {
+        printf("No scene files selected. Exiting.\n");
+        exit(1);
+    }
 
     while (optind < argc) {
         const aiScene* sc = getScene(argv[optind++]);

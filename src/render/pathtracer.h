@@ -30,6 +30,11 @@ public:
     void setObjects(vector<Drawable *> objList);
 
     /**
+     * Sets the lights for the scene
+     */
+    void setLights(vector<Drawable *> lights);
+
+    /**
      * Sets the maximum recusion depth that a light path will bounce before
      * terminating.
      */
@@ -48,8 +53,9 @@ public:
     };
 
 private:
-
     KDTree objTree;
+
+    vector<Drawable *> lightList;
 
     int maxDepth;
 

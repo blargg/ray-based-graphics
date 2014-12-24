@@ -1,4 +1,5 @@
 #include "render/pathtracer.h"
+#include <vector>
 
 PathTracer::PathTracer() {
     maxDepth = 5;
@@ -95,4 +96,8 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
 
 void PathTracer::setObjects(vector<Drawable *> objList) {
     objTree.rebuildTree(objList);
+}
+
+void PathTracer::setLights(vector<Drawable *> lights) {
+    lightList = lights;
 }

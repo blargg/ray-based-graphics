@@ -1,8 +1,10 @@
 #include <math.h>
 #include <string>
+#include <algorithm>
 
 #include "core/common.h"
 #include "render/camera.h"
+#include "util/log.h"
 
 #define BLOCK_SIZE 32
 
@@ -125,6 +127,7 @@ void progressiveRender(string const file_base, PathTracer &render,
     while (1) {
         pathtraceImage(&myFilm, render, cam, sampleInterval);
         PNG pic = myFilm.writeImage();
+        LOG("writting out to file\n");
         pic.writeToFile(baseDir + std::to_string(sampleNumber) + "_" + filename);
 
         sampleNumber++;

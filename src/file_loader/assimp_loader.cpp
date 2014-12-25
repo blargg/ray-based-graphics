@@ -143,9 +143,7 @@ const aiScene *getScene(std::string filename) {
             aiProcess_JoinIdenticalVertices);
 
     const aiScene* scene = importer.GetOrphanedScene();
-    if (!scene) {
-        LOG_W("Assimp: could not load scene");
-    }
+    LOG_IF_W(!scene, "could not load scene");
 
     return scene;
 }

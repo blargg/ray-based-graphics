@@ -24,6 +24,17 @@ extern int LOG_level;
 
 #define LOG_IF(bool_exp, fmt, args...) {if(bool_exp) { LOG(fmt, ##args); }}
 
+#define LOG_IF_E(bool_exp, fmt, args...)\
+{if ((4 >= LOG_level) && (bool_exp)) { LOG_("ERROR", fmt, ##args); }}
+#define LOG_IF_W(bool_exp, fmt, args...)\
+{if ((3 >= LOG_level) && (bool_exp)) { LOG_("WARNING", fmt, ##args); }}
+#define LOG_IF_I(bool_exp, fmt, args...)\
+{if ((2 >= LOG_level) && (bool_exp)) { LOG_("INFO", fmt, ##args); }}
+#define LOG_IF_D(bool_exp, fmt, args...)\
+{if ((1 >= LOG_level) && (bool_exp)) { LOG_("DEBUG", fmt, ##args); }}
+#define LOG_IF_T(bool_exp, fmt, args...)\
+{if ((0 >= LOG_level) && (bool_exp)) { LOG_("TRACE", fmt, ##args); }}
+
 #else
 // for when we don't want logging
 
@@ -36,6 +47,13 @@ extern int LOG_level;
 #define LOG_T(fmt, args...) NO_OP
 
 #define LOG_IF(...) NO_OP
+
+#define LOG_IF_E(bool_exp, fmt, args...)
+#define LOG_IF_W(bool_exp, fmt, args...)
+#define LOG_IF_I(bool_exp, fmt, args...)
+#define LOG_IF_D(bool_exp, fmt, args...)
+#define LOG_IF_T(bool_exp, fmt, args...)
+
 
 #endif
 

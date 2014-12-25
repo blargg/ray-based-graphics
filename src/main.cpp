@@ -17,6 +17,9 @@ using std::string;
 using std::min;
 using std::max;
 
+// use this to set the logging level
+extern int LOG_level;
+
 int main(int argc, char **argv) {
     int optChar;
     int numSamples = 10;
@@ -28,10 +31,11 @@ int main(int argc, char **argv) {
     render_algorithm = progressive_p;
 
     static struct option long_options[] = {
-        {"raytrace",     no_argument,        0,  'r'},
-        {"pathtrace",    required_argument,  0,  'p'},
-        {"progressive",  required_argument,  0,  'g'},
-        {"output",       required_argument,  0,  'o'}
+        {"raytrace",      no_argument,        0,  'r'},
+        {"pathtrace",     required_argument,  0,  'p'},
+        {"progressive",   required_argument,  0,  'g'},
+        {"output",        required_argument,  0,  'o'},
+        {"log-level",     required_argument,  0,  0}
     };
     while (1) {
         int option_index = 0;
@@ -40,6 +44,11 @@ int main(int argc, char **argv) {
         if (optChar == -1)
             break;
         switch (optChar) {
+            case 0:
+                if (strcmp(long_options[option_index].name, "log-level") == 0)
+                    LOG_level = atoi(optarg);
+                break;
+
             case 'r':
                 render_algorithm = raytrace;
                 break;

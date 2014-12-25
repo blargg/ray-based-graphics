@@ -127,7 +127,7 @@ void progressiveRender(string const file_base, PathTracer &render,
     while (1) {
         pathtraceImage(&myFilm, render, cam, sampleInterval);
         PNG pic = myFilm.writeImage();
-        LOG("writting out to file\n");
+        LOG("writting out to file");
         pic.writeToFile(baseDir + std::to_string(sampleNumber) + "_" + filename);
 
         sampleNumber++;

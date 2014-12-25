@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include <vector>
+#include <string>
+
 #include "util/log.h"
 
 using std::vector;
@@ -42,25 +45,27 @@ SolidColor getMaterial(const aiScene *sc, unsigned int index) {
 
     // diffuse
     if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_DIFFUSE, tmpColor)) {
-        printf("problem with diffuse color\n");
+        LOG_T("problem with diffuse color");
     }
     prop.color = convert_color(tmpColor);
 
     // specular
     if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_SPECULAR, tmpColor)) {
-        printf("problem with specular color\n");
+        LOG_T("problem with specular color");
     }
     prop.specular = convert_color(tmpColor);
 
     // emissive
     if (AI_SUCCESS != mat->Get(AI_MATKEY_COLOR_EMISSIVE, tmpColor)) {
-        printf("problem with emissive color\n");
+        LOG_T("problem with emissive color");
     }
     prop.emittance = convert_color(tmpColor);
 
     // transparency
     if (AI_SUCCESS != mat->Get(AI_MATKEY_OPACITY, prop.tranparency)) {
-        printf("problem with transparency\n");
+        LOG_T("problem with transparency");
+    } else {
+        prop.tranparency = 0.0;
     }
 
     return SolidColor(prop);
@@ -107,7 +112,6 @@ void processFace(const aiScene *sc, const aiMesh *mesh,
                     Triangle(a, b, c),
                     mat));
     }
-
 }
 
 void processMesh(const aiScene *sc, const aiMesh *mesh,
@@ -134,13 +138,13 @@ void assimp_append(const aiScene *sc, vector<Drawable *> &list,
 const aiScene *getScene(std::string filename) {
     Assimp::Importer importer;
 
-    importer.ReadFile( filename,
+    importer.ReadFile(filename,
             aiProcess_Triangulate           |
             aiProcess_JoinIdenticalVertices);
 
     const aiScene* scene = importer.GetOrphanedScene();
     if (!scene) {
-        printf("Assimp: could not load scene\n");
+        LOG_W("Assimp: could not load scene");
     }
 
     return scene;

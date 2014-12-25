@@ -17,10 +17,11 @@ using std::string;
 using std::min;
 using std::max;
 
-// use this to set the logging level
-extern int LOG_level;
 
 int main(int argc, char **argv) {
+    // set default log level to debug and higher
+    LOG_level = 1;
+
     int optChar;
     int numSamples = 10;
     string outputFileName = "dump/out.png";

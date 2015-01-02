@@ -22,6 +22,7 @@ def build(bld):
         ('obj_loader', ['obj_loader']),
         ('assimp_loader', ['assimp_loader']),
         ('kdtree', ['kdtree', 'obj_loader']),
+        ('cam_loader', ['cam_loader']),
         ('perturb_normals', ['sphere', 'ray'])]
 
     for t in tests:

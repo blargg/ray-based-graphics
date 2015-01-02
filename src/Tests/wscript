@@ -29,5 +29,5 @@ def build(bld):
             features='test',
             source='test_' + t[0] + ".cpp",
             target=t[0] + '.test',
-            lib=['gtest', 'assimp'],
+            lib=['gtest', 'assimp', 'png'],
             use=t[1])

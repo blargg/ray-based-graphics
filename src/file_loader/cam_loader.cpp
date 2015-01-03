@@ -13,7 +13,10 @@ Camera loadCameraFromFile(string filename) {
     Camera cam;
 
     std::ifstream fs(filename.c_str());
-    LOG_IF_W(!fs, "Cannot load %s", filename.c_str());
+    if (!fs) {
+        LOG_W("Cannot load %s", filename.c_str());
+        return cam;
+    }
 
     while (getline(fs, line)) {
         std::istringstream iss(line);
@@ -29,12 +32,12 @@ Camera loadCameraFromFile(string filename) {
         } else if (command.compare("direction") == 0.0) {
             float x, y, z;
             iss >> x >> y >> z;
-            cam.position.dir = Vector4d(x, y, z, 0.0);
+            cam.position.dir = Vector4d(x, y, z, 0.0).normalized();
             LOG_D("direction: %f, %f, %f", x, y, z);
         } else if (command.compare("up") == 0.0) {
             float x, y, z;
             iss >> x >> y >> z;
-            cam.up = Vector4d(x, y, z, 0.0);
+            cam.up = Vector4d(x, y, z, 0.0).normalized();
             LOG_D("up: %f, %f, %f", x, y, z);
         } else if (command.compare("dimensions") == 0.0) {
             double w, h;

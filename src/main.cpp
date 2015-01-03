@@ -9,6 +9,7 @@
 #include "render/camera.h"
 #include "file_loader/obj_loader.h"
 #include "file_loader/assimp_loader.h"
+#include "file_loader/cam_loader.h"
 
 #include "util/log.h"
 
@@ -81,11 +82,6 @@ int main(int argc, char **argv) {
     Camera cam;
     int imgWidth = 500;
     int imgHeight = 500;
-    cam.position.dir = Vector4d(-1, 0, 0, 0);
-    cam.position.orig = Vector4d(10, 0, 0, 1);
-    cam.up = Vector4d(0, 0, 1, 0);
-    cam.worldWidth = 1.0;
-    cam.worldHeight = 1.0;
 
     vector<Drawable *> allObj;
     vector<Drawable *> lights;
@@ -96,8 +92,12 @@ int main(int argc, char **argv) {
     }
 
     while (optind < argc) {
-        const aiScene* sc = getScene(argv[optind++]);
+        string filename = string(argv[optind++]);
+        const aiScene* sc = getScene(filename.c_str());
         assimp_append(sc, allObj, lights);
+
+        string basename = filename.substr(0, filename.find_last_of('.'));
+        cam = loadCameraFromFile(basename + ".cam");
     }
 
     if (render_algorithm == raytrace) {

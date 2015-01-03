@@ -62,10 +62,18 @@ SolidColor getMaterial(const aiScene *sc, unsigned int index) {
     prop.emittance = convert_color(tmpColor);
 
     // transparency
-    if (AI_SUCCESS != mat->Get(AI_MATKEY_OPACITY, prop.tranparency)) {
+    float tmpfloat;
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_OPACITY, tmpfloat)) {
         LOG_T("problem with transparency");
-    } else {
         prop.tranparency = 0.0;
+    } else {
+        prop.tranparency = 1.0 - double(tmpfloat);
+    }
+
+    if (AI_SUCCESS != mat->Get(AI_MATKEY_REFRACTI, tmpfloat)) {
+        LOG_T("problem with index of refraction");
+    } else {
+        prop.i_refraction = double(tmpfloat);
     }
 
     return SolidColor(prop);

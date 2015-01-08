@@ -3,6 +3,7 @@
 #include <limits>
 #include "core/common.h"
 #include "shapes/triBoxOverlap.h"
+#include "util/log.h"
 
 
 /**
@@ -37,20 +38,54 @@ double Triangle::intersection(const ray &viewRay)const{
     return t;
 }
 
-Vector4d Triangle::normal_vector(const Vector4d &surface)const{
-    Vector4d edge1 = p2 - p1;
-    Vector4d edge2 = p3 - p1;
+Vector4d Triangle::normal_vector(const Vector4d &surface) const {
+    double d1 = (surface - p1).norm();
+    double d2 = (surface - p2).norm();
+    double d3 = (surface - p3).norm();
+    Vector4d normal = (d1 * n1) + (d2 * n2) + (d3 * n3);
+    normal.normalize();
+    return normal;
+}
+
+Vector4d Triangle::normal(Vector4d x, Vector4d y, Vector4d z) const {
+    Vector4d edge1 = y - x;
+    Vector4d edge2 = z - x;
     Vector3d e1 = edge1.head(3);
     Vector3d e2 = edge2.head(3);
     Vector3d result = e1.cross(e2);
     return Vector4d(result(0), result(1), result(2), 0);
 }
 
-Triangle::Triangle():Shape(),p1(0,0,0,1),p2(1,0,0,1),p3(1,1,0,1)
-{ /* do nothing */ }
+std::tuple<double, double> Triangle::uvCoords(const Vector4d &point) const {
+    Vector4d edge1 = p2 - p1;
+    Vector4d edge2 = p3 - p1;
 
-Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):Shape(),p1(first),p2(second),p3(third)
-{ /* do nothing */ }
+    Vector4d h = cross(trueNormal, edge2);
+    double a = edge1.dot(h);
+
+    double f = 1/a;
+    Vector4d s = point - p1;
+    double u = f * s.dot(h);
+
+    Vector4d q = cross(s, edge1);
+    double v = f * q.dot(trueNormal);
+
+    return std::make_tuple(u, v);
+}
+
+Triangle::Triangle():Shape(),p1(0,0,0,1),p2(1,0,0,1),p3(1,1,0,1) {
+    trueNormal = n1 = n2 = n3 = normal(p1, p2, p3);
+}
+
+Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):Shape(),p1(first),p2(second),p3(third) {
+    trueNormal = n1 = n2 = n3 = normal(p1, p2, p3);
+}
+
+Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third,
+        Vector4d norm1, Vector4d norm2, Vector4d norm3)
+    :Shape(), p1(first), p2(second), p3(third), n1(norm1), n2(norm2), n3(norm3) {
+    trueNormal = normal(p1, p2, p3);
+}
 
 double Triangle::getMinBound(int axis) const {
     return min3<double>(p1(axis), p2(axis), p3(axis));

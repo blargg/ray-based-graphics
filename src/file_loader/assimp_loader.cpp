@@ -98,6 +98,10 @@ Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
             );
 }
 
+Vector4d getVector(const aiVector3D vec) {
+    return Vector4d( vec[0], vec[1], vec[2], 0);
+}
+
 void processFace(const aiScene *sc, const aiMesh *mesh,
         unsigned int index, vector<Drawable *> &list,
         vector<Drawable *> &lights) {
@@ -109,16 +113,32 @@ void processFace(const aiScene *sc, const aiMesh *mesh,
     Vector4d c = getPoint(mesh, face.mIndices[2]);
 
     SolidColor mat = getMaterial(sc, mesh->mMaterialIndex);
-    list.push_back(
-            new SimpleObject(
-                Triangle(a, b, c),
-                mat));
 
-    if (materialIsEmmissive(sc, mesh->mMaterialIndex)) {
-        lights.push_back(
+    if (mesh->HasNormals()) {
+        Vector4d n1 = getVector(mesh->mNormals[face.mIndices[0]]);
+        Vector4d n2 = getVector(mesh->mNormals[face.mIndices[1]]);
+        Vector4d n3 = getVector(mesh->mNormals[face.mIndices[2]]);
+        Drawable *obj = new SimpleObject(
+                    Triangle(
+                        a, b, c,
+                        n1, n2, n3),
+                    mat);
+        list.push_back(obj);
+        if (materialIsEmmissive(sc, mesh->mMaterialIndex)) {
+            lights.push_back(obj);
+        }
+    } else {
+        list.push_back(
                 new SimpleObject(
                     Triangle(a, b, c),
                     mat));
+
+        if (materialIsEmmissive(sc, mesh->mMaterialIndex)) {
+            lights.push_back(
+                    new SimpleObject(
+                        Triangle(a, b, c),
+                        mat));
+        }
     }
 }
 

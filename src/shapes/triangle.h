@@ -16,6 +16,13 @@ class Triangle: public Shape
     Vector4d p2;
     Vector4d p3;
 
+    // the true geometric normal of the triangle
+    Vector4d trueNormal;
+    // normals for interpolation
+    Vector4d n1;
+    Vector4d n2;
+    Vector4d n3;
+
     public:
     Triangle();
 
@@ -23,6 +30,13 @@ class Triangle: public Shape
      * Constructs a triangle with verticies at the given points.
      */
     Triangle(Vector4d first, Vector4d second, Vector4d third);
+
+    /**
+     * Construct a triangle based on the three points and the normals at those
+     * points
+     */
+    Triangle(Vector4d first, Vector4d second, Vector4d third,
+        Vector4d norm1, Vector4d norm2, Vector4d norm3);
 
     /**
      * virtual default constructor.
@@ -56,6 +70,14 @@ class Triangle: public Shape
     virtual bool intersectsBox(AABB box) const;
 
     virtual Vector4d randomSurfacePoint() const;
+
+    private:
+    std::tuple<double, double> uvCoords(const Vector4d &point) const;
+
+    /**
+     * calculate the normal of a triangle defined by the points x, y, z
+     */
+    Vector4d normal(Vector4d x, Vector4d y, Vector4d z) const;
 };
 
 #endif//TRIANGLE_H

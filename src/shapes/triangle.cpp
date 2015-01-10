@@ -39,10 +39,9 @@ double Triangle::intersection(const ray &viewRay)const{
 }
 
 Vector4d Triangle::normal_vector(const Vector4d &surface) const {
-    double d1 = (surface - p1).norm();
-    double d2 = (surface - p2).norm();
-    double d3 = (surface - p3).norm();
-    Vector4d normal = (d1 * n1) + (d2 * n2) + (d3 * n3);
+    double u, v;
+    std::tie(u, v) = uvCoords(surface);
+    Vector4d normal = (1 - u - v) * n1 + u * n2 + v * n3;
     normal.normalize();
     return normal;
 }

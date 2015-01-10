@@ -11,18 +11,17 @@ TEST(cam_loader, loadCameraFromFile) {
     EXPECT_FLOAT_EQ(c.position.orig[2], 6.0);
 
     // direction
-    EXPECT_FLOAT_EQ(c.position.dir[0], 1.0);
-    EXPECT_FLOAT_EQ(c.position.dir[1], 0.5);
-    EXPECT_FLOAT_EQ(c.position.dir[2], 1.1);
+    Vector4d expected = Vector4d(1.0, 0.5, 1.1, 0.0);
+    expected.normalize();
+    EXPECT_LT((c.position.dir - expected).norm(), 0.00001) << "direction vector";
 
     // up direction
-    EXPECT_FLOAT_EQ(c.up[0], 1.0);
-    EXPECT_FLOAT_EQ(c.up[1], 2.0);
-    EXPECT_FLOAT_EQ(c.up[2], 3.0);
+    Vector4d expected_up = Vector4d(1, 2, 3, 0).normalized();
+    EXPECT_FLOAT_EQ((c.up - expected_up).norm(), 0.0) << "up vector";
 
-    // dim
-    EXPECT_DOUBLE_EQ(c.worldWidth, 10);
-    EXPECT_DOUBLE_EQ(c.worldHeight, 20);
+    // dimensions
+    EXPECT_DOUBLE_EQ(c.worldWidth, 10) << "world width";
+    EXPECT_DOUBLE_EQ(c.worldHeight, 20) << "world height";
 }
 
 int main(int argc, char **argv) {

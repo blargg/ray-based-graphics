@@ -1,4 +1,4 @@
-#include "triangle.h"
+#include "shapes/triangle.h"
 #include <assert.h>
 #include <limits>
 #include "core/common.h"
@@ -9,14 +9,14 @@
 /**
  * operating with 3-vectors here because there are a lot of cross products
  */
-double Triangle::intersection(const ray &viewRay)const{
+double Triangle::intersection(const ray &viewRay)const {
     Vector4d edge1 = p2 - p1;
     Vector4d edge2 = p3 - p1;
 
     Vector4d h = cross(viewRay.dir, edge2);
     double a = edge1.dot(h);
 
-    if(a > -EPSILON && a < EPSILON)
+    if (a > -EPSILON && a < EPSILON)
         return -1 * std::numeric_limits<double>::max();
 
 
@@ -24,13 +24,13 @@ double Triangle::intersection(const ray &viewRay)const{
     Vector4d s = viewRay.orig - p1;
     double u = f * s.dot(h);
 
-    if(u < 0.0 || u > 1.0)
+    if (u < 0.0 || u > 1.0)
         return -1 * std::numeric_limits<double>::max();
 
     Vector4d q = cross(s, edge1);
     double v = f * q.dot(viewRay.dir);
 
-    if(v < 0.0 || u + v > 1.0)
+    if (v < 0.0 || u + v > 1.0)
         return -1 * std::numeric_limits<double>::max();
 
     double t = f * edge2.dot(q);
@@ -72,11 +72,13 @@ std::tuple<double, double> Triangle::uvCoords(const Vector4d &point) const {
     return std::make_tuple(u, v);
 }
 
-Triangle::Triangle():Shape(),p1(0,0,0,1),p2(1,0,0,1),p3(1,1,0,1) {
+Triangle::Triangle():
+    Shape(),  p1(0, 0, 0, 1), p2(1, 0, 0, 1), p3(1, 1, 0, 1) {
     trueNormal = n1 = n2 = n3 = normal(p1, p2, p3);
 }
 
-Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):Shape(),p1(first),p2(second),p3(third) {
+Triangle::Triangle(Vector4d first, Vector4d second, Vector4d third):
+    Shape(), p1(first), p2(second), p3(third) {
     trueNormal = n1 = n2 = n3 = normal(p1, p2, p3);
 }
 
@@ -127,7 +129,7 @@ Vector4d Triangle::randomSurfacePoint() const {
     double u = (double) rand() / (double) RAND_MAX;
     double v = (double) rand() / (double) RAND_MAX;
 
-    if(u > 1.0 - v) {
+    if (u > 1.0 - v) {
         u = 1.0 - u;
         v = 1.0 - v;
     }
@@ -138,11 +140,11 @@ Vector4d Triangle::randomSurfacePoint() const {
     return e1 * u + e2 * v;
 }
 
-Shape* Triangle::create() const{
+Shape* Triangle::create() const {
     return new Triangle();
 }
 
-Shape* Triangle::clone() const{
+Shape* Triangle::clone() const {
     return new Triangle(*this);
 }
 #undef EPSILON

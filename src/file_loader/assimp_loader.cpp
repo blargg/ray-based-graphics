@@ -99,7 +99,7 @@ Vector4d getPoint(const aiMesh *mesh, unsigned int index) {
 }
 
 Vector4d getVector(const aiVector3D vec) {
-    return Vector4d( vec[0], vec[1], vec[2], 0);
+    return Vector4d(vec[0], vec[1], vec[2], 0);
 }
 
 void processFace(const aiScene *sc, const aiMesh *mesh,

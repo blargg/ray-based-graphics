@@ -1,5 +1,5 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef SRC_SHAPES_TRIANGLE_H_
+#define SRC_SHAPES_TRIANGLE_H_
 
 #include <Eigen/Dense>
 #include "shapes/shape.h"
@@ -9,9 +9,8 @@
 /**
  * Triangle shape.
  */
-class Triangle: public Shape
-{
-    protected:
+class Triangle: public Shape {
+ protected:
     Vector4d p1;
     Vector4d p2;
     Vector4d p3;
@@ -23,7 +22,7 @@ class Triangle: public Shape
     Vector4d n2;
     Vector4d n3;
 
-    public:
+ public:
     Triangle();
 
     /**
@@ -51,7 +50,7 @@ class Triangle: public Shape
     /**
      * Cleans up and removes the triangle.
      */
-    virtual ~Triangle(){/* do nothing */}
+    virtual ~Triangle() {/* do nothing */}
 
     /**
      * Calculates the intersection of the ray and triangle.
@@ -71,7 +70,7 @@ class Triangle: public Shape
 
     virtual Vector4d randomSurfacePoint() const;
 
-    private:
+ private:
     std::tuple<double, double> uvCoords(const Vector4d &point) const;
 
     /**
@@ -80,4 +79,4 @@ class Triangle: public Shape
     Vector4d normal(Vector4d x, Vector4d y, Vector4d z) const;
 };
 
-#endif//TRIANGLE_H
+#endif  // SRC_SHAPES_TRIANGLE_H_

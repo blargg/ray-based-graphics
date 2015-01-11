@@ -7,6 +7,7 @@
  */
 
 #include <Eigen/Dense>
+#include "util/debug.h"
 using namespace Eigen;
 
 
@@ -78,6 +79,14 @@ T min3(T a, T b, T c) {
         return (b < c?b:c);
     else
         return (a < c?a:c);
+}
+
+template <class T>
+T randomRange(T lower, T upper) {
+    ASSERT(lower < upper,
+            "The lower bound should be lower than the upper bound");
+    auto diff = upper - lower;
+    return diff * (((T) rand()) / ((T)(RAND_MAX))) + lower;
 }
 
 #endif  // SRC_CORE_COMMON_H_

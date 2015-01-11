@@ -1,5 +1,8 @@
-#include "render/pathtracer.h"
+
 #include <vector>
+#include "render/pathtracer.h"
+#include "util/log.h"
+#include "core/common.h"
 
 PathTracer::PathTracer() {
     maxDepth = 5;
@@ -44,9 +47,28 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
     // emittance
     retColor += objProp.emittance;
 
+    double pathChoice = randomRange<double>(0, 1);
+    int numPaths = 0;
+    bool isDiffuse = true;
+    if (isDiffuse) numPaths++;
+    bool isReflective =
+        max3<double>(
+                objProp.specular.red,
+                objProp.specular.green,
+                objProp.specular.blue) > EPSILON;
+    if (isReflective) numPaths++;
+    bool isTransmissive = objProp.tranparency > EPSILON;
+    if (isTransmissive) numPaths++;
+
     // diffuse
-    Color diffuse_lighting = trace(random_ray, depth + 1, curIndexRefraction);
-    retColor += objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
+    if (isDiffuse && pathChoice < (1.0 / (double)numPaths)) {
+        Color diffuse_lighting = trace(random_ray, depth + 1, curIndexRefraction);
+        retColor += (M_PI / 1.0) * ((double)numPaths) * objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
+        return retColor;
+    } else {
+        pathChoice -= (1.0 / numPaths);
+    }
+
 
     ray reflect_ray;
     reflect_ray.orig = intersection;
@@ -54,13 +76,16 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
     assert(isUnitVector<Vector4d>(reflect_ray.dir));
 
     // reflection
-    if (max3<double>(objProp.specular.red, objProp.specular.green, objProp.specular.blue) > EPSILON) {
+    if (isReflective && pathChoice < (1.0 / (double)numPaths)) {
         Color specular_lighting = trace(reflect_ray, depth + 1, curIndexRefraction);
-        retColor += objProp.specular * specular_lighting;
+        retColor += ((double)numPaths) * objProp.specular * specular_lighting;
+        return retColor;
+    } else {
+        pathChoice -= (1.0 / numPaths);
     }
 
     // refraction
-    if(objProp.tranparency > EPSILON) {
+    if(isTransmissive && pathChoice < (1.0 / (double)numPaths)) {
         double next_index_refraction;
         if(inside_obj)
             next_index_refraction = indexRefractionScene;
@@ -79,16 +104,21 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
             if(1.0 - reflection_coef > EPSILON) {
                 ray transmit;
                 transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
+                transmit.dir.normalize();
                 transmit.orig = intersection;
-                retColor += (1.0 - reflection_coef) * trace(transmit, depth + 1, next_index_refraction);
+                retColor += ((double)numPaths) * (1.0 - reflection_coef) * trace(transmit, depth + 1, next_index_refraction);
             }
 
             if(reflection_coef > EPSILON) {
-                retColor += reflection_coef * trace(reflect_ray, depth+1, curIndexRefraction);
+                retColor += ((double)numPaths) * reflection_coef * trace(reflect_ray, depth+1, curIndexRefraction);
             }
         } else {
-            retColor += trace(reflect_ray, depth + 1, curIndexRefraction);
+            retColor += ((double)numPaths) * trace(reflect_ray, depth + 1, curIndexRefraction);
         }
+        return retColor;
+    } else {
+        pathChoice -= (1.0 / numPaths);
+        LOG_W("pathChoice=%f, skipped all paths", pathChoice);
     }
 
     return retColor;

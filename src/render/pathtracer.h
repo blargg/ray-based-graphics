@@ -1,8 +1,8 @@
-#ifndef RT_PATHTRACER_H
-#define RT_PATHTRACER_H
+#ifndef SRC_RENDER_PATHTRACER_H_
+#define SRC_RENDER_PATHTRACER_H_
 
-#include <vector>
 #include <Eigen/Dense>
+#include <vector>
 
 #include "drawables/drawable.h"
 #include "kdtree/kdtree.h"
@@ -11,13 +11,13 @@
 #include "core/common.h"
 
 class PathTracer {
-public:
+ public:
     /**
      * Initializes the Pathtracer
      */
-    PathTracer ();
+    PathTracer();
 
-    virtual ~PathTracer () { /* do nothing */ };
+    virtual ~PathTracer() { /* do nothing */ }
 
     /**
      * Evaluates the color output for the given view ray.
@@ -38,21 +38,21 @@ public:
      * Sets the maximum recusion depth that a light path will bounce before
      * terminating.
      */
-    void setMaxRecursionDepth(int depth) { maxDepth = depth; };
+    void setMaxRecursionDepth(int depth) { maxDepth = depth; }
 
     /**
      * Sets the Color of light for rays that exit the scene.
      */
-    void setExitSceneColor(Color c) { exitSceneColor = c; };
+    void setExitSceneColor(Color c) { exitSceneColor = c; }
 
     /**
      * Sets the index of refraction for empty space in the scene.
      */
     void setIndexOfRefraction(double iRefraction) {
         indexRefractionScene = iRefraction;
-    };
+    }
 
-private:
+ private:
     KDTree objTree;
 
     vector<Drawable *> lightList;
@@ -66,4 +66,4 @@ private:
     Color trace(const ray& viewRay, int depth, double curIndexRefraction);
 };
 
-#endif // RT_PATHTRACER_H
+#endif  // SRC_RENDER_PATHTRACER_H_

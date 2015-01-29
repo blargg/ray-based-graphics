@@ -11,6 +11,27 @@
 using std::min;
 using std::max;
 
+ray Camera::getViewRay(double x, double y) {
+    ASSERT(isUnitVector(up), "up direction should be normalized");
+    ASSERT(isUnitVector(position.dir), "direction should be normalized");
+    Vector4d right = cross(up, position.dir);
+    ASSERT(isUnitVector(right), "the result of the cross product is unit right?");
+    double fov = (45.0 * M_PI) / 180.0;
+    double distance = worldWidth / (2.0 * tan(fov));
+    Vector4d start = position(-distance);
+
+    Vector4d bot_left_corner = position.orig -
+        (worldWidth / 2.0) * right -
+        (worldHeight / 2.0) * up;
+
+    ray viewRay;
+    viewRay.orig =
+        bot_left_corner + (up * worldHeight * y) + (right * worldWidth * (1 - x));
+    viewRay.dir = viewRay.orig - start;
+    viewRay.dir.normalize();
+    return viewRay;
+}
+
 PNG* renderImage(Raytracer &render, Camera cam, int imgWidth, int imgHeight) {
 
     cam.up.normalize();
@@ -64,16 +85,6 @@ void pathtraceImage(Film *imageFilm, PathTracer &render,
 
     cam.up.normalize();
     cam.position.dir.normalize();
-    Vector4d right = cross(cam.position.dir, cam.up);
-    right.normalize();
-
-    double fov = (45 * M_PI) / 180;
-    double tmp = cam.worldWidth / (2 * tan(fov));
-    Vector4d start = cam.position(-tmp);
-
-    Vector4d bot_right_corner = cam.position.orig
-        - (cam.worldWidth / 2) * right
-        - (cam.worldHeight / 2) * cam.up;
 
     double dx = (cam.worldWidth / imageFilm->getWidth());
     double dy = (cam.worldHeight / imageFilm->getHeight());
@@ -89,14 +100,12 @@ void pathtraceImage(Film *imageFilm, PathTracer &render,
                          yoff++) {
                         double xRand = (double)rand() / (double)RAND_MAX;
                         double yRand = (double)rand() / (double)RAND_MAX;
-                        Vector4d screen_point = bot_right_corner
-                            + dx * (BLOCK_SIZE * x + xoff + xRand) * right
-                            + dy * (BLOCK_SIZE * y + yoff + yRand) * cam.up;
-                        Vector4d currentDir = screen_point - start;
-                        currentDir.normalize();
+                        double normX =
+                            (double)(BLOCK_SIZE * x + xoff + xRand) / (double)imageFilm->getWidth();
+                        double normY =
+                            (double)(BLOCK_SIZE * y + yoff + yRand) / (double)imageFilm->getHeight();
                         ray viewRay;
-                        viewRay.dir = currentDir;
-                        viewRay.orig = screen_point;
+                        viewRay = cam.getViewRay(normX, normY);
                         Color c = render.trace(viewRay);
                         imageFilm->addColor(c,
                                 BLOCK_SIZE * x + xoff,

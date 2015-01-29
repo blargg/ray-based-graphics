@@ -26,6 +26,9 @@ struct Camera
     ray position;
     /// The "up" direction for the camera.
     Vector4d up;
+
+    /// Given a camera coordinate (in [0,1] x [0,1]) give the view ray
+    ray getViewRay(double x, double y);
 };
 
 /**

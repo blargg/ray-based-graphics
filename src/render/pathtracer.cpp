@@ -11,12 +11,12 @@ PathTracer::PathTracer() {
 }
 
 Color PathTracer::trace(const ray& viewRay) {
-    return trace(viewRay, 0, indexRefractionScene);
+    return std::get<0>(trace(viewRay, 0, indexRefractionScene));
 }
 
-Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction) {
+std::tuple<Color, double> PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction) {
     if(depth >= maxDepth)
-        return Color(0,0,0);
+        return std::make_tuple(Color(0,0,0), 100);
     assert(isUnitVector<Vector4d>(viewRay.dir));
     double bestTime = -1.0;
     Drawable *obj = NULL;
@@ -25,7 +25,7 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
 
     // no object was intersected and the ray has left the scene. return this color.
     if(obj == NULL)
-        return exitSceneColor;
+        return std::make_tuple(exitSceneColor, 100);
 
     Color retColor(0.0, 0.0, 0.0);
     Properties objProp = obj->getProperties( intersection );
@@ -62,9 +62,15 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
 
     // diffuse
     if (isDiffuse && pathChoice < (1.0 / (double)numPaths)) {
-        Color diffuse_lighting = trace(random_ray, depth + 1, curIndexRefraction);
-        retColor += (M_PI / 1.0) * ((double)numPaths) * objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
-        return retColor;
+        Color diffuse_lighting;
+        double distancesq;
+        std::tie(diffuse_lighting, distancesq) = trace(random_ray, depth + 1, curIndexRefraction);
+        retColor +=
+            (M_PI / 1.0) *
+            ((double)numPaths) *
+            (1.0 / (distancesq + 1.0)) *
+            objProp.color * diffuse_lighting * unit_normal.dot(random_ray.dir);
+        return std::make_tuple(retColor, bestTime * bestTime);
     } else {
         pathChoice -= (1.0 / numPaths);
     }
@@ -77,9 +83,11 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
 
     // reflection
     if (isReflective && pathChoice < (1.0 / (double)numPaths)) {
-        Color specular_lighting = trace(reflect_ray, depth + 1, curIndexRefraction);
+        Color specular_lighting;
+        double distancesq;
+        std::tie(specular_lighting, distancesq) = trace(reflect_ray, depth + 1, curIndexRefraction);
         retColor += ((double)numPaths) * objProp.specular * specular_lighting;
-        return retColor;
+        return std::make_tuple(retColor, bestTime * bestTime);
     } else {
         pathChoice -= (1.0 / numPaths);
     }
@@ -106,22 +114,31 @@ Color PathTracer::trace(const ray& viewRay, int depth, double curIndexRefraction
                 transmit.dir = (n * viewRay.dir) + (n * cosI - sqrt(cosT2)) * unit_normal;
                 transmit.dir.normalize();
                 transmit.orig = intersection;
-                retColor += ((double)numPaths) * (1.0 - reflection_coef) * trace(transmit, depth + 1, next_index_refraction);
+                Color transmit_color;
+                double distancesq;
+                std::tie(transmit_color, distancesq) = trace(transmit, depth + 1, next_index_refraction);
+                retColor += ((double)numPaths) * (1.0 - reflection_coef) * transmit_color;
             }
 
             if(reflection_coef > EPSILON) {
-                retColor += ((double)numPaths) * reflection_coef * trace(reflect_ray, depth+1, curIndexRefraction);
+                Color reflect_color;
+                double distancesq;
+                std::tie(reflect_color, distancesq) = trace(reflect_ray, depth + 1, next_index_refraction);
+                retColor += ((double)numPaths) * reflection_coef * reflect_color;
             }
         } else {
-            retColor += ((double)numPaths) * trace(reflect_ray, depth + 1, curIndexRefraction);
+            Color reflect_color;
+            double distancesq;
+            std::tie(reflect_color, distancesq) = trace(reflect_ray, depth + 1, curIndexRefraction);
+            retColor += ((double)numPaths) * reflect_color;
         }
-        return retColor;
+        return std::make_tuple(retColor, bestTime * bestTime);
     } else {
         pathChoice -= (1.0 / numPaths);
-        LOG_W("pathChoice=%f, skipped all paths", pathChoice);
     }
 
-    return retColor;
+    LOG_W("pathChoice=%f, skipped all paths", pathChoice);
+    return std::make_tuple(retColor, bestTime * bestTime);
 }
 
 void PathTracer::setObjects(vector<Drawable *> objList) {

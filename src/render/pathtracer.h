@@ -63,7 +63,7 @@ class PathTracer {
 
     double indexRefractionScene;
 
-    Color trace(const ray& viewRay, int depth, double curIndexRefraction);
+    std::tuple<Color, double> trace(const ray& viewRay, int depth, double curIndexRefraction);
 };
 
 #endif  // SRC_RENDER_PATHTRACER_H_

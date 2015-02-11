@@ -27,6 +27,15 @@ TEST(RayTest, value_at_distance) {
     EXPECT_DOUBLE_EQ(test(3),expect(3));
 }
 
+TEST(RayTest, projectOnToPlane) {
+    ray xyPlane(Vector4d(0,0,0,1), Vector4d(0,0,1,0));
+    Vector4d projected = xyPlane.projectOnToPlane(Vector4d(3,4,5,1));
+    EXPECT_DOUBLE_EQ(projected[0], 3);
+    EXPECT_DOUBLE_EQ(projected[1], 4);
+    EXPECT_DOUBLE_EQ(projected[2], 0);
+    EXPECT_DOUBLE_EQ(projected[3], 1);
+}
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

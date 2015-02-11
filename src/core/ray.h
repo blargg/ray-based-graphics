@@ -8,7 +8,6 @@
 #define SRC_CORE_RAY_H_
 
 #include <Eigen/Dense>
-#include "core/common.h"
 
 using namespace Eigen;
 
@@ -53,6 +52,15 @@ class ray {
      * @returns the point where the ray is.
      */
     Vector4d operator()(const double time) const;
+
+    /**
+     * Takes a point in space, and projects it onto the plane determined by this
+     * ray
+     *
+     * The plane contains the point orig, and its normal is the ray's vector
+     * dir.
+     */
+    Vector4d projectOnToPlane(const Vector4d point) const;
 };
 
 

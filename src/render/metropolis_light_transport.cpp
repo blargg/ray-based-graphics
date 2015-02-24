@@ -214,8 +214,6 @@ LightPath MetropolisRenderer::randomPath() {
 }
 
 Color MetropolisRenderer::lightOfPath(LightPath path) {
-    // TODO this is no longer correct
-
     if (!path.isClearPath())
         return Color(0, 0, 0);
 
@@ -223,7 +221,7 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
     Color total;
     std::tie(lightpoint, total) = path.getLight();
 
-    for (int i = 1; i < path.size() - 1; i++) {
+    for (int i = 0; i < path.size(); i++) {
         PathPoint current = path.getPoint(i);
         ASSERT(isUnitVector(current.normal), "The normal should be a unit vector");
 
@@ -250,7 +248,6 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
 
 double MetropolisRenderer::importance(LightPath p) {
     // TODO better importance function
-    return 1;
     Color light = lightOfPath(p);
     // return the luminace of the path
     return 0.2126 * light.red +

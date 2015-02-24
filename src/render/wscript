@@ -6,3 +6,6 @@ def build(bld):
                 use='kdtree ray common AreaLight')
     bld.objects(source='pathtracer.cpp', target='pathtracer',
                 use='ray film common kdtree easypng log')
+    bld.objects(source='metropolis_light_transport.cpp',
+                target='metropolis',
+                use='film camera common kdtree log')

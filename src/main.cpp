@@ -7,6 +7,7 @@
 #include "render/raytracer.h"
 #include "render/pathtracer.h"
 #include "render/camera.h"
+#include "render/metropolis_light_transport.h"
 #include "file_loader/obj_loader.h"
 #include "file_loader/assimp_loader.h"
 #include "file_loader/cam_loader.h"
@@ -28,7 +29,7 @@ int main(int argc, char **argv) {
     string outputFileName = "dump/out.png";
 
     enum {
-        raytrace, path_trace, progressive_p
+        raytrace, path_trace, progressive_p, metropolis
     } render_algorithm;
     render_algorithm = progressive_p;
 
@@ -36,6 +37,7 @@ int main(int argc, char **argv) {
         {"raytrace",      no_argument,        0,  'r'},
         {"pathtrace",     required_argument,  0,  'p'},
         {"progressive",   required_argument,  0,  'g'},
+        {"metropolis",    no_argument,        0,  'm'},
         {"output",        required_argument,  0,  'o'},
         {"log-level",     required_argument,  0,  0}
     };
@@ -58,6 +60,10 @@ int main(int argc, char **argv) {
             case 'p':
                 render_algorithm = path_trace;
                 numSamples = atoi(optarg);
+                break;
+
+            case 'm':
+                render_algorithm = metropolis;
                 break;
 
             case 'g':
@@ -121,6 +127,17 @@ int main(int argc, char **argv) {
         PathTracer pathTracer;
         pathTracer.setObjects(allObj);
         progressiveRender(outputFileName, pathTracer, cam, imgWidth, imgHeight, numSamples);
+    }
+
+    if (render_algorithm == metropolis) {
+        MetropolisRenderer met;
+        met.setCamera(cam);
+        met.setObjects(allObj);
+        met.setLights(lights);
+        Film myFilm(imgWidth, imgHeight);
+        met.sampleImage(&myFilm);
+        PNG pic = myFilm.writeImage();
+        pic.writeToFile(outputFileName);
     }
 
     for (unsigned int i = 0; i < allObj.size(); i++) {

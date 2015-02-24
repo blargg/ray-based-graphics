@@ -137,7 +137,7 @@ Vector4d Triangle::randomSurfacePoint() const {
     Vector4d e1, e2;
     e1 = p2 - p1;
     e2 = p3 - p1;
-    return e1 * u + e2 * v;
+    return p1 + (e1 * u + e2 * v);
 }
 
 Shape* Triangle::create() const {

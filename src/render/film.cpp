@@ -8,12 +8,16 @@ Film::Film(int width, int height) {
     this->height = height;
     this->width = width;
     color_grid = new Color [width * height];
-    count_grid = new int [width * height];
+    count_grid = new double [width * height];
 }
 
 void Film::addColor(Color c, int x, int y) {
-    color_grid[getIndex(x,y)] += c;
-    count_grid[getIndex(x,y)] += 1;
+    addColorWeighted(c, x, y, 1.0);
+}
+
+void Film::addColorWeighted(Color c, int x, int y, double weight) {
+    color_grid[getIndex(x,y)] += weight * c;
+    count_grid[getIndex(x,y)] += weight;
 }
 
 PNG Film::writeImage() {

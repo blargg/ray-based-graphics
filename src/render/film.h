@@ -16,8 +16,12 @@ class Film {
          * Initializes the image for the given dimetions.
          */
         Film(int width, int height);
+
         /// Adds color contribution to pixel (x,y)
         void addColor(Color c, int x, int y);
+
+        // Add contribution to pixel (x,y) with the given weight
+        void addColorWeighted(Color c, int x, int y, double weight);
 
         /// Get the height of the image in pixels
         int getHeight();
@@ -36,7 +40,7 @@ class Film {
         void writeFile(std::string filename);
     private:
         Color *color_grid;
-        int *count_grid;
+        double *count_grid;
         int height;
         int width;
 

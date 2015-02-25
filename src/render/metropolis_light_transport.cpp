@@ -101,15 +101,19 @@ void MetropolisRenderer::sampleImage(Film *imageFilm) {
                 importance(y) * probabilityOfMutation(x, y) /
                 (importance(x) * probabilityOfMutation(y, x)));
 
-        // TODO deposit both x and y on the film
+        depositSample(imageFilm, x, 1.0 - accProb);
+        depositSample(imageFilm, y, accProb);
+
         if (randomRange(0, 1) < accProb) {
             x = y;
         }
-
-        int filmx = (int)(imageFilm->getWidth() * x.getSampleX());
-        int filmy = (int)(imageFilm->getHeight() * x.getSampleY());
-        imageFilm->addColor(lightOfPath(x), filmx, filmy);
     }
+}
+
+void MetropolisRenderer::depositSample(Film *imageFilm, LightPath p, double weight) {
+        int filmx = (int)(imageFilm->getWidth() * p.getSampleX());
+        int filmy = (int)(imageFilm->getHeight() * p.getSampleY());
+        imageFilm->addColorWeighted(lightOfPath(p), filmx, filmy, weight);
 }
 
 std::tuple<ray, Color> MetropolisRenderer::randomLightEmission() {
@@ -162,13 +166,13 @@ LightPath MetropolisRenderer::randomPath() {
     double camx = randomRange<double>(0,1);
     double camy = randomRange<double>(0,1);
     ray viewRay = cam.getViewRay(camx, camy);
-    vector<PathPoint> eyePath = tracePath(viewRay, 3);
+    vector<PathPoint> eyePath = tracePath(viewRay, 2);
 
     // generate the light path
     ray lightRay;
     Color emittedLight;
     std::tie(lightRay, emittedLight) = randomLightEmission();
-    vector<PathPoint> lightPath = tracePath(lightRay, 0); // TODO increase
+    vector<PathPoint> lightPath = tracePath(lightRay, 1); // TODO increase
 
     // check if the path can be joined
     Vector4d lightEnd;

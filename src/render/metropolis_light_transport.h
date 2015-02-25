@@ -2,6 +2,7 @@
 #define SRC_RENDER_METROPOLIS_LIGHT_TRANSPORT_H_
 
 #include <vector>
+#include <tuple>
 #include "drawables/drawable.h"
 #include "render/film.h"
 #include "render/camera.h"
@@ -85,6 +86,9 @@ class MetropolisRenderer {
     KDTree objTree;
     vector<Drawable *> lightList;
     Color exitSceneColor;
+
+    // deposits a light path onto the film with the given weight
+    void depositSample(Film *imageFilm, LightPath p, double weight);
 
     // generates a random beam of light emitted from a source in the scene
     std::tuple<ray, Color> randomLightEmission();

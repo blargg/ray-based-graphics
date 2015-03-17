@@ -7,6 +7,7 @@
  */
 
 #include <Eigen/Dense>
+#include <cmath>
 #include "util/debug.h"
 using namespace Eigen;
 
@@ -88,5 +89,11 @@ T randomRange(T lower, T upper) {
     auto diff = upper - lower;
     return diff * (((T) rand()) / ((T)(RAND_MAX))) + lower;
 }
+
+// generates a random integer
+// 1 with prob 0.25
+// 2 with prob 0.5
+// u > 3, with prob 2^(-u)
+int skewedGeometricRandom();
 
 #endif  // SRC_CORE_COMMON_H_

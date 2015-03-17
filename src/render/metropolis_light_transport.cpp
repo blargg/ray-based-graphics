@@ -166,13 +166,13 @@ LightPath MetropolisRenderer::randomPath() {
     double camx = randomRange<double>(0,1);
     double camy = randomRange<double>(0,1);
     ray viewRay = cam.getViewRay(camx, camy);
-    vector<PathPoint> eyePath = tracePath(viewRay, 2);
+    vector<PathPoint> eyePath = tracePath(viewRay, skewedGeometricRandom());
 
     // generate the light path
     ray lightRay;
     Color emittedLight;
     std::tie(lightRay, emittedLight) = randomLightEmission();
-    vector<PathPoint> lightPath = tracePath(lightRay, 1); // TODO increase
+    vector<PathPoint> lightPath = tracePath(lightRay, 0); // TODO increase
 
     // check if the path can be joined
     Vector4d lightEnd;

@@ -32,3 +32,11 @@ Vector4d perturb(Vector4d original, double max_angle) {
 
     return (x * right + y * up + z * a);
 }
+
+int skewedGeometricRandom() {
+    double u = randomRange<double>(0.0, 1.0);
+
+    if (u > 0.5) return 2;
+    if (u > 0.25) return 1;
+    return floor(log(u) / log(0.5)) + 1;
+}

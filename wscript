@@ -1,3 +1,5 @@
+from waflib.Build import BuildContext
+
 top = '.'
 out = 'build'
 
@@ -47,8 +49,6 @@ def configure(conf):
 def build(bld):
     bld.recurse('src')
 
-from waflib.Build import BuildContext
-
 
 class release(BuildContext):
     cmd = 'build'
@@ -56,5 +56,6 @@ class release(BuildContext):
 
 
 class debug(BuildContext):
+    """Builds the debug version (no optimization or error checking)"""
     cmd = 'debug'
     variant = 'debug'

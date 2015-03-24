@@ -3,6 +3,7 @@
 #include <vector>
 #include "util/log.h"
 #include "util/debug.h"
+#include "render/shader.h"
 
 using std::vector;
 
@@ -25,6 +26,8 @@ Vector4d LightPath::getCameraPoint() {
 }
 
 PathPoint LightPath::getPoint(int index) {
+    ASSERT(index >= 0, "needs a positive index");
+    ASSERT(index < objectPoints.size(), "index out of bounds");
     return objectPoints[index];
 }
 
@@ -48,6 +51,34 @@ Vector4d LightPath::getViewDirection(int index) {
 
     Vector4d current = getPoint(index).location;
     return (next - current).normalized();
+}
+
+double LightPath::G(int index) {
+    Vector4d s1, s2, n1, n2;
+    PathPoint p2 = getPoint(index);
+    if (index == 0) {
+        s1 = lightLocation;
+        n1 = (p2.location - lightLocation).normalized();
+    } else {
+        PathPoint p1 = getPoint(index - 1);
+        s1 = p1.location;
+        n1 = p1.normal;
+    }
+    s2 = p2.location;
+    n2 = p2.normal;
+    return geometric(s1, n1, s2, n2);
+}
+
+double LightPath::GCam() {
+    if (size() == 0) {
+        Vector4d lightdir = (cameraLocation - lightLocation).normalized();
+        return geometric(lightLocation, lightdir, cameraLocation, -1 * lightdir);
+    } else {
+        PathPoint p = getPoint(size() - 1);
+        // TODO need to rethink what the camera's normal exactly is
+        Vector4d camNorm = (p.location - cameraLocation).normalized();
+        return geometric(p.location, p.normal, cameraLocation, camNorm);
+    }
 }
 
 int LightPath::size() {
@@ -232,6 +263,7 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
         // set up useful data
         Vector4d lightdirection = path.getLightDirection(i);
         Vector4d viewDirection = path.getViewDirection(i);
+
 
         if (viewDirection.dot(current.normal) < 0.0)
             current.normal *= -1.0;

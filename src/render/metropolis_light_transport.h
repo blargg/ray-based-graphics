@@ -52,6 +52,12 @@ class MetropolisRenderer {
      * Generates a random path with bidirectional path tracing
      */
     LightPath randomPath();
+
+    /**
+     * Mutates a light path by deleting a segment and tracing a new path
+     */
+    LightPath bidirectionalMutation(LightPath p);
+
     // generates a random series of bounces in the scene
     std::vector<PathPoint> tracePath(ray start, int size);
     Color lightOfPath(LightPath p);

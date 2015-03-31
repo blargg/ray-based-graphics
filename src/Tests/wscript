@@ -18,6 +18,7 @@ def build(bld):
         ('arealight', 'AreaLight'),
         ('sphere', ['sphere', 'shape']),
         ('triangle', ['triangle', 'shape']),
+        ('lightpath', ['lightpath']),
         ('mtl_loader', ['mtl_loader']),
         ('obj_loader', ['obj_loader']),
         ('assimp_loader', ['assimp_loader']),

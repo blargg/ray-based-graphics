@@ -17,6 +17,23 @@ LightPath::LightPath(Vector4d lightPoint, Color emittedLight,
     clearPath = false;
 }
 
+LightPath::LightPath(LightPartialPath lightPath, CamPartialPath camPath) {
+    lightLocation = lightPath.lightLocation;
+    emitted = lightPath.emitted;
+    cameraLocation = camPath.cameraLocation.orig;
+    sampleX = camPath.samplex;
+    sampleY = camPath.sampley;
+    clearPath = false;
+    objectPoints.reserve(lightPath.bounces.size() + camPath.bounces.size());
+    objectPoints.insert(objectPoints.begin(),
+                   lightPath.bounces.begin(),
+                   lightPath.bounces.end());
+    std::reverse(camPath.bounces.begin(), camPath.bounces.end());
+    objectPoints.insert(objectPoints.end(),
+                   camPath.bounces.begin(),
+                   camPath.bounces.end());
+}
+
 std::tuple<Vector4d, Color> LightPath::getLight() {
     return std::make_tuple(lightLocation, emitted);
 }
@@ -83,6 +100,49 @@ double LightPath::GCam() {
 
 int LightPath::size() {
     return objectPoints.size();
+}
+
+Vector4d LightPath::getCameraDirection() {
+    if (size() > 0) {
+        return getPoint(size() - 1).location - getCameraPoint();
+    } else {
+        return lightLocation - getCameraPoint();
+    }
+}
+
+std::tuple<LightPartialPath, CamPartialPath> LightPath::deleteSubpath(int s, int t) {
+    // TODO test
+    ASSERT(s < t, "s must be less than t");
+    LightPartialPath lightP;
+    if (s <= -2) {
+        lightP.exists = false;
+    } else {
+        lightP.exists = true;
+        lightP.emitted = emitted;
+        lightP.lightLocation = lightLocation;
+
+        for (int i = 0; i <= s; i++) {
+            lightP.bounces.push_back(getPoint(i));
+        }
+    }
+
+    CamPartialPath camP;
+    if (t >= size() + 2) {
+        camP.exists = false;
+    } else {
+        camP.exists = true;
+        camP.samplex = getSampleX();
+        camP.sampley = getSampleY();
+        camP.cameraLocation.orig = getCameraPoint();
+        camP.cameraLocation.dir = getCameraDirection();
+        camP.cameraLocation.dir.normalize();
+
+        // TODO find the number of path points to add
+        for (int i = size() - 1; i >= t; i--) {
+            camP.bounces.push_back(getPoint(i));
+        }
+    }
+    return std::make_tuple(lightP, camP);
 }
 
 void LightPath::setClearPath(bool isclear) {

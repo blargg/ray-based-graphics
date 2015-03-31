@@ -149,6 +149,10 @@ LightPath MetropolisRenderer::randomPath() {
     return generatedPath;
 }
 
+LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
+    ASSERT(false, "TODO");
+}
+
 Color MetropolisRenderer::lightOfPath(LightPath path) {
     if (!path.isClearPath())
         return Color(0, 0, 0);

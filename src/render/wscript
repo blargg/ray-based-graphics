@@ -1,5 +1,6 @@
 def build(bld):
-    bld.objects(source='lightpath.cpp', target='lightpath', use='common debug')
+    bld.objects(source='lightpath.cpp', target='lightpath',
+                use='shader common debug')
     bld.objects(source='shader.cpp', target='shader', use='common debug')
     bld.objects(source='film.cpp', target='film', use='common easypng')
     bld.objects(source='camera.cpp', target='camera',

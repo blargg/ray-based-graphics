@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include "core/common.h"
+#include "core/ray.h"
 #include "core/properties.h"
 using namespace Eigen;
 using std::vector;
@@ -18,13 +19,29 @@ struct PathPoint {
     ShaderType shader;
 };
 
+struct CamPartialPath {
+    bool exists;
+    double samplex, sampley;
+    ray cameraLocation;
+    vector<PathPoint> bounces;
+};
+
+struct LightPartialPath {
+    bool exists;
+    Color emitted;
+    Vector4d lightLocation;
+    vector<PathPoint> bounces;
+};
+
 class LightPath {
  public:
     LightPath(Vector4d lightPoint, Color emittedLight,
             vector<PathPoint> bounces, Vector4d cameraPoint);
+    LightPath(LightPartialPath lightPath, CamPartialPath camPath);
 
     std::tuple<Vector4d, Color> getLight();
     Vector4d getCameraPoint();
+    Vector4d getCameraDirection();
 
     PathPoint getPoint(int index);
     // for a path point, get the direction that the light is coming from
@@ -37,6 +54,14 @@ class LightPath {
     // term
     double GCam();
     int size();
+
+    /**
+     * returns the eye side and light side partial paths that result from
+     * deleting the path points from s to t
+     *
+     * the partial paths may be empty
+     */
+    std::tuple<LightPartialPath, CamPartialPath> deleteSubpath(int s, int t);
 
     void setClearPath(bool isclear);
     bool isClearPath();

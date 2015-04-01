@@ -20,7 +20,7 @@ LightPath mkPath(int numPoints) {
 
 TEST(LightPathTest, deleteSubpath) {
     LightPath p1 = mkPath(4);
-    EXPECT_EQ(p1.size(), 4 - 2);
+    EXPECT_EQ(p1.numberOfBounces(), 4 - 2);
 
     LightPartialPath lightPath;
     CamPartialPath camPath;

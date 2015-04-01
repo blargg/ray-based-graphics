@@ -61,7 +61,7 @@ Vector4d LightPath::getLightDirection(int index) {
 
 Vector4d LightPath::getViewDirection(int index) {
     Vector4d next;
-    if (index == size() - 1)
+    if (index == numberOfBounces() - 1)
         next = cameraLocation;
     else
         next = getPoint(index + 1).location;
@@ -87,24 +87,24 @@ double LightPath::G(int index) {
 }
 
 double LightPath::GCam() {
-    if (size() == 0) {
+    if (numberOfBounces() == 0) {
         Vector4d lightdir = (cameraLocation - lightLocation).normalized();
         return geometric(lightLocation, lightdir, cameraLocation, -1 * lightdir);
     } else {
-        PathPoint p = getPoint(size() - 1);
+        PathPoint p = getPoint(numberOfBounces() - 1);
         // TODO need to rethink what the camera's normal exactly is
         Vector4d camNorm = (p.location - cameraLocation).normalized();
         return geometric(p.location, p.normal, cameraLocation, camNorm);
     }
 }
 
-int LightPath::size() {
+int LightPath::numberOfBounces() {
     return objectPoints.size();
 }
 
 Vector4d LightPath::getCameraDirection() {
-    if (size() > 0) {
-        return getPoint(size() - 1).location - getCameraPoint();
+    if (numberOfBounces() > 0) {
+        return getPoint(numberOfBounces() - 1).location - getCameraPoint();
     } else {
         return lightLocation - getCameraPoint();
     }
@@ -127,7 +127,7 @@ std::tuple<LightPartialPath, CamPartialPath> LightPath::deleteSubpath(int s, int
     }
 
     CamPartialPath camP;
-    if (t >= size() + 2) {
+    if (t >= numberOfBounces() + 2) {
         camP.exists = false;
     } else {
         camP.exists = true;
@@ -138,7 +138,7 @@ std::tuple<LightPartialPath, CamPartialPath> LightPath::deleteSubpath(int s, int
         camP.cameraLocation.dir.normalize();
 
         // TODO find the number of path points to add
-        for (int i = size() - 1; i >= t; i--) {
+        for (int i = numberOfBounces() - 1; i >= t; i--) {
             camP.bounces.push_back(getPoint(i));
         }
     }

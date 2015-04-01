@@ -151,6 +151,7 @@ LightPath MetropolisRenderer::randomPath() {
 
 LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
     ASSERT(false, "TODO");
+    int deleteLenght = skewedGeometricRandom();
 }
 
 Color MetropolisRenderer::lightOfPath(LightPath path) {
@@ -161,7 +162,7 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
     Color total;
     std::tie(lightpoint, total) = path.getLight();
 
-    for (int i = 0; i < path.size(); i++) {
+    for (int i = 0; i < path.numberOfBounces(); i++) {
         PathPoint current = path.getPoint(i);
         ASSERT(isUnitVector(current.normal), "The normal should be a unit vector");
 

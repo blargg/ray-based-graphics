@@ -11,7 +11,7 @@ Vector4d ray::operator()(const double time) const {
 }
 
 Vector4d ray::projectOnToPlane(const Vector4d point) const {
-    ASSERT(abs(point[3] - 1.0) < 0.00001, "points should have extra coordinate set to 1.0");
+    ASSERT(fabs(point[3] - 1.0) < 0.00001, "points should have extra coordinate set to 1.0");
     ASSERT(isUnitVector(dir), "rays should have unit direction");
     Vector4d diff = point - orig;
     double dist = diff.dot(dir);

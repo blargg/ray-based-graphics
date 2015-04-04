@@ -42,6 +42,12 @@ Vector4d reflectVector(Vector4d viewVector, Vector4d normal);
  */
 Vector4d perturb(Vector4d a, double max_angle);
 
+/**
+ * returns a random unit vector.
+ * Uniformly distributed over the area of the unit sphere
+ */
+Vector4d randomUnitVector();
+
 template <class T>
 inline bool isUnitVector(T v) {
     float length = v.norm();

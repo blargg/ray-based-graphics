@@ -33,6 +33,11 @@ Vector4d perturb(Vector4d original, double max_angle) {
     return (x * right + y * up + z * a);
 }
 
+Vector4d randomUnitVector() {
+    // TODO better test
+    return perturb(Vector4d(1,0,0,0), 2.0 * M_PI);
+}
+
 int randomRangeInt(int lower, int upper) {
     ASSERT(lower <= upper,
             "The lower bound should be less than or equal to the upper bound");

@@ -33,6 +33,13 @@ Vector4d perturb(Vector4d original, double max_angle) {
     return (x * right + y * up + z * a);
 }
 
+int randomRangeInt(int lower, int upper) {
+    ASSERT(lower <= upper,
+            "The lower bound should be less than or equal to the upper bound");
+    int diff = upper - lower + 1;
+    return (rand() % diff) + lower;
+}
+
 int skewedGeometricRandom() {
     double u = randomRange<double>(0.0, 1.0);
 

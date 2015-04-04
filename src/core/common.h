@@ -90,6 +90,8 @@ T randomRange(T lower, T upper) {
     return diff * (((T) rand()) / ((T)(RAND_MAX))) + lower;
 }
 
+int randomRangeInt(int lower, int upper);
+
 // generates a random integer
 // 1 with prob 0.25
 // 2 with prob 0.5

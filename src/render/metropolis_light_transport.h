@@ -58,8 +58,19 @@ class MetropolisRenderer {
      */
     LightPath bidirectionalMutation(LightPath p);
 
+    int lengthToAdd(int lengthDeleted);
+
     // generates a random series of bounces in the scene
     std::vector<PathPoint> tracePath(ray start, int size);
+
+    /**
+     * returns true if point a is mutually visable from point b
+     *
+     * isVisable(x, y) <==> isVisable(y, x)
+     */
+    bool isVisable(Vector4d a, Vector4d b);
+
+    Vector4d sampleBSDF(ShaderType dist, Vector4d normal, Vector4d view);
     Color lightOfPath(LightPath p);
     double importance(LightPath p);
 

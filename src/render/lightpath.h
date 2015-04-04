@@ -53,7 +53,14 @@ class LightPath {
     // for the last segment leading into the camera, calculate the geometric
     // term
     double GCam();
+
+    // the number of times that the light path bounces off of an object in the
+    // scene
     int numberOfBounces();
+
+    // the total number of points in the path
+    // totalSize() == numberOfBounces() + 2
+    int totalSize();
 
     /**
      * returns the eye side and light side partial paths that result from

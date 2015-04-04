@@ -72,6 +72,8 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
     double time = -1.0;
     Drawable *obj = NULL;
     for (int i = 0; i < size; i++) {
+        time = -1.0;
+        obj = NULL;
         objTree.intersection(currentRay, time, &obj);
 
         if (obj == NULL) {
@@ -87,71 +89,228 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
         path.push_back(p);
 
         currentRay.orig = p.location;
-        currentRay.dir = perturb(p.normal, M_PI/2.0);
+        currentRay.dir = sampleBSDF(p.shader, p.normal, start.dir);
     }
 
     return path;
 }
 
+bool MetropolisRenderer::isVisable(Vector4d a, Vector4d b) {
+    Vector4d aToB = b - a;
+    ray view(a, aToB);
+    double time = -1.0;
+    Drawable *obj = NULL;
+    objTree.intersection(view, time, &obj);
+
+    if (obj == NULL || time < 0)
+        return false;
+
+    double distToB = (b - view(time)).norm();
+    return distToB < EPSILON * 100;
+}
+
+/**
+ * Randomly samples the given bsdf.
+ *
+ * dist is the type of bsdf
+ * normal is the normal vector at the surface
+ * view is the direction of the incoming view direction
+ */
+Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector4d view) {
+    if (dist == Diffuse) {
+        // choose a random direction in the hemisphere of the normal
+        return perturb(normal, M_PI/2.0);
+    } else {
+        LOG_E("Unaccounted for shader: %d", dist);
+        ASSERT(false, "This shader was not coded for");
+        return Vector4d(1,0,0,0);
+    }
+}
+
 LightPath MetropolisRenderer::randomPath() {
     // generate the eye path
+    CamPartialPath camp;
+    camp.exists = true;
     double camx = randomRange<double>(0,1);
     double camy = randomRange<double>(0,1);
     ray viewRay = cam.getViewRay(camx, camy);
-    vector<PathPoint> eyePath = tracePath(viewRay, skewedGeometricRandom());
+    camp.samplex = camx;
+    camp.sampley = camy;
+    camp.cameraLocation = viewRay;
+    camp.bounces = tracePath(viewRay, skewedGeometricRandom());
 
     // generate the light path
+    LightPartialPath lightp;
+    lightp.exists = true;
+
     ray lightRay;
     Color emittedLight;
     std::tie(lightRay, emittedLight) = randomLightEmission();
-    vector<PathPoint> lightPath = tracePath(lightRay, 0); // TODO increase
+    lightp.emitted = emittedLight;
+    lightp.lightLocation = lightRay.orig;
+    lightp.bounces = tracePath(lightRay, 0); // TODO increase
 
     // check if the path can be joined
     Vector4d lightEnd;
-    if (lightPath.size() > 0) {
-        PathPoint tmp = lightPath[lightPath.size() - 1];
+    if (lightp.bounces.size() > 0) {
+        PathPoint tmp = lightp.bounces[lightp.bounces.size() - 1];
         lightEnd = tmp.location;
     } else {
         lightEnd = lightRay.orig;
     }
 
     Vector4d eyeEnd;
-    if (eyePath.size() > 0) {
-        eyeEnd = eyePath[eyePath.size() - 1].location;
+    if (camp.bounces.size() > 0) {
+        eyeEnd = camp.bounces[camp.bounces.size() - 1].location;
     } else {
         eyeEnd = viewRay.orig;
     }
 
-    ray checkRay;
-    checkRay.orig = lightEnd;
-    checkRay.dir = eyeEnd - lightEnd;
-    double time;
-    Drawable *intersectionObj;
-    objTree.intersection(checkRay, time, &intersectionObj);
-
     // TODO also check if the right object is hit
-    bool clearPath = (checkRay(time) - eyeEnd).norm() < EPSILON * 10;
+    bool clearPath = isVisable(lightEnd, eyeEnd);
 
     // join the paths and return
-    vector<PathPoint> bounces;
-    bounces.reserve(lightPath.size() + eyePath.size());
-    bounces.insert(bounces.end(), lightPath.begin(), lightPath.end());
-    std::reverse(eyePath.begin(), eyePath.end());
-    bounces.insert(bounces.end(), eyePath.begin(), eyePath.end());
-
-    LightPath generatedPath(
-            lightRay.orig,
-            emittedLight,
-            bounces,
-            viewRay.orig);
-    generatedPath.setClearPath(clearPath);
-    generatedPath.setSampleLocation(camx, camy);
-    return generatedPath;
+    LightPath fullPath(lightp, camp);
+    fullPath.setClearPath(clearPath);
+    return fullPath;
 }
 
 LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
-    ASSERT(false, "TODO");
-    int deleteLenght = skewedGeometricRandom();
+    int deleteLength = skewedGeometricRandom();
+    if (deleteLength >= p.totalSize()) {
+        return randomPath();
+    }
+    int s = randomRangeInt(-2, p.numberOfBounces() - deleteLength);
+    int t = s + deleteLength;
+
+    LightPartialPath lightp;
+    CamPartialPath camp;
+    std::tie(lightp, camp) = p.deleteSubpath(s, t);
+
+    int lengthAdd = lengthToAdd(deleteLength);
+    int s_add = randomRangeInt(0, lengthAdd - 1);
+    int t_add = lengthAdd - s_add - 1;
+    ASSERT(s_add >= 0, "light path add must be greater than or equal to 0");
+    ASSERT(t_add >= 0, "light path add must be greater than or equal to 0");
+
+    // TODO: case hanling here is huge
+    // some of the design doesn't really fit c++ style well
+    ray lightCastDir;
+    if (!lightp.exists) {
+        ray lightdir;
+        Color emittedlight;
+        std::tie(lightdir, emittedlight) = randomLightEmission();
+
+        lightCastDir = lightdir;
+        lightp.lightLocation = lightdir.orig;
+        lightp.emitted = emittedlight;
+        lightp.exists = true;
+        lightp.bounces.clear();
+    } else {
+        if (lightp.bounces.size() == 0) {
+            lightCastDir.orig = lightp.lightLocation;
+            lightCastDir.dir = randomUnitVector();
+        } else {
+            PathPoint lastBounce = lightp.bounces.back();
+            lightCastDir.orig = lastBounce.location;
+
+            Vector4d incomingDir;
+            if (lightp.bounces.size() == 1) {
+                incomingDir = lightp.bounces[0].location - lightp.lightLocation;
+            } else if (lightp.bounces.size() > 1) {
+                int index = lightp.bounces.size() - 1;
+                incomingDir = lightp.bounces[index].location - lightp.bounces[index - 1].location;
+            }
+            lightCastDir.dir =
+                sampleBSDF(lastBounce.shader, lastBounce.normal, incomingDir);
+        }
+    }
+
+    // get new light path points
+    vector<PathPoint> addedToLight = tracePath(lightCastDir, s_add);
+
+    // add points to light path
+    lightp.bounces.insert(lightp.bounces.end(),
+                          addedToLight.begin(),
+                          addedToLight.end());
+
+    ray camCastDir;
+    if (!camp.exists) {
+        double camx = randomRange<double>(0,1);
+        double camy = randomRange<double>(0,1);
+        camCastDir = cam.getViewRay(camx, camy);
+
+        camp.samplex = camx;
+        camp.sampley = camy;
+        camp.cameraLocation = camCastDir;
+        camp.bounces.clear();
+        camp.exists = true;
+    } else {
+        if (camp.bounces.size() == 0) {
+            camCastDir = camp.cameraLocation;
+        } else {
+            PathPoint lastBounce = camp.bounces.back();
+            camCastDir.orig = lastBounce.location;
+            Vector4d viewDir;
+            if (camp.bounces.size() == 1) {
+                viewDir =
+                    camp.bounces[0].location - camp.cameraLocation.orig;
+            } else {
+                int index = camp.bounces.size() - 1;
+                viewDir =
+                    camp.bounces[index].location - camp.bounces[index - 1].location;
+            }
+            camCastDir.dir =
+                sampleBSDF(lastBounce.shader, lastBounce.normal, viewDir);
+        }
+    }
+
+    vector<PathPoint> addedToCam = tracePath(camCastDir, t_add);
+    camp.bounces.insert(camp.bounces.end(),
+                        addedToCam.begin(),
+                        addedToCam.end());
+
+    // check if the light path is clear
+    Vector4d lightEnd;
+    if (lightp.bounces.size() == 0)
+        lightEnd = lightp.lightLocation;
+    else
+        lightEnd = lightp.bounces.back().location;
+    Vector4d camEnd;
+    if (camp.bounces.size() == 0)
+        camEnd = camp.cameraLocation.orig;
+    else
+        camEnd = camp.bounces.back().location;
+
+    bool pathClear = s_add == addedToLight.size() &&
+                     t_add == addedToCam.size() &&
+                     isVisable(lightEnd, camEnd);
+
+    LightPath fullPath(lightp, camp);
+    fullPath.setClearPath(pathClear);
+    return fullPath;
+}
+
+/**
+ * Given the lenght deleted, return a random length to add.
+ * lengthDeleted >= 1
+ * return >= 1
+ */
+int MetropolisRenderer::lengthToAdd(int lengthDeleted) {
+    ASSERT(lengthDeleted >= 1,
+            "This value should always be at least 1");
+    double r = (double) rand() / (double) RAND_MAX;
+    if (r > 0.5) {
+        return lengthDeleted;
+    }
+
+    if (lengthDeleted == 1)
+        return lengthDeleted + 1;
+
+    if (r > 0.25)
+        return lengthDeleted + 1;
+    else
+        return lengthDeleted - 1;
 }
 
 Color MetropolisRenderer::lightOfPath(LightPath path) {
@@ -190,15 +349,18 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
 
 double MetropolisRenderer::importance(LightPath p) {
     // TODO better importance function
+    //
+    if (p.totalSize() > 6)
+        return 0.0;
     Color light = lightOfPath(p);
     // return the luminace of the path
-    return 0.2126 * light.red +
+    return (0.2126 * light.red +
            0.7152 * light.green +
-           0.0722 * light.blue;
+           0.0722 * light.blue) / p.totalSize();
 }
 
 LightPath MetropolisRenderer::mutate(LightPath original) {
-    return randomPath();
+    return bidirectionalMutation(original);
 }
 
 double MetropolisRenderer::probabilityOfMutation(LightPath original, LightPath mutated) {

@@ -102,6 +102,10 @@ int LightPath::numberOfBounces() {
     return objectPoints.size();
 }
 
+int LightPath::totalSize() {
+    return numberOfBounces() + 2;
+}
+
 Vector4d LightPath::getCameraDirection() {
     if (numberOfBounces() > 0) {
         return getPoint(numberOfBounces() - 1).location - getCameraPoint();
@@ -137,8 +141,8 @@ std::tuple<LightPartialPath, CamPartialPath> LightPath::deleteSubpath(int s, int
         camP.cameraLocation.dir = getCameraDirection();
         camP.cameraLocation.dir.normalize();
 
-        // TODO find the number of path points to add
-        for (int i = numberOfBounces() - 1; i >= t; i--) {
+        // TODO, this no longer follows pointsDeleted = t - s - 1
+        for (int i = numberOfBounces() - 1; i >= t && i >= 0; i--) {
             camP.bounces.push_back(getPoint(i));
         }
     }

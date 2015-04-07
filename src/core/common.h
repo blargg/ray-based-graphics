@@ -103,5 +103,7 @@ int randomRangeInt(int lower, int upper);
 // 2 with prob 0.5
 // u > 3, with prob 2^(-u)
 int skewedGeometricRandom();
+// returns the probability of generating x
+double probOfSkewedGeometric(int x);
 
 #endif  // SRC_CORE_COMMON_H_

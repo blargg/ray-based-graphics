@@ -52,3 +52,10 @@ int skewedGeometricRandom() {
     if (u > 0.25) return 1;
     return floor(log(u) / log(0.5)) + 1;
 }
+
+double probOfSkewedGeometric(int x) {
+    if (x < 1) return 0.0;
+    if (x == 1) return 0.25;
+    if (x == 2) return 0.5;
+    return std::pow(2, -x);
+}

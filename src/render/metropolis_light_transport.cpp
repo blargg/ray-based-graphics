@@ -6,6 +6,9 @@
 #include "render/shader.h"
 
 using std::vector;
+using std::tuple;
+using std::tie;
+using std::make_tuple;
 
 MetropolisRenderer::MetropolisRenderer() {
     exitSceneColor = Color(0.3, 0.3, 0.3);
@@ -39,6 +42,8 @@ void MetropolisRenderer::sampleImage(Film *imageFilm) {
         if (randomRange(0, 1) < accProb) {
             x = y;
         }
+        // LOG_IF_D(i % 100 == 0, "Path size = %d", x.totalSize());
+        LOG_D("Path size = %d", x.totalSize());
     }
 }
 
@@ -109,6 +114,10 @@ bool MetropolisRenderer::isVisable(Vector4d a, Vector4d b) {
     return distToB < EPSILON * 100;
 }
 
+bool MetropolisRenderer::pointsAreClose(Vector4d a, Vector4d b) {
+    return (a - b).squaredNorm() < 1000 * EPSILON;
+}
+
 /**
  * Randomly samples the given bsdf.
  *
@@ -124,6 +133,21 @@ Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector
         LOG_E("Unaccounted for shader: %d", dist);
         ASSERT(false, "This shader was not coded for");
         return Vector4d(1,0,0,0);
+    }
+}
+
+double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, Vector4d normal, Vector4d out) {
+    if (dist == Diffuse) {
+        // the out sample direction is uniformly distributed in the hemisphere
+        // of the surface normal
+        if (normal.dot(out) > 0.0)
+            return 1.0;
+        else
+            return 0.0;
+    } else {
+        LOG_E("Shader not programed");
+        ASSERT(false, "This should not execute");
+        return 0.0;
     }
 }
 
@@ -176,7 +200,7 @@ LightPath MetropolisRenderer::randomPath() {
 }
 
 LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
-    int deleteLength = skewedGeometricRandom();
+    int deleteLength = skewedGeometricRandom() + 1;
     if (deleteLength >= p.totalSize()) {
         return randomPath();
     }
@@ -291,6 +315,97 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
     return fullPath;
 }
 
+double MetropolisRenderer::probOfBidirectionalTransition(LightPath original, LightPath mutant) {
+    int s, t;
+    tie(s, t) = segmentChanged(original, mutant);
+    int s_a, t_a;
+    tie(s_a, t_a) = segmentChanged(mutant, original);
+
+    return probOfSkewedGeometric(t - s - 1)
+           * probOfLengthChange(t - s, t_a - s_a)
+           * probOfAddingSamples(mutant, s_a, t_a);
+}
+
+double MetropolisRenderer::probOfLengthChange(int lengthDeleted, int lengthAdded) {
+    int diff = lengthDeleted - lengthAdded;
+    if (diff == 0)
+        return 0.5;
+    if (diff == 1)
+        return 0.25;
+    ASSERT(lengthDeleted != 0, "Division by 0");
+    return 0.25 * (1 / (lengthDeleted - 1));
+}
+
+double MetropolisRenderer::probOfAddingSamples(LightPath path, int s, int t) {
+    ASSERT(s < t, "s = %d, t = %d", s, t);
+    if (s < 0)
+        s = 0;
+    if (t > path.numberOfBounces() - 1)
+        t = path.numberOfBounces() - 1;
+    double totalProb = 0.0;
+    // TODO there is duplicated work in the calculation here
+    for (int split = s; split <= t; split++) {
+        double prob = 1.0;
+        for (int i = s+1; i < split; i++) {
+            PathPoint point = path.getPoint(i);
+            prob *=
+                probabilityOfSample(
+                        point.shader,
+                        path.getLightDirection(i),
+                        point.normal,
+                        path.getViewDirection(i));
+            prob *= path.nextG(i);
+        }
+        for (int i = split; i < t; i++) {
+            PathPoint point = path.getPoint(i);
+            prob *=
+                probabilityOfSample(
+                        point.shader,
+                        path.getLightDirection(i),
+                        point.normal,
+                        path.getViewDirection(i));
+            prob *= path.previousG(i);
+        }
+
+        totalProb += prob;
+    }
+    return totalProb;
+}
+
+tuple<int, int> MetropolisRenderer::segmentChanged(LightPath original, LightPath mutant) {
+    int s = -2;
+    int t = original.totalSize() - 1;
+
+    if (pointsAreClose(original.getCameraPoint(), mutant.getCameraPoint())) {
+        for (int i = 0; i < original.numberOfBounces() && i < mutant.numberOfBounces(); i++) {
+            if (pointsAreClose(original.getPoint(i).location, mutant.getPoint(i).location))
+                s = i;
+            else
+                break;
+        }
+    }
+
+    Vector4d originalLight;
+    Vector4d mutantLight;
+    Color lightIntensity;
+
+    tie(originalLight, lightIntensity) = original.getLight();
+    tie(mutantLight, lightIntensity) = mutant.getLight();
+    if (pointsAreClose(originalLight, mutantLight)) {
+        for (int i = 1 ; 0 <= original.numberOfBounces() - i && 0 <= mutant.numberOfBounces() - i; i++) {
+            int originalIndex = original.numberOfBounces() - i;
+            int mutantIndex = mutant.numberOfBounces() - i;
+
+            if (pointsAreClose(original.getPoint(originalIndex).location, mutant.getPoint(mutantIndex).location))
+                t = i;
+            else
+                break;
+        }
+    }
+
+    return make_tuple(s, t);
+}
+
 /**
  * Given the lenght deleted, return a random length to add.
  * lengthDeleted >= 1
@@ -310,7 +425,7 @@ int MetropolisRenderer::lengthToAdd(int lengthDeleted) {
     if (r > 0.25)
         return lengthDeleted + 1;
     else
-        return lengthDeleted - 1;
+        return randomRangeInt(1, lengthDeleted - 1);
 }
 
 Color MetropolisRenderer::lightOfPath(LightPath path) {
@@ -350,13 +465,11 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
 double MetropolisRenderer::importance(LightPath p) {
     // TODO better importance function
     //
-    if (p.totalSize() > 6)
-        return 0.0;
     Color light = lightOfPath(p);
     // return the luminace of the path
     return (0.2126 * light.red +
            0.7152 * light.green +
-           0.0722 * light.blue) / p.totalSize();
+           0.0722 * light.blue);
 }
 
 LightPath MetropolisRenderer::mutate(LightPath original) {
@@ -365,5 +478,5 @@ LightPath MetropolisRenderer::mutate(LightPath original) {
 
 double MetropolisRenderer::probabilityOfMutation(LightPath original, LightPath mutated) {
     // assume all paths have the same probability of being generated
-    return 1;
+    return probOfBidirectionalTransition(original, mutated);
 }

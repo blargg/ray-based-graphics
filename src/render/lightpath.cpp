@@ -70,7 +70,7 @@ Vector4d LightPath::getViewDirection(int index) {
     return (next - current).normalized();
 }
 
-double LightPath::G(int index) {
+double LightPath::previousG(int index) {
     Vector4d s1, s2, n1, n2;
     PathPoint p2 = getPoint(index);
     if (index == 0) {
@@ -84,6 +84,22 @@ double LightPath::G(int index) {
     s2 = p2.location;
     n2 = p2.normal;
     return geometric(s1, n1, s2, n2);
+}
+
+double LightPath::nextG(int index) {
+    Vector4d s1, s2, n1, n2;
+    PathPoint p1 = getPoint(index);
+    if (index == numberOfBounces() - 1) {
+        s2 = cameraLocation;
+        n2 = (p1.location - s2).normalized();
+    } else {
+        PathPoint p2 = getPoint(index + 1);
+        s2 = p2.location;
+        n2 = p2.normal;
+    }
+    s1 = p1.location;
+    n1 = p1.location;
+    return geometric(s1, n2, s2, n2);
 }
 
 double LightPath::GCam() {

@@ -58,6 +58,24 @@ class MetropolisRenderer {
      */
     LightPath bidirectionalMutation(LightPath p);
 
+    double probOfBidirectionalTransition(LightPath original, LightPath mutant);
+    double probOfLengthChange(int lengthDeleted, int lengthAdded);
+    double probOfAddingSamples(LightPath path, int s, int t);
+
+    /**
+     * returns (s, t), the segment deleted from original, and replaced to make
+     * mutant.
+     *
+     * Everything point at index i s.t. i <= s is in both paths
+     * Everything point at index i s.t. t <= i is in both paths
+     *
+     * if the paths are different then s < t
+     *
+     * Indecies of matching points may not be the same (eg. the paths are
+     * different lenghts and the last point in each path match)
+     */
+    std::tuple<int, int> segmentChanged(LightPath original, LightPath mutant);
+
     int lengthToAdd(int lengthDeleted);
 
     // generates a random series of bounces in the scene
@@ -70,7 +88,14 @@ class MetropolisRenderer {
      */
     bool isVisable(Vector4d a, Vector4d b);
 
+    /**
+     * true if the distance between the points is less than machine precision
+     */
+    bool pointsAreClose(Vector4d a, Vector4d b);
+
     Vector4d sampleBSDF(ShaderType dist, Vector4d normal, Vector4d view);
+    double probabilityOfSample(ShaderType dist, Vector4d view, Vector4d normal, Vector4d out);
+
     Color lightOfPath(LightPath p);
     double importance(LightPath p);
 

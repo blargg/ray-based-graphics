@@ -80,6 +80,9 @@ class MetropolisRenderer {
 
     // generates a random series of bounces in the scene
     std::vector<PathPoint> tracePath(ray start, int size);
+    ShaderType randomShader(Properties p);
+    double probOfShader(Properties p, ShaderType shader);
+    vector<ShaderType> getShaders(Properties p);
 
     /**
      * returns true if point a is mutually visable from point b

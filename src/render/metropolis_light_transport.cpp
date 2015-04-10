@@ -42,8 +42,6 @@ void MetropolisRenderer::sampleImage(Film *imageFilm) {
         if (randomRange(0, 1) < accProb) {
             x = y;
         }
-        // LOG_IF_D(i % 100 == 0, "Path size = %d", x.totalSize());
-        LOG_D("Path size = %d", x.totalSize());
     }
 }
 
@@ -90,7 +88,7 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
         p.location = currentRay(time);
         p.normal = obj->normal_vector(p.location);
         p.properties = obj->getProperties(p.location);
-        p.shader = Diffuse;
+        p.shader = randomShader(p.properties);
         path.push_back(p);
 
         currentRay.orig = p.location;
@@ -98,6 +96,38 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
     }
 
     return path;
+}
+
+ShaderType MetropolisRenderer::randomShader(Properties prop) {
+    vector<ShaderType> candidates = getShaders(prop);
+
+    if (candidates.size() == 0)
+        return Diffuse;
+
+    int choice = randomRangeInt(0, candidates.size() - 1);
+    return candidates[choice];
+}
+
+double MetropolisRenderer::probOfShader(Properties p, ShaderType shader) {
+    auto shaders = getShaders(p);
+    if (shaders.size() == 0)
+        return 1.0;
+    return 1 / shaders.size();
+}
+
+vector<ShaderType> MetropolisRenderer::getShaders(Properties prop) {
+    vector<ShaderType> candidates;
+    double min = 0.0001;
+    if (prop.color.red > min ||
+            prop.color.blue > min ||
+            prop.color.green > min)
+        candidates.push_back(Diffuse);
+
+    if (prop.specular.red > min ||
+            prop.specular.blue > min ||
+            prop.specular.green > min)
+        candidates.push_back(Specular);
+    return candidates;
 }
 
 bool MetropolisRenderer::isVisable(Vector4d a, Vector4d b) {
@@ -126,10 +156,13 @@ bool MetropolisRenderer::pointsAreClose(Vector4d a, Vector4d b) {
  * view is the direction of the incoming view direction
  */
 Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector4d view) {
+    ASSERT(isUnitVector(normal), "sample method assume the normal is a unit vector");
     if (dist == Diffuse) {
         // choose a random direction in the hemisphere of the normal
         return perturb(normal, M_PI/2.0);
-    } else {
+    } else if (dist == Specular) {
+        return reflectVector(view, normal);
+    }else {
         LOG_E("Unaccounted for shader: %d", dist);
         ASSERT(false, "This shader was not coded for");
         return Vector4d(1,0,0,0);
@@ -144,7 +177,11 @@ double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, V
             return 1.0;
         else
             return 0.0;
-    } else {
+    } else if (dist == Specular) {
+        ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON,
+                "This should always be the reflection vector");
+        return 1.0;
+    }else {
         LOG_E("Shader not programed");
         ASSERT(false, "This should not execute");
         return 0.0;
@@ -348,6 +385,7 @@ double MetropolisRenderer::probOfAddingSamples(LightPath path, int s, int t) {
         double prob = 1.0;
         for (int i = s+1; i < split; i++) {
             PathPoint point = path.getPoint(i);
+            prob *= probOfShader(point.properties, point.shader);
             prob *=
                 probabilityOfSample(
                         point.shader,
@@ -358,6 +396,7 @@ double MetropolisRenderer::probOfAddingSamples(LightPath path, int s, int t) {
         }
         for (int i = split; i < t; i++) {
             PathPoint point = path.getPoint(i);
+            prob *= probOfShader(point.properties, point.shader);
             prob *=
                 probabilityOfSample(
                         point.shader,
@@ -452,7 +491,9 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
         if (current.shader == Diffuse) {
             total = current.properties.color * total *
                 current.normal.dot(lightdirection);
-        } else {
+        } else if (current.shader == Specular) {
+            total *= current.properties.specular;
+        }else {
             LOG_E("Unaccounted for shader");
         }
 

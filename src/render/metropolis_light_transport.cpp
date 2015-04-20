@@ -89,6 +89,9 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
         p.normal = obj->normal_vector(p.location);
         p.properties = obj->getProperties(p.location);
         p.shader = randomShader(p.properties);
+
+        if (start.dir.dot(p.normal) > 0)
+            p.normal *= -1.0;
         path.push_back(p);
 
         currentRay.orig = p.location;
@@ -161,6 +164,9 @@ Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector
         // choose a random direction in the hemisphere of the normal
         return perturb(normal, M_PI/2.0);
     } else if (dist == Specular) {
+        // ASSERT(view.dot(normal) < 0, "view vector should be headed into the surface");
+        if (view.dot(normal) < 0)
+            normal *= -1;
         return reflectVector(view, normal);
     }else {
         LOG_E("Unaccounted for shader: %d", dist);
@@ -178,7 +184,9 @@ double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, V
         else
             return 0.0;
     } else if (dist == Specular) {
-        ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON,
+        view *= -1;
+        ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON
+               || (reflectVector(view, -1 * normal).normalized() - out).norm() < 100 * EPSILON,
                 "This should always be the reflection vector");
         return 1.0;
     }else {
@@ -358,9 +366,15 @@ double MetropolisRenderer::probOfBidirectionalTransition(LightPath original, Lig
     int s_a, t_a;
     tie(s_a, t_a) = segmentChanged(mutant, original);
 
-    return probOfSkewedGeometric(t - s - 1)
-           * probOfLengthChange(t - s, t_a - s_a)
-           * probOfAddingSamples(mutant, s_a, t_a);
+    if (s < t)
+        return probOfSkewedGeometric(t - s - 1)
+               * probOfLengthChange(t - s, t_a - s_a)
+               * probOfAddingSamples(mutant, s_a, t_a);
+    else
+        // whole path changed
+        return probOfSkewedGeometric(t - s - 1)
+               * probOfLengthChange(t - s, t_a - s_a)
+               * probOfAddingSamples(mutant, 0, mutant.numberOfBounces() - 1);
 }
 
 double MetropolisRenderer::probOfLengthChange(int lengthDeleted, int lengthAdded) {

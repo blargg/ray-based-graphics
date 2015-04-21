@@ -1,4 +1,5 @@
 #include "render/film.h"
+#include "util/log.h"
 #include <algorithm>
 
 using std::min;
@@ -35,6 +36,21 @@ PNG Film::writeImage() {
 void Film::writeFile(std::string filename) {
     PNG pic = writeImage();
     pic.writeToFile(filename);
+}
+
+void Film::addSamples(Film other) {
+    LOG_IF_W(height != other.height, "combining films with different dimensions");
+    LOG_IF_W(width != other.width, "combining films with different dimensions");
+    int x = std::min(height, other.height);
+    int y = std::min(width, other.width);
+    for (int i = 0; i < x; i++) {
+        for (int j = 0; j < y; j++) {
+            color_grid[getIndex(i, j)] +=
+                other.color_grid[other.getIndex(i, j)];
+            count_grid[getIndex(i, j)] +=
+                other.count_grid[other.getIndex(i, j)];
+        }
+    }
 }
 
 RGBAPixel Film::makePixel(Color c) {

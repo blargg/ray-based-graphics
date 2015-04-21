@@ -38,6 +38,8 @@ class Film {
          * Writes the film to the file given by filename
          */
         void writeFile(std::string filename);
+
+        void addSamples(Film other);
     private:
         Color *color_grid;
         double *count_grid;

@@ -2,7 +2,7 @@ def build(bld):
     bld.objects(source='lightpath.cpp', target='lightpath',
                 use='shader common debug')
     bld.objects(source='shader.cpp', target='shader', use='common debug')
-    bld.objects(source='film.cpp', target='film', use='common easypng')
+    bld.objects(source='film.cpp', target='film', use='common easypng log')
     bld.objects(source='camera.cpp', target='camera',
                 use='common film easypng raytracer pathtracer ray')
     bld.objects(source='raytracer.cpp', target='raytracer',

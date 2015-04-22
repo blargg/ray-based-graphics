@@ -22,15 +22,19 @@ void MetropolisRenderer::setObjects(vector<Drawable *> objList) {
     objTree.rebuildTree(objList);
 }
 
+void MetropolisRenderer::setObjectsByKDTree(KDTree objectTree) {
+    objTree = objectTree;
+}
+
 void MetropolisRenderer::setLights(vector<Drawable *> lights) {
     lightList = lights;
 }
 
-void MetropolisRenderer::sampleImage(Film *imageFilm) {
+void MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
     ASSERT(lightList.size() > 0, "There must be a light in the scene");
     LightPath x = randomPath();
 
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < numSamples; i++) {
         LightPath y = mutate(x);
         double accProb = std::min(1.0,
                 importance(y) * probabilityOfMutation(x, y) /

@@ -5,10 +5,17 @@ def build(bld):
     bld.objects(source='film.cpp', target='film', use='common easypng log')
     bld.objects(source='camera.cpp', target='camera',
                 use='common film easypng raytracer pathtracer ray')
+
     bld.objects(source='raytracer.cpp', target='raytracer',
                 use='kdtree ray common AreaLight')
+
     bld.objects(source='pathtracer.cpp', target='pathtracer',
                 use='ray film common kdtree easypng log')
+
     bld.objects(source='metropolis_light_transport.cpp',
                 target='metropolis',
                 use='film camera common kdtree log shader lightpath')
+
+    bld.objects(source='stratified_metropolis.cpp',
+                target='stratified_metropolis',
+                use='metropolis log debug')

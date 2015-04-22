@@ -4,8 +4,9 @@ def build(bld):
     bld.program(
         source='main.cpp',
         target='renderer',
-        use='easypng common camera pathtracer raytracer simpleObject'
-        + ' obj_loader assimp_loader log cam_loader metropolis',
+        use='easypng common camera pathtracer raytracer simpleObject' +
+        ' obj_loader assimp_loader log cam_loader metropolis' +
+        ' stratified_metropolis',
         lib=['png', 'assimp'])
 
     bld.recurse('core')

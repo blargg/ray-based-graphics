@@ -27,6 +27,11 @@ class MetropolisRenderer {
     void setObjects(std::vector<Drawable *> objList);
 
     /**
+     * Sets the objects in the scene with a preconstructed kdtree
+     */
+    void setObjectsByKDTree(KDTree objectTree);
+
+    /**
      * Sets the lights in the scene
      */
     void setLights(std::vector<Drawable *> lights);
@@ -35,7 +40,7 @@ class MetropolisRenderer {
      * Samples the scene using the MLT algorithm
      * Deposits samples into the film
      */
-    void sampleImage(Film *imageFilm);
+    void sampleImage(Film *imageFilm, int numSamples);
 
  private:
     Camera cam;

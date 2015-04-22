@@ -8,6 +8,7 @@
 #include "render/pathtracer.h"
 #include "render/camera.h"
 #include "render/metropolis_light_transport.h"
+#include "render/stratified_metropolis.h"
 #include "file_loader/obj_loader.h"
 #include "file_loader/assimp_loader.h"
 #include "file_loader/cam_loader.h"
@@ -29,7 +30,8 @@ int main(int argc, char **argv) {
     string outputFileName = "dump/out.png";
 
     enum {
-        raytrace, path_trace, progressive_p, metropolis
+        raytrace, path_trace, progressive_p, metropolis,
+        stratified_metropolis
     } render_algorithm;
     render_algorithm = progressive_p;
 
@@ -38,6 +40,8 @@ int main(int argc, char **argv) {
         {"pathtrace",     required_argument,  0,  'p'},
         {"progressive",   required_argument,  0,  'g'},
         {"metropolis",    no_argument,        0,  'm'},
+        {"strat",         no_argument,        0,  's'},
+        {"stratified",    no_argument,        0,  's'},
         {"output",        required_argument,  0,  'o'},
         {"log-level",     required_argument,  0,  0}
     };
@@ -64,6 +68,10 @@ int main(int argc, char **argv) {
 
             case 'm':
                 render_algorithm = metropolis;
+                break;
+
+            case 's':
+                render_algorithm = stratified_metropolis;
                 break;
 
             case 'g':
@@ -135,7 +143,18 @@ int main(int argc, char **argv) {
         met.setObjects(allObj);
         met.setLights(lights);
         Film myFilm(imgWidth, imgHeight);
-        met.sampleImage(&myFilm);
+        met.sampleImage(&myFilm, 1000000);
+        PNG pic = myFilm.writeImage();
+        pic.writeToFile(outputFileName);
+    }
+
+    if (render_algorithm == stratified_metropolis) {
+        StratifiedMetropolis strat;
+        strat.setCamera(cam);
+        strat.setObjects(allObj);
+        strat.setStrataFromVector(lights);
+        Film myFilm(imgWidth, imgHeight);
+        strat.sampleImage(&myFilm, 1000000);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
     }

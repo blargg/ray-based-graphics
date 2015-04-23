@@ -15,7 +15,7 @@ LightPath mkPath(int numPoints) {
         bounce.shader = Diffuse;
         bounces.push_back(bounce);
     }
-    return LightPath(light, emitted, bounces, cam);
+    return LightPath(NULL, light, emitted, bounces, cam);
 }
 
 TEST(LightPathTest, deleteSubpath) {

@@ -7,6 +7,7 @@
 #include "core/common.h"
 #include "core/ray.h"
 #include "core/properties.h"
+#include "drawables/drawable.h"
 using namespace Eigen;
 using std::vector;
 
@@ -31,15 +32,17 @@ struct LightPartialPath {
     Color emitted;
     Vector4d lightLocation;
     vector<PathPoint> bounces;
+    Drawable *lightObject = NULL;
 };
 
 class LightPath {
  public:
-    LightPath(Vector4d lightPoint, Color emittedLight,
+    LightPath(Drawable *lightObj, Vector4d lightPoint, Color emittedLight,
             vector<PathPoint> bounces, Vector4d cameraPoint);
     LightPath(LightPartialPath lightPath, CamPartialPath camPath);
 
     std::tuple<Vector4d, Color> getLight();
+    Drawable *getLightObject();
     Vector4d getCameraPoint();
     Vector4d getCameraDirection();
 
@@ -86,6 +89,7 @@ class LightPath {
  private:
     vector<PathPoint> objectPoints;
     Vector4d lightLocation;
+    Drawable *lightObject;
     Color emitted;
     Vector4d cameraLocation;
     double sampleX;

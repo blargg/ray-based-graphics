@@ -7,8 +7,10 @@
 
 using std::vector;
 
-LightPath::LightPath(Vector4d lightPoint, Color emittedLight,
+LightPath::LightPath(Drawable *lightObj, Vector4d lightPoint, Color emittedLight,
         vector<PathPoint> bounces, Vector4d cameraPoint) {
+
+    lightObject = lightObj;
     lightLocation = lightPoint;
     emitted = emittedLight;
     objectPoints = bounces;
@@ -18,6 +20,7 @@ LightPath::LightPath(Vector4d lightPoint, Color emittedLight,
 }
 
 LightPath::LightPath(LightPartialPath lightPath, CamPartialPath camPath) {
+    lightObject = lightPath.lightObject;
     lightLocation = lightPath.lightLocation;
     emitted = lightPath.emitted;
     cameraLocation = camPath.cameraLocation.orig;
@@ -36,6 +39,10 @@ LightPath::LightPath(LightPartialPath lightPath, CamPartialPath camPath) {
 
 std::tuple<Vector4d, Color> LightPath::getLight() {
     return std::make_tuple(lightLocation, emitted);
+}
+
+Drawable* LightPath::getLightObject() {
+    return lightObject;
 }
 
 Vector4d LightPath::getCameraPoint() {
@@ -138,6 +145,7 @@ std::tuple<LightPartialPath, CamPartialPath> LightPath::deleteSubpath(int s, int
         lightP.exists = false;
     } else {
         lightP.exists = true;
+        lightP.lightObject = lightObject;
         lightP.emitted = emitted;
         lightP.lightLocation = lightLocation;
 

@@ -52,7 +52,7 @@ class MetropolisRenderer {
     void depositSample(Film *imageFilm, LightPath p, double weight);
 
     // generates a random beam of light emitted from a source in the scene
-    std::tuple<ray, Color> randomLightEmission();
+    std::tuple<ray, Color, Drawable *> randomLightEmission();
     /**
      * Generates a random path with bidirectional path tracing
      */
@@ -105,6 +105,11 @@ class MetropolisRenderer {
     double probabilityOfSample(ShaderType dist, Vector4d view, Vector4d normal, Vector4d out);
 
     Color lightOfPath(LightPath p);
+
+    /**
+     * returns true if the path is in the current stratum
+     */
+    bool inStratum(LightPath p);
     double importance(LightPath p);
 
     LightPath mutate(LightPath original);

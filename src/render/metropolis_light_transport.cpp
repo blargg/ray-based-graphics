@@ -55,7 +55,7 @@ void MetropolisRenderer::depositSample(Film *imageFilm, LightPath p, double weig
         imageFilm->addColorWeighted(lightOfPath(p), filmx, filmy, weight);
 }
 
-std::tuple<ray, Color> MetropolisRenderer::randomLightEmission() {
+std::tuple<ray, Color, Drawable *> MetropolisRenderer::randomLightEmission() {
     int randIndex = rand() % lightList.size();
     Drawable *emittingLight = lightList[randIndex];
     ray emittedRay;
@@ -64,7 +64,7 @@ std::tuple<ray, Color> MetropolisRenderer::randomLightEmission() {
     emittedRay.dir = perturb(normal, M_PI/2.0);
 
     Properties prop = emittingLight->getProperties(emittedRay.orig);
-    return std::make_tuple(emittedRay, prop.emittance);
+    return std::make_tuple(emittedRay, prop.emittance, emittingLight);
 }
 
 /**
@@ -218,7 +218,9 @@ LightPath MetropolisRenderer::randomPath() {
 
     ray lightRay;
     Color emittedLight;
-    std::tie(lightRay, emittedLight) = randomLightEmission();
+    Drawable *light;
+    std::tie(lightRay, emittedLight, light) = randomLightEmission();
+    lightp.lightObject = light;
     lightp.emitted = emittedLight;
     lightp.lightLocation = lightRay.orig;
     lightp.bounces = tracePath(lightRay, 0); // TODO increase
@@ -272,9 +274,12 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
     if (!lightp.exists) {
         ray lightdir;
         Color emittedlight;
-        std::tie(lightdir, emittedlight) = randomLightEmission();
+        Drawable *tmpLight;
+        // TODO tie the actual variables to reduce temporary variables
+        std::tie(lightdir, emittedlight, tmpLight) = randomLightEmission();
 
         lightCastDir = lightdir;
+        lightp.lightObject = tmpLight;
         lightp.lightLocation = lightdir.orig;
         lightp.emitted = emittedlight;
         lightp.exists = true;
@@ -345,18 +350,26 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
 
     // check if the light path is clear
     Vector4d lightEnd;
-    if (lightp.bounces.size() == 0)
+    bool bothEndsAreDiffuse = true;
+    if (lightp.bounces.size() == 0) {
         lightEnd = lightp.lightLocation;
-    else
+    } else {
         lightEnd = lightp.bounces.back().location;
+        bothEndsAreDiffuse =
+            bothEndsAreDiffuse && lightp.bounces.back().shader == Diffuse;
+    }
     Vector4d camEnd;
-    if (camp.bounces.size() == 0)
+    if (camp.bounces.size() == 0) {
         camEnd = camp.cameraLocation.orig;
-    else
+    } else {
         camEnd = camp.bounces.back().location;
+        bothEndsAreDiffuse =
+            bothEndsAreDiffuse && camp.bounces.back().shader == Diffuse;
+    }
 
     bool pathClear = s_add == addedToLight.size() &&
                      t_add == addedToCam.size() &&
+                     bothEndsAreDiffuse && // don't join when one end is a reflective bounce
                      isVisable(lightEnd, camEnd);
 
     LightPath fullPath(lightp, camp);
@@ -521,9 +534,20 @@ Color MetropolisRenderer::lightOfPath(LightPath path) {
     return total;
 }
 
+bool MetropolisRenderer::inStratum(LightPath p) {
+    for (auto light : lightList) {
+        if (light == p.getLightObject())
+            return true;
+    }
+    return false;
+}
+
 double MetropolisRenderer::importance(LightPath p) {
     // TODO better importance function
     //
+    if (!inStratum(p))
+        return 0.0;
+    LOG_IF_D(!inStratum(p), "not in statum");
     Color light = lightOfPath(p);
     // return the luminace of the path
     return (0.2126 * light.red +

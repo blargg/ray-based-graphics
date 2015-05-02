@@ -39,9 +39,9 @@ int main(int argc, char **argv) {
         {"raytrace",      no_argument,        0,  'r'},
         {"pathtrace",     required_argument,  0,  'p'},
         {"progressive",   required_argument,  0,  'g'},
-        {"metropolis",    no_argument,        0,  'm'},
-        {"strat",         no_argument,        0,  's'},
-        {"stratified",    no_argument,        0,  's'},
+        {"metropolis",    required_argument,  0,  'm'},
+        {"strat",         required_argument,  0,  's'},
+        {"stratified",    required_argument,  0,  's'},
         {"output",        required_argument,  0,  'o'},
         {"log-level",     required_argument,  0,  0}
     };
@@ -68,10 +68,12 @@ int main(int argc, char **argv) {
 
             case 'm':
                 render_algorithm = metropolis;
+                numSamples = atoi(optarg);
                 break;
 
             case 's':
                 render_algorithm = stratified_metropolis;
+                numSamples = atoi(optarg);
                 break;
 
             case 'g':
@@ -143,7 +145,7 @@ int main(int argc, char **argv) {
         met.setObjects(allObj);
         met.setLights(lights);
         Film myFilm(imgWidth, imgHeight);
-        met.sampleImage(&myFilm, 1000000);
+        met.sampleImage(&myFilm, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
     }
@@ -154,7 +156,7 @@ int main(int argc, char **argv) {
         strat.setObjects(allObj);
         strat.setStrataFromVector(lights);
         Film myFilm(imgWidth, imgHeight);
-        strat.sampleImage(&myFilm, 1000000);
+        strat.sampleImage(&myFilm, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
     }

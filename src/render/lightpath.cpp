@@ -16,6 +16,7 @@ LightPath::LightPath(Drawable *lightObj, Vector4d lightPoint, Color emittedLight
     objectPoints = bounces;
     cameraLocation = cameraPoint;
 
+    origin = "not set";
     clearPath = false;
 }
 
@@ -35,6 +36,7 @@ LightPath::LightPath(LightPartialPath lightPath, CamPartialPath camPath) {
     objectPoints.insert(objectPoints.end(),
                    camPath.bounces.begin(),
                    camPath.bounces.end());
+    origin = "not set";
 }
 
 std::tuple<Vector4d, Color> LightPath::getLight() {

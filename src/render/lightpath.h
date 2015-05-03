@@ -37,6 +37,7 @@ struct LightPartialPath {
 
 class LightPath {
  public:
+    const char *origin;
     LightPath(Drawable *lightObj, Vector4d lightPoint, Color emittedLight,
             vector<PathPoint> bounces, Vector4d cameraPoint);
     LightPath(LightPartialPath lightPath, CamPartialPath camPath);

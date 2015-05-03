@@ -36,9 +36,16 @@ void MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
 
     for (int i = 0; i < numSamples; i++) {
         LightPath y = mutate(x);
-        double accProb = std::min(1.0,
+        double accProb = 0.0;
+        if (y.isClearPath()) {
+            accProb = std::min(1.0,
                 importance(y) * probabilityOfMutation(x, y) /
                 (importance(x) * probabilityOfMutation(y, x)));
+        } else {
+            // this mutation produces and impossible path
+            // always reject it
+            accProb = 0.0;
+        }
 
         depositSample(imageFilm, x, 1.0 - accProb);
         depositSample(imageFilm, y, accProb);
@@ -169,7 +176,7 @@ Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector
         return perturb(normal, M_PI/2.0);
     } else if (dist == Specular) {
         // ASSERT(view.dot(normal) < 0, "view vector should be headed into the surface");
-        if (view.dot(normal) < 0)
+        if (view.dot(normal) > 0)
             normal *= -1;
         return reflectVector(view, normal);
     }else {
@@ -188,7 +195,8 @@ double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, V
         else
             return 0.0;
     } else if (dist == Specular) {
-        view *= -1;
+        if (view.dot(normal) > 0)
+            normal *= -1;
         ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON
                || (reflectVector(view, -1 * normal).normalized() - out).norm() < 100 * EPSILON,
                 "This should always be the reflection vector");
@@ -225,28 +233,13 @@ LightPath MetropolisRenderer::randomPath() {
     lightp.lightLocation = lightRay.orig;
     lightp.bounces = tracePath(lightRay, 0); // TODO increase
 
-    // check if the path can be joined
-    Vector4d lightEnd;
-    if (lightp.bounces.size() > 0) {
-        PathPoint tmp = lightp.bounces[lightp.bounces.size() - 1];
-        lightEnd = tmp.location;
-    } else {
-        lightEnd = lightRay.orig;
-    }
-
-    Vector4d eyeEnd;
-    if (camp.bounces.size() > 0) {
-        eyeEnd = camp.bounces[camp.bounces.size() - 1].location;
-    } else {
-        eyeEnd = viewRay.orig;
-    }
-
     // TODO also check if the right object is hit
-    bool clearPath = isVisable(lightEnd, eyeEnd);
+    bool clearPath = canJoinPath(lightp, camp);
 
     // join the paths and return
     LightPath fullPath(lightp, camp);
     fullPath.setClearPath(clearPath);
+    fullPath.origin = "randompath";
     return fullPath;
 }
 
@@ -299,6 +292,7 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
                 int index = lightp.bounces.size() - 1;
                 incomingDir = lightp.bounces[index].location - lightp.bounces[index - 1].location;
             }
+            incomingDir.normalize();
             lightCastDir.dir =
                 sampleBSDF(lastBounce.shader, lastBounce.normal, incomingDir);
         }
@@ -338,6 +332,7 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
                 viewDir =
                     camp.bounces[index].location - camp.bounces[index - 1].location;
             }
+            viewDir.normalize();
             camCastDir.dir =
                 sampleBSDF(lastBounce.shader, lastBounce.normal, viewDir);
         }
@@ -349,32 +344,34 @@ LightPath MetropolisRenderer::bidirectionalMutation(LightPath p) {
                         addedToCam.end());
 
     // check if the light path is clear
-    Vector4d lightEnd;
-    bool bothEndsAreDiffuse = true;
-    if (lightp.bounces.size() == 0) {
-        lightEnd = lightp.lightLocation;
-    } else {
-        lightEnd = lightp.bounces.back().location;
-        bothEndsAreDiffuse =
-            bothEndsAreDiffuse && lightp.bounces.back().shader == Diffuse;
-    }
-    Vector4d camEnd;
-    if (camp.bounces.size() == 0) {
-        camEnd = camp.cameraLocation.orig;
-    } else {
-        camEnd = camp.bounces.back().location;
-        bothEndsAreDiffuse =
-            bothEndsAreDiffuse && camp.bounces.back().shader == Diffuse;
-    }
-
     bool pathClear = s_add == addedToLight.size() &&
                      t_add == addedToCam.size() &&
-                     bothEndsAreDiffuse && // don't join when one end is a reflective bounce
-                     isVisable(lightEnd, camEnd);
+                     canJoinPath(lightp, camp);
 
     LightPath fullPath(lightp, camp);
     fullPath.setClearPath(pathClear);
+    fullPath.origin = "bidirectional";
     return fullPath;
+}
+
+bool MetropolisRenderer::canJoinPath(LightPartialPath lp, CamPartialPath cp) {
+    if (cp.bounces.size() < 1)
+        return false;
+
+    Vector4d lightEnd;
+    if (lp.bounces.size() == 0) {
+        lightEnd = lp.lightLocation;
+    } else {
+        lightEnd = lp.bounces.back().location;
+        if (lp.bounces.back().shader != Diffuse)
+            return false;
+    }
+    Vector4d camEnd;
+    camEnd = cp.bounces.back().location;
+    if (cp.bounces.back().shader != Diffuse)
+        return false;
+
+    return isVisable(lightEnd, camEnd);
 }
 
 double MetropolisRenderer::probOfBidirectionalTransition(LightPath original, LightPath mutant) {

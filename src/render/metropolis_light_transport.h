@@ -63,6 +63,8 @@ class MetropolisRenderer {
      */
     LightPath bidirectionalMutation(LightPath p);
 
+    bool canJoinPath(LightPartialPath lp, CamPartialPath cp);
+
     double probOfBidirectionalTransition(LightPath original, LightPath mutant);
     double probOfLengthChange(int lengthDeleted, int lengthAdded);
     double probOfAddingSamples(LightPath path, int s, int t);

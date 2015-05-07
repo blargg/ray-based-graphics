@@ -106,7 +106,7 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
         path.push_back(p);
 
         currentRay.orig = p.location;
-        currentRay.dir = sampleBSDF(p.shader, p.normal, start.dir);
+        currentRay.dir = sampleBSDF(p.shader, p.normal, currentRay.dir);
     }
 
     return path;
@@ -187,6 +187,7 @@ Vector4d MetropolisRenderer::sampleBSDF(ShaderType dist, Vector4d normal, Vector
 }
 
 double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, Vector4d normal, Vector4d out) {
+    view *= -1;
     if (dist == Diffuse) {
         // the out sample direction is uniformly distributed in the hemisphere
         // of the surface normal
@@ -218,7 +219,8 @@ LightPath MetropolisRenderer::randomPath() {
     camp.samplex = camx;
     camp.sampley = camy;
     camp.cameraLocation = viewRay;
-    camp.bounces = tracePath(viewRay, skewedGeometricRandom());
+    // TODO split the path length between camera and light paths
+    camp.bounces = tracePath(viewRay, skewedGeometricRandom()+1);
 
     // generate the light path
     LightPartialPath lightp;
@@ -231,7 +233,7 @@ LightPath MetropolisRenderer::randomPath() {
     lightp.lightObject = light;
     lightp.emitted = emittedLight;
     lightp.lightLocation = lightRay.orig;
-    lightp.bounces = tracePath(lightRay, 0); // TODO increase
+    lightp.bounces = tracePath(lightRay, 0);
 
     // TODO also check if the right object is hit
     bool clearPath = canJoinPath(lightp, camp);

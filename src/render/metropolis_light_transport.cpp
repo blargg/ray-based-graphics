@@ -38,15 +38,22 @@ void MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
         LightPath y = mutate(x);
         double accProb = 0.0;
         if (y.isClearPath()) {
-            accProb = std::min(1.0,
-                importance(y) * probabilityOfMutation(x, y) /
-                (importance(x) * probabilityOfMutation(y, x)));
+            double numerator = importance(y) * probabilityOfMutation(x, y);
+            double denom = (importance(x) * probabilityOfMutation(y, x));
+            // ASSERT(std::abs(denom) > EPSILON, "division by 0");
+            if(std::abs(denom) < EPSILON) {
+                accProb = 1.0;
+            } else {
+                accProb = std::min(1.0, numerator / denom);
+            }
         } else {
             // this mutation produces and impossible path
             // always reject it
             accProb = 0.0;
         }
 
+        ASSERT(accProb < 1.000001, "invalid accProb");
+        ASSERT(accProb >= -0.0000001, "invalid accProb");
         depositSample(imageFilm, x, 1.0 - accProb);
         depositSample(imageFilm, y, accProb);
 
@@ -126,7 +133,7 @@ double MetropolisRenderer::probOfShader(Properties p, ShaderType shader) {
     auto shaders = getShaders(p);
     if (shaders.size() == 0)
         return 1.0;
-    return 1 / shaders.size();
+    return 1.0 / (double)shaders.size();
 }
 
 vector<ShaderType> MetropolisRenderer::getShaders(Properties prop) {
@@ -196,11 +203,11 @@ double MetropolisRenderer::probabilityOfSample(ShaderType dist, Vector4d view, V
         else
             return 0.0;
     } else if (dist == Specular) {
-        if (view.dot(normal) > 0)
-            normal *= -1;
-        ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON
-               || (reflectVector(view, -1 * normal).normalized() - out).norm() < 100 * EPSILON,
-                "This should always be the reflection vector");
+        // if (view.dot(normal) > 0)
+        //     normal *= -1;
+        // ASSERT((reflectVector(view, normal).normalized() - out).norm() < 100 * EPSILON
+        //        || (reflectVector(view, -1 * normal).normalized() - out).norm() < 100 * EPSILON,
+        //         "This should always be the reflection vector");
         return 1.0;
     }else {
         LOG_E("Shader not programed");
@@ -400,7 +407,7 @@ double MetropolisRenderer::probOfLengthChange(int lengthDeleted, int lengthAdded
     if (diff == 1)
         return 0.25;
     ASSERT(lengthDeleted != 0, "Division by 0");
-    return 0.25 * (1 / (lengthDeleted - 1));
+    return 0.25 * (1.0 / (double)(lengthDeleted - 1));
 }
 
 double MetropolisRenderer::probOfAddingSamples(LightPath path, int s, int t) {
@@ -549,9 +556,12 @@ double MetropolisRenderer::importance(LightPath p) {
     LOG_IF_D(!inStratum(p), "not in statum");
     Color light = lightOfPath(p);
     // return the luminace of the path
-    return (0.2126 * light.red +
-           0.7152 * light.green +
-           0.0722 * light.blue);
+    double lum = (0.2126 * light.red +
+                  0.7152 * light.green +
+                  0.0722 * light.blue);
+    lum = std::max(0.0, lum);
+    ASSERT(lum >= 0.0, "importance must be >= 0");
+    return lum;
 }
 
 LightPath MetropolisRenderer::mutate(LightPath original) {
@@ -560,5 +570,7 @@ LightPath MetropolisRenderer::mutate(LightPath original) {
 
 double MetropolisRenderer::probabilityOfMutation(LightPath original, LightPath mutated) {
     // assume all paths have the same probability of being generated
-    return probOfBidirectionalTransition(original, mutated);
+    double pr =  probOfBidirectionalTransition(original, mutated);
+    ASSERT(pr >= 0.0, "probability is always non-negative");
+    return pr;
 }

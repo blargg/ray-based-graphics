@@ -2,9 +2,12 @@
 #define RT_FILM_H
 
 #include <string>
+#include <vector>
 #include "core/common.h"
 #include "core/color.h"
 #include "core/easypng.h"
+
+using std::vector;
 
 /**
  * Manages collected image data.
@@ -41,8 +44,8 @@ class Film {
 
         void addSamples(Film other);
     private:
-        Color *color_grid;
-        double *count_grid;
+        vector<Color> color_grid;
+        vector<double> count_grid;
         int height;
         int width;
 

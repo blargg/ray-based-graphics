@@ -8,8 +8,14 @@ using std::max;
 Film::Film(int width, int height) {
     this->height = height;
     this->width = width;
-    color_grid = new Color [width * height];
-    count_grid = new double [width * height];
+    color_grid.reserve(width * height);
+    for(int i = 0; i < width * height; i++) {
+        color_grid.push_back(Color(0, 0, 0));
+    }
+    count_grid.reserve(width * height);
+    for (int i = 0; i < width * height; i++) {
+        count_grid.push_back(0.0);
+    }
 }
 
 void Film::addColor(Color c, int x, int y) {

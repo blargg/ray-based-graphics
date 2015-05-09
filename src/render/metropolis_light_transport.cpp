@@ -551,9 +551,11 @@ bool MetropolisRenderer::inStratum(LightPath p) {
 double MetropolisRenderer::importance(LightPath p) {
     // TODO better importance function
     //
+    LOG_IF_D(!inStratum(p), "not in statum");
     if (!inStratum(p))
         return 0.0;
-    LOG_IF_D(!inStratum(p), "not in statum");
+    if (p.numberOfBounces() > 20)
+        return 0.0;
     Color light = lightOfPath(p);
     // return the luminace of the path
     double lum = (0.2126 * light.red +

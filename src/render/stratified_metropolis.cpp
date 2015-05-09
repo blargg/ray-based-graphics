@@ -34,7 +34,7 @@ void StratifiedMetropolis::sampleImage(Film *imageFilm, int numSamples) {
         Film currentSample(width, height);
         MetropolisRenderer m;
         m.setCamera(cam);
-        m.setObjectsByKDTree(objTree);
+        m.setObjectsByKDTree(&objTree);
         m.setLights(stratum);
         m.sampleImage(&currentSample, numSamplesPerStratum);
 

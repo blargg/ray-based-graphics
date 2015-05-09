@@ -29,7 +29,7 @@ class MetropolisRenderer {
     /**
      * Sets the objects in the scene with a preconstructed kdtree
      */
-    void setObjectsByKDTree(KDTree objectTree);
+    void setObjectsByKDTree(KDTree *objectTree);
 
     /**
      * Sets the lights in the scene
@@ -44,7 +44,7 @@ class MetropolisRenderer {
 
  private:
     Camera cam;
-    KDTree objTree;
+    KDTree *objTree;
     vector<Drawable *> lightList;
     Color exitSceneColor;
 

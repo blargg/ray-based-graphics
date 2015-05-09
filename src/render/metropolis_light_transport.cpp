@@ -19,10 +19,10 @@ void MetropolisRenderer::setCamera(Camera c) {
 }
 
 void MetropolisRenderer::setObjects(vector<Drawable *> objList) {
-    objTree.rebuildTree(objList);
+    objTree->rebuildTree(objList);
 }
 
-void MetropolisRenderer::setObjectsByKDTree(KDTree objectTree) {
+void MetropolisRenderer::setObjectsByKDTree(KDTree *objectTree) {
     objTree = objectTree;
 }
 
@@ -95,7 +95,7 @@ vector<PathPoint> MetropolisRenderer::tracePath(ray start, int size) {
     for (int i = 0; i < size; i++) {
         time = -1.0;
         obj = NULL;
-        objTree.intersection(currentRay, time, &obj);
+        objTree->intersection(currentRay, time, &obj);
 
         if (obj == NULL) {
             // exited scene
@@ -156,7 +156,7 @@ bool MetropolisRenderer::isVisable(Vector4d a, Vector4d b) {
     ray view(a, aToB);
     double time = -1.0;
     Drawable *obj = NULL;
-    objTree.intersection(view, time, &obj);
+    objTree->intersection(view, time, &obj);
 
     if (obj == NULL || time < 0)
         return false;

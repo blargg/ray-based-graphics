@@ -140,9 +140,12 @@ int main(int argc, char **argv) {
     }
 
     if (render_algorithm == metropolis) {
+        KDTree objTree;
+        objTree.rebuildTree(allObj);
+
         MetropolisRenderer met;
         met.setCamera(cam);
-        met.setObjects(allObj);
+        met.setObjectsByKDTree(&objTree);
         met.setLights(lights);
         Film myFilm(imgWidth, imgHeight);
         met.sampleImage(&myFilm, numSamples);

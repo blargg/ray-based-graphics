@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <time.h>
 
 #include "render/raytracer.h"
 #include "render/pathtracer.h"
@@ -24,6 +25,12 @@ using std::max;
 int main(int argc, char **argv) {
     // set default log level to debug and higher
     LOG_level = 1;
+
+#ifdef NDEBUG
+    auto myseed = time(NULL);
+    LOG_D("myseed = %lu", myseed);
+    srand(myseed);
+#endif
 
     int optChar;
     int numSamples = 10;
@@ -148,9 +155,10 @@ int main(int argc, char **argv) {
         met.setObjectsByKDTree(&objTree);
         met.setLights(lights);
         Film myFilm(imgWidth, imgHeight);
-        met.sampleImage(&myFilm, numSamples);
+        int numRejected = met.sampleImage(&myFilm, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
+        printf("acc rate = %f\n", 1 - ((float)numRejected / (float)numSamples));
     }
 
     if (render_algorithm == stratified_metropolis) {
@@ -159,9 +167,10 @@ int main(int argc, char **argv) {
         strat.setObjects(allObj);
         strat.setStrataFromVector(lights);
         Film myFilm(imgWidth, imgHeight);
-        strat.sampleImage(&myFilm, numSamples);
+        int numRejected = strat.sampleImage(&myFilm, numSamples);
         PNG pic = myFilm.writeImage();
         pic.writeToFile(outputFileName);
+        printf("acc rate = %f\n", 1 - ((float)numRejected / (float)numSamples));
     }
 
     for (unsigned int i = 0; i < allObj.size(); i++) {

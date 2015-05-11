@@ -39,8 +39,9 @@ class MetropolisRenderer {
     /**
      * Samples the scene using the MLT algorithm
      * Deposits samples into the film
+     * returns number of rejected samples
      */
-    void sampleImage(Film *imageFilm, int numSamples);
+    int sampleImage(Film *imageFilm, int numSamples);
 
  private:
     Camera cam;

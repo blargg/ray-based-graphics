@@ -24,7 +24,10 @@ class StratifiedMetropolis {
     void setLightStrata(std::vector< std::vector<Drawable *> > strata);
     void setStrataFromVector(std::vector<Drawable *> lights);
 
-    void sampleImage(Film *imageFilm, int numSamples);
+    /**
+     * returns the number of rejected samples
+     */
+    int sampleImage(Film *imageFilm, int numSamples);
 
  private:
     Camera cam;

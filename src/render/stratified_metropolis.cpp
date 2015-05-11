@@ -25,19 +25,22 @@ void StratifiedMetropolis::setStrataFromVector(vector<Drawable *> lights) {
     }
 }
 
-void StratifiedMetropolis::sampleImage(Film *imageFilm, int numSamples) {
+int StratifiedMetropolis::sampleImage(Film *imageFilm, int numSamples) {
     int width = imageFilm->getWidth();
     int height = imageFilm->getHeight();
 
     int numSamplesPerStratum = numSamples / lightStrata.size();
+    int numberRejected = 0;
     for (vector<Drawable *> &stratum : lightStrata) {
         Film currentSample(width, height);
         MetropolisRenderer m;
         m.setCamera(cam);
         m.setObjectsByKDTree(&objTree);
         m.setLights(stratum);
-        m.sampleImage(&currentSample, numSamplesPerStratum);
+        numberRejected += m.sampleImage(&currentSample, numSamplesPerStratum);
 
         imageFilm->addSamples(currentSample);
     }
+
+    return numberRejected;
 }

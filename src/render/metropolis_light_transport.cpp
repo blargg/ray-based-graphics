@@ -30,9 +30,10 @@ void MetropolisRenderer::setLights(vector<Drawable *> lights) {
     lightList = lights;
 }
 
-void MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
+int MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
     ASSERT(lightList.size() > 0, "There must be a light in the scene");
     LightPath x = randomPath();
+    int rejects = 0;
 
     for (int i = 0; i < numSamples; i++) {
         LightPath y = mutate(x);
@@ -59,8 +60,12 @@ void MetropolisRenderer::sampleImage(Film *imageFilm, int numSamples) {
 
         if (randomRange(0, 1) < accProb) {
             x = y;
+        } else {
+            rejects++;
         }
     }
+
+    return rejects;
 }
 
 void MetropolisRenderer::depositSample(Film *imageFilm, LightPath p, double weight) {
